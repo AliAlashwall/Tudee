@@ -12,7 +12,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.tudee.presentation.components.BottomNavBar
 import com.example.tudee.presentation.design.theme.TudeeTheme
 import com.example.tudee.presentation.onBoarding.OnBoardingScreen
-
+//https://www.figma.com/design/Kc0YU5ycMGzo48f0suelUc/Tudee?node-id=4-138&p=f&t=JzUjibAXo4u2ypgb-0
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
