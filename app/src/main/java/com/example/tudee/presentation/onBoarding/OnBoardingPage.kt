@@ -4,7 +4,6 @@ import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -33,7 +32,6 @@ fun OnBoardingPage(
     @DrawableRes imgId: Int,
     mainText: String,
     subText: String,
-    onSkipClick: () -> Unit = {}
 ) {
 
     Column(
@@ -42,15 +40,6 @@ fun OnBoardingPage(
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(
-            "Skip",
-            modifier = Modifier
-                .fillMaxWidth()
-                .clickable { onSkipClick() },
-            color = Theme.colors.primary,
-            style = Theme.textStyle.label.large
-        )
-
         Spacer(Modifier.height(153.dp))
 
         Image(
