@@ -4,15 +4,18 @@ import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.Button
@@ -82,8 +85,7 @@ fun OnBoardingScreen(
             contentScale = ContentScale.FillWidth,
         )
         Box(contentAlignment = Alignment.BottomCenter) {
-
-            Column{
+            Column {
                 Button(
                     onClick = { onCompleteScroll() },
                     colors = ButtonDefaults.buttonColors(Color.Transparent),
@@ -111,7 +113,6 @@ fun OnBoardingScreen(
 
             IconButton(
                 onClick = {
-
                     if (pagerState.currentPage < OnBoardingItems.entries.lastIndex) {
                         scope.launch {
                             pagerState.animateScrollToPage(
@@ -125,7 +126,6 @@ fun OnBoardingScreen(
                     } else {
                         onCompleteScroll()
                     }
-
                 },
                 colors = IconButtonDefaults.iconButtonColors(containerColor = Theme.colors.primary),
                 modifier = Modifier.size(64.dp)
@@ -139,6 +139,29 @@ fun OnBoardingScreen(
                         .size(28.dp),
                 )
             }
+        }
+        Column(
+            verticalArrangement = Arrangement.Bottom,
+            modifier = Modifier.fillMaxSize()
+        ) {
+            Row(
+                Modifier
+                    .fillMaxWidth()
+                    .padding(start = 20.dp, end = 20.dp)
+            ) {
+                for (i in 0..2) {
+                    Box(
+                        Modifier
+                            .height(5.dp)
+                            .weight(1f)
+                            .background(color = if (i == pagerState.currentPage) Theme.colors.primary else Color.White)
+
+                    )
+                    Spacer(Modifier.width(if (i == 2) 0.dp else 10.dp))
+                }
+            }
+            Spacer(Modifier.height(44.dp))
+
         }
     }
 }
