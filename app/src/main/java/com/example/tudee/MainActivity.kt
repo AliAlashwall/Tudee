@@ -8,10 +8,14 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.tudee.navigation.AppNavHost
+import com.example.tudee.navigation.Screens
 import com.example.tudee.presentation.TudeeViewModel
 import com.example.tudee.presentation.components.BottomNavBar
 import com.example.tudee.presentation.design.theme.Theme
@@ -25,12 +29,21 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             val navController = rememberNavController()
-
+            val navBackStackEntry by navController.currentBackStackEntryAsState()
             TudeeTheme {
                 Scaffold(
                     modifier = Modifier.fillMaxSize(),
-                    bottomBar = { BottomNavBar(navController = navController) },
-                    containerColor = Theme.colors.overlay,
+                    bottomBar = {
+                        if ((navBackStackEntry?.destination?.route) in listOf(
+                                Screens.Home.route,
+                                Screens.Document.route,
+                                Screens.Menu.route,
+                            )
+                        ) {
+                            BottomNavBar(navController = navController)
+                        }
+                    },
+                    containerColor = Color.Transparent,
                     contentColor = Theme.colors.overlay,
                 ) { innerPadding ->
                     AppNavHost(

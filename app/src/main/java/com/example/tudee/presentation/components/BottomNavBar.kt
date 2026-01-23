@@ -32,17 +32,16 @@ fun BottomNavBar(
     modifier: Modifier = Modifier,
     navController: NavController
 ) {
-    NavigationBar {
+    NavigationBar(containerColor = Theme.colors.surfaceHigh) {
         val navBackStackEntry by navController.currentBackStackEntryAsState()
         val currentRoute = navBackStackEntry?.destination?.route
 
         Row(
             modifier = modifier
                 .fillMaxWidth()
-                .background(color = Theme.colors.surfaceHigh)
-                .padding(horizontal = 32.dp, vertical = 16.dp),
+                .padding(horizontal = 32.dp, vertical = 8.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.Bottom
         ) {
             NavBarIcon(
                 iconId = if (currentRoute == Screens.Home.route) R.drawable.ic_home_filled else R.drawable.ic_home_outlined,

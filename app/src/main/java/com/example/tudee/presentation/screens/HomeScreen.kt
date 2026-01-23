@@ -15,11 +15,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.tudee.navigation.Screens
+import com.example.tudee.presentation.design.theme.Theme
 
 @Composable
 fun HomeScreen(modifier: Modifier = Modifier, navController: NavController) {
     Column(
-        Modifier.fillMaxSize(), verticalArrangement = Arrangement.Center,
+        Modifier.fillMaxSize().background(Theme.colors.surface), verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
