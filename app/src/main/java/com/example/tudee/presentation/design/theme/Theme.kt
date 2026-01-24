@@ -9,7 +9,6 @@ import com.example.tudee.presentation.design.color.LocalTudeeColors
 import com.example.tudee.presentation.design.color.TudeeColors
 import com.example.tudee.presentation.design.color.darkThemeColors
 import com.example.tudee.presentation.design.color.lightThemeColors
-import com.moscow.tudee.presentation.designSystem.theme.ThemeState
 import com.example.tudee.presentation.design.typography.DefaultTextStyle
 import com.example.tudee.presentation.design.typography.LocalTudeeTextStyle
 import com.example.tudee.presentation.design.typography.TudeeTextStyle

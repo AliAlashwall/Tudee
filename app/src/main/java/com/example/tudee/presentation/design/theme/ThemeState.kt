@@ -1,4 +1,4 @@
-package com.moscow.tudee.presentation.designSystem.theme
+package com.example.tudee.presentation.design.theme
 
 import androidx.compose.runtime.Stable
 

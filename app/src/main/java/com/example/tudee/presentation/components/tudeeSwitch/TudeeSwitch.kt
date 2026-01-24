@@ -29,7 +29,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.tudee.presentation.design.theme.Theme
 import com.example.tudee.presentation.design.theme.TudeeTheme
-import com.moscow.tudee.presentation.designSystem.theme.ThemeState
+import com.example.tudee.presentation.design.theme.ThemeState
 
 
 @OptIn(ExperimentalAnimationApi::class)
