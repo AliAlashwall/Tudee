@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -24,11 +23,9 @@ import com.example.tudee.presentation.design.typography.CherryBomb
 import com.example.tudee.presentation.design.typography.DefaultTextStyle
 
 @Composable
-fun TopAppBar() {
+fun HomeTopBar(modifier: Modifier = Modifier) {
     Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp),
+        modifier = modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
@@ -37,7 +34,7 @@ fun TopAppBar() {
             contentDescription = "App Logo"
         )
 
-        Column() {
+        Column {
             Text(
                 text = "Tudee",
                 fontSize = 18.sp,
@@ -59,8 +56,8 @@ fun TopAppBar() {
 
 @Preview
 @Composable
-private fun TopAppBarPreview() {
+private fun HomeTopBarPreview() {
     TudeeTheme {
-        TopAppBar()
+        HomeTopBar()
     }
 }
