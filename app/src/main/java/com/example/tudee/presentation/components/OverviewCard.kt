@@ -142,6 +142,7 @@ fun OverviewCard(
             )
 
         }
+        Spacer(Modifier.height(12.dp))
     }
 
 }
@@ -154,44 +155,49 @@ fun ProgressOverviewCard(
     @DrawableRes icon: Int = R.drawable.ic_done_tasks,
     progressCount: Int = 0
 ) {
-    Card(
-        modifier = modifier.size(96.dp, 110.dp), colors = CardDefaults.cardColors(cardColor),
-        shape = RoundedCornerShape(16.dp),
-    ) {
-        Column(
-            Modifier
-                .fillMaxSize()
-                .padding(start = 12.dp, end = 12.dp, bottom = 10.dp, top = 12.dp),
-//            verticalArrangement = Arrangement.spacedBy(4.dp)
+    Box(modifier = modifier.size(96.dp, 110.dp)) {
+
+        Card(
+            colors = CardDefaults.cardColors(cardColor),
+            shape = RoundedCornerShape(16.dp),
         ) {
-            Box(
-                modifier = Modifier
-                    .size(40.dp)
-                    .background(
-                        color = Color(0x3DFFFFFF),
-                        shape = RoundedCornerShape(10.dp)
-                    )
+
+
+            Column(
+                Modifier
+                    .fillMaxSize()
+                    .padding(start = 12.dp, end = 12.dp, bottom = 10.dp, top = 12.dp),
+//            verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
-                Icon(
-                    painter = painterResource(icon),
-                    contentDescription = "done tasks icon",
-                    tint = Theme.colors.onPrimary,
+                Box(
                     modifier = Modifier
-                        .size(20.dp, 22.dp)
-                        .align(Alignment.Center)
+                        .size(40.dp)
+                        .background(
+                            color = Color(0x3DFFFFFF),
+                            shape = RoundedCornerShape(10.dp)
+                        )
+                ) {
+                    Icon(
+                        painter = painterResource(icon),
+                        contentDescription = "done tasks icon",
+                        tint = Theme.colors.onPrimary,
+                        modifier = Modifier
+                            .size(20.dp, 22.dp)
+                            .align(Alignment.Center)
+                    )
+                }
+
+                Text(
+                    text = progressCount.toString(),
+                    style = Theme.textStyle.headline.medium,
+                    color = Theme.colors.onPrimary
+                )
+                Text(
+                    text = "Done",
+                    style = Theme.textStyle.label.small,
+                    color = Theme.colors.onPrimaryCaption
                 )
             }
-
-            Text(
-                text = progressCount.toString(),
-                style = Theme.textStyle.headline.medium,
-                color = Theme.colors.onPrimary
-            )
-            Text(
-                text = "Done",
-                style = Theme.textStyle.label.small,
-                color = Theme.colors.onPrimaryCaption
-            )
         }
     }
 }
