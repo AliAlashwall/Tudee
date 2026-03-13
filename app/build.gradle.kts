@@ -57,6 +57,7 @@ dependencies {
     // Preferences DataStore (SharedPreferences like APIs)
     implementation(libs.androidx.datastore.preferences)
 
+    implementation(libs.lottie.compose)
 
     //Room
     implementation(libs.androidx.room.runtime)

@@ -29,8 +29,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.tudee.R
-import com.example.tudee.presentation.design.shadow.innerShadow
-import com.example.tudee.presentation.design.theme.Theme
+import com.example.tudee.presentation.designSystem.shadow.innerShadow
+import com.example.tudee.presentation.designSystem.theme.Theme
 
 
 @Stable

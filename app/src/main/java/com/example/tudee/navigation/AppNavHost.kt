@@ -1,5 +1,8 @@
 package com.example.tudee.navigation
 
+import android.annotation.SuppressLint
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.CircularProgressIndicator
@@ -12,10 +15,11 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.tudee.presentation.TudeeViewModel
-import com.example.tudee.presentation.onBoarding.OnBoardingScreen
-import com.example.tudee.presentation.screens.HomeScreen
 import com.example.tudee.presentation.screens.MenuScreen
 import com.example.tudee.presentation.screens.ProfileScreen
+import com.example.tudee.presentation.screens.home.HomeScreen
+import com.example.tudee.presentation.screens.home.HomeViewModel
+import com.example.tudee.presentation.screens.onBoarding.OnBoardingScreen
 
 sealed class Screens(val route: String) {
     object OnBoarding : Screens("onBoarding")
@@ -25,6 +29,8 @@ sealed class Screens(val route: String) {
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
+@SuppressLint("ViewModelConstructorInComposable")
 @Composable
 fun AppNavHost(
     navController: NavHostController,
@@ -56,7 +62,8 @@ fun AppNavHost(
         }
 
         composable(route = Screens.Home.route) {
-            HomeScreen(navController = navController)
+            val homeViewModel = HomeViewModel()
+            HomeScreen(navController = navController, homeViewModel = homeViewModel)
         }
 
         composable(Screens.Document.route) {

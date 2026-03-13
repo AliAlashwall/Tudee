@@ -1,4 +1,4 @@
-package com.example.tudee.presentation.design.typography
+package com.example.tudee.presentation.designSystem.typography
 
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.text.TextStyle

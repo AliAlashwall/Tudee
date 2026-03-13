@@ -24,8 +24,8 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.tudee.R
 import com.example.tudee.navigation.Screens
-import com.example.tudee.presentation.design.theme.Theme
-import com.example.tudee.presentation.design.theme.TudeeTheme
+import com.example.tudee.presentation.designSystem.theme.Theme
+import com.example.tudee.presentation.designSystem.theme.TudeeTheme
 
 @Composable
 fun BottomNavBar(

@@ -25,7 +25,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
-import com.example.tudee.presentation.design.theme.Theme
+import com.example.tudee.presentation.designSystem.theme.Theme
 
 @Stable
 @Composable

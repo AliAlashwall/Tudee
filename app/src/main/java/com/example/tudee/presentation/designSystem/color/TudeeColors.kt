@@ -1,4 +1,4 @@
-package com.example.tudee.presentation.design.color
+package com.example.tudee.presentation.designSystem.color
 
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Brush

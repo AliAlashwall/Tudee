@@ -1,17 +1,17 @@
-package com.example.tudee.presentation.design.theme
+package com.example.tudee.presentation.designSystem.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.compositionLocalOf
-import com.example.tudee.presentation.design.color.LocalTudeeColors
-import com.example.tudee.presentation.design.color.TudeeColors
-import com.example.tudee.presentation.design.color.darkThemeColors
-import com.example.tudee.presentation.design.color.lightThemeColors
-import com.example.tudee.presentation.design.typography.DefaultTextStyle
-import com.example.tudee.presentation.design.typography.LocalTudeeTextStyle
-import com.example.tudee.presentation.design.typography.TudeeTextStyle
+import com.example.tudee.presentation.designSystem.color.LocalTudeeColors
+import com.example.tudee.presentation.designSystem.color.TudeeColors
+import com.example.tudee.presentation.designSystem.color.darkThemeColors
+import com.example.tudee.presentation.designSystem.color.lightThemeColors
+import com.example.tudee.presentation.designSystem.typography.DefaultTextStyle
+import com.example.tudee.presentation.designSystem.typography.LocalTudeeTextStyle
+import com.example.tudee.presentation.designSystem.typography.TudeeTextStyle
 
 
 @Composable

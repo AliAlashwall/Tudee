@@ -1,4 +1,4 @@
-package com.example.tudee.presentation.design.shadow
+package com.example.tudee.presentation.designSystem.shadow
 
 import android.graphics.BlurMaskFilter
 import android.graphics.PorterDuff

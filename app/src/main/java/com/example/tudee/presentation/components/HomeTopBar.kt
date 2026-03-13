@@ -18,9 +18,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.tudee.R
 import com.example.tudee.presentation.components.tudeeSwitch.TudeeSwitch
-import com.example.tudee.presentation.design.theme.TudeeTheme
-import com.example.tudee.presentation.design.typography.CherryBomb
-import com.example.tudee.presentation.design.typography.DefaultTextStyle
+import com.example.tudee.presentation.designSystem.theme.TudeeTheme
+import com.example.tudee.presentation.designSystem.typography.CherryBomb
+import com.example.tudee.presentation.designSystem.typography.DefaultTextStyle
 
 @Composable
 fun HomeTopBar(modifier: Modifier = Modifier) {

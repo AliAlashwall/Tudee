@@ -1,4 +1,4 @@
-package com.example.tudee.presentation.onBoarding
+package com.example.tudee.presentation.screens.onBoarding
 
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.tween
@@ -35,8 +35,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.tudee.R
-import com.example.tudee.presentation.design.theme.Theme
-import com.example.tudee.presentation.design.theme.TudeeTheme
+import com.example.tudee.presentation.designSystem.theme.Theme
+import com.example.tudee.presentation.designSystem.theme.TudeeTheme
 import kotlinx.coroutines.launch
 
 
