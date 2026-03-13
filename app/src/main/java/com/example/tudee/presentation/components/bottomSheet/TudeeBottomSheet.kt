@@ -1,0 +1,92 @@
+package com.example.tudee.presentation.components.bottomSheet
+
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material3.Button
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.ModalBottomSheetProperties
+import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Preview
+import com.example.tudee.presentation.designSystem.theme.Theme
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun TudeeBottomSheet(
+    modifier: Modifier = Modifier,
+    containerColor: Color = Theme.colors.surface,
+    expanded: Boolean = true,
+    contentHorizontalAlignment: Alignment.Horizontal = Alignment.CenterHorizontally,
+    onDismissRequest: (() -> Unit)? = {},
+    scrimColor: Color = Color.Black.copy(alpha = 0.5f),
+    content: @Composable ColumnScope.() -> Unit,
+) {
+
+    val sheetState =
+        rememberModalBottomSheetState(
+            skipPartiallyExpanded = expanded,
+        )
+
+    ModalBottomSheet(
+        sheetState = sheetState,
+        onDismissRequest = onDismissRequest ?: {},
+        properties = ModalBottomSheetProperties(shouldDismissOnBackPress = onDismissRequest != null),
+        containerColor = containerColor,
+        scrimColor = scrimColor,
+    ) {
+        Column(
+            horizontalAlignment = contentHorizontalAlignment,
+            modifier =
+                modifier
+                    .fillMaxWidth()
+        ) {
+            content()
+        }
+    }
+}
+
+
+@Preview
+@Composable
+private fun TudeeBottomSheetPreview() {
+
+    var show by remember { mutableStateOf(true) }
+    Box(Modifier.fillMaxSize()) {
+
+
+        if (show) {
+
+            TudeeBottomSheet(
+                onDismissRequest = {},
+
+                ) {
+                Column {
+                    Text(text = "bottom sheet content")
+                    Text(text = "bottom sheet content")
+                    Text(text = "bottom sheet content")
+                    Text(text = "bottom sheet content")
+                }
+            }
+        }
+
+        Button(
+            modifier = Modifier.align(Alignment.Center),
+            onClick = {
+                show = true
+            }) {
+            Text(text = "Show bottom sheet")
+        }
+    }
+}
