@@ -6,6 +6,7 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -42,8 +43,9 @@ fun CategoryCard(
     count: Int? = null,
     showCount: Boolean = true,
     selected: Boolean = false,
-    iconTint: Color = Theme.colors.greenAccent,
-    isPredefined: Boolean = true
+    iconTint: Color = Color.Unspecified,
+    isPredefined: Boolean = true,
+    onClickCategory: () -> Unit = { }
 ) {
     Column(
         modifier = modifier.animateContentSize(),
@@ -53,7 +55,10 @@ fun CategoryCard(
         Box(
             modifier = Modifier
                 .wrapContentSize()
-                .animateContentSize(),
+                .animateContentSize()
+                .clickable {
+                    onClickCategory()
+                },
             contentAlignment = Alignment.TopEnd
         ) {
             Box(
