@@ -55,22 +55,22 @@ fun BottomNavBar(
             )
 
             NavBarIcon(
-                iconId = if (currentRoute == Screens.Document.route) R.drawable.ic_document_filled else R.drawable.ic_document_outlined,
+                iconId = if (currentRoute == Screens.Tasks.route) R.drawable.ic_document_filled else R.drawable.ic_document_outlined,
                 contentDescription = "document",
-                isSelected = currentRoute == Screens.Document.route,
+                isSelected = currentRoute == Screens.Tasks.route,
                 onClick = {
-                    navController.navigate(Screens.Document.route) {
+                    navController.navigate(Screens.Tasks.route) {
                         launchSingleTop = true
                     }
                 }
             )
 
             NavBarIcon(
-                iconId = if (currentRoute == Screens.Menu.route) R.drawable.ic_menu_circle_filled else R.drawable.ic_menu_circle_outlined,
+                iconId = if (currentRoute == Screens.Categories.route) R.drawable.ic_menu_circle_filled else R.drawable.ic_menu_circle_outlined,
                 contentDescription = "menu",
-                isSelected = currentRoute == Screens.Menu.route,
+                isSelected = currentRoute == Screens.Categories.route,
                 onClick = {
-                    navController.navigate(Screens.Menu.route) {
+                    navController.navigate(Screens.Categories.route) {
                         launchSingleTop = true
                     }
                 },

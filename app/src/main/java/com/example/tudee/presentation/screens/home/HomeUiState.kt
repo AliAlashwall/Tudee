@@ -8,7 +8,9 @@ data class HomeUiState(
     var showBottomSheet: Boolean = false,
     var selectedDate: String = "22-6-2025",
     var currentDate: String = "22-6-2025",
-    var currentPriority: String = "",
+    var currentPriority: Int? = null,
+    var selectedCategory: Int? = null,
+
 )
 
 val categoryList = listOf(

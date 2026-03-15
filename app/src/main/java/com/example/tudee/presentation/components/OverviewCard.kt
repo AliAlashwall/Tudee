@@ -33,11 +33,11 @@ import com.example.tudee.presentation.designSystem.theme.TudeeTheme
 
 @Composable
 fun OverviewCard(
-    currentDate: String = "today, 22 Jun 2025",
-    @DrawableRes statusIconId: Int = R.drawable.ic_status_neutral,
-    @DrawableRes tudeeStatusImgId: Int = R.drawable.im_robot_neutral,
-    notificationTitle: String = "Stay working!",
-    notificationDescription: String = "You've completed 3 out of 10 tasks Keep going!"
+    currentDate: String,
+    @DrawableRes statusIconId: Int,
+    @DrawableRes tudeeStatusImgId: Int,
+    notificationTitle: String,
+    notificationDescription: String
 ) {
     Card(
         colors = CardDefaults.cardColors(Theme.colors.surfaceHigh),
@@ -240,6 +240,12 @@ fun OverviewDateRow(
 @Composable
 private fun OverviewCardPreview() {
     TudeeTheme {
-        OverviewCard()
+        OverviewCard(
+            currentDate = "22-6-2025",
+            statusIconId = R.drawable.ic_status_neutral,
+            tudeeStatusImgId = R.drawable.im_robot_neutral,
+            notificationTitle = "Stay working",
+            notificationDescription = "You have 3 tasks to do today, let's get it done!"
+        )
     }
 }

@@ -18,17 +18,17 @@ import com.example.tudee.navigation.Screens
 
 @Composable
 
-fun MenuScreen(modifier: Modifier = Modifier,navController: NavController) {
+fun TasksScreen(modifier: Modifier = Modifier, navController: NavController) {
     Column(
         Modifier.fillMaxSize(), verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = "Menu Screen",
+            text = "Tasks Screen",
             modifier = modifier
                 .background(Color.Red)
                 .padding(16.dp)
-                .clickable { navController.navigate(Screens.Menu.route) },
+                .clickable { navController.navigate(Screens.Categories.route) },
             color = Color.White,
             fontSize = 49.sp
         )

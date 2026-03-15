@@ -20,7 +20,7 @@ import com.example.tudee.presentation.unit.toLocalDate
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DateRangePicker(
+fun CustomDateRangePicker(
     onDismissRequest: () -> Unit,
     onConfirm: (String) -> Unit
 ) {
@@ -50,6 +50,6 @@ fun DateRangePicker(
 @RequiresApi(Build.VERSION_CODES.O)
 @Preview
 @Composable
-private fun DateRangePickerPreview() {
-    DateRangePicker({}, {})
+fun CustomDateRangePickerPreview() {
+    CustomDateRangePicker({}, {})
 }

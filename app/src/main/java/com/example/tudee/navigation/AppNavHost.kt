@@ -15,8 +15,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.tudee.presentation.TudeeViewModel
-import com.example.tudee.presentation.screens.MenuScreen
-import com.example.tudee.presentation.screens.ProfileScreen
+import com.example.tudee.presentation.screens.TasksScreen
+import com.example.tudee.presentation.screens.CategoriesScreen
 import com.example.tudee.presentation.screens.home.HomeScreen
 import com.example.tudee.presentation.screens.home.HomeViewModel
 import com.example.tudee.presentation.screens.onBoarding.OnBoardingScreen
@@ -24,8 +24,8 @@ import com.example.tudee.presentation.screens.onBoarding.OnBoardingScreen
 sealed class Screens(val route: String) {
     object OnBoarding : Screens("onBoarding")
     object Home : Screens("home")
-    object Document : Screens("Document")
-    object Menu : Screens("Menu") {
+    object Tasks : Screens("Tasks")
+    object Categories : Screens("Categories") {
     }
 }
 
@@ -66,14 +66,14 @@ fun AppNavHost(
             HomeScreen(navController = navController, homeViewModel = homeViewModel)
         }
 
-        composable(Screens.Document.route) {
-            MenuScreen(navController = navController)
+        composable(Screens.Tasks.route) {
+            TasksScreen(navController = navController)
         }
 
         composable(
-            route = Screens.Menu.route
+            route = Screens.Categories.route
         ) {
-            ProfileScreen(navController = navController)
+            CategoriesScreen(navController = navController)
         }
 
     }

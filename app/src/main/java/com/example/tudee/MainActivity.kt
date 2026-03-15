@@ -38,8 +38,8 @@ class MainActivity : ComponentActivity() {
                     bottomBar = {
                         if ((navBackStackEntry?.destination?.route) in listOf(
                                 Screens.Home.route,
-                                Screens.Document.route,
-                                Screens.Menu.route,
+                                Screens.Tasks.route,
+                                Screens.Categories.route,
                             )
                         ) {
                             BottomNavBar(navController = navController)
