@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -26,10 +25,10 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -38,9 +37,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.tudee.R
@@ -51,11 +50,12 @@ import com.example.tudee.presentation.components.HomeTopBar
 import com.example.tudee.presentation.components.OverviewCard
 import com.example.tudee.presentation.components.PriorityButton
 import com.example.tudee.presentation.components.TudeeBoxWithIcon
-import com.example.tudee.presentation.components.TudeeTextButton
 import com.example.tudee.presentation.components.TudeeTextField
+import com.example.tudee.presentation.components.bottomSheet.BottomSheetButtons
 import com.example.tudee.presentation.components.bottomSheet.TudeeBottomSheet
 import com.example.tudee.presentation.designSystem.theme.Theme
 import com.example.tudee.presentation.designSystem.theme.TudeeTheme
+import com.example.tudee.presentation.screens.category.TudeeCategories.categoriesList
 
 @RequiresApi(Build.VERSION_CODES.O)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -68,13 +68,15 @@ fun HomeScreen(
         homeViewModel.getCurrentDate()
     }
 
-    val homeUiState = homeViewModel.homeUiState.collectAsState().value
+    val homeUiState = homeViewModel.homeUiState.collectAsStateWithLifecycle().value
     Scaffold(
         containerColor = Theme.colors.surface,
         floatingActionButton = {
             FloatingActionButton(
                 onClick = { homeViewModel.onFABClicked() },
-                containerColor = Theme.colors.primary
+                containerColor = Theme.colors.primary,
+                shape = RoundedCornerShape(50.dp),
+                modifier = Modifier.size(64.dp)
             ) {
                 Icon(
                     painterResource(R.drawable.ic_add_task),
@@ -87,8 +89,7 @@ fun HomeScreen(
     {
         Column(
             modifier = modifier
-                .fillMaxSize()
-            ,
+                .fillMaxSize(),
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -119,9 +120,10 @@ fun HomeScreen(
                     EmptyTasks(modifier = Modifier.fillMaxWidth())
 
                     if (homeUiState.showBottomSheet) {
-                        TudeeBottomSheet(onDismissRequest = {
-                            homeViewModel.onDismissBottomSheet()
-                        }) {
+                        TudeeBottomSheet(
+                            modifier = Modifier.heightIn(max = 700.dp),
+                            onDismissRequest = { homeViewModel.onDismissBottomSheet() })
+                        {
                             BottomSheetContent(
                                 modifier = Modifier.background(Theme.colors.surface),
                                 newTaskTitle = homeUiState.newTaskTitle,
@@ -139,7 +141,8 @@ fun HomeScreen(
                                 updateSelectedDate = { homeViewModel.updateSelectedDate(it) },
                                 onClickCategory = { homeViewModel.updateSelectedCategory(it) },
                                 enableAddTaskButton = homeViewModel.enableAddTaskButton(),
-                                onCancelBottomSheetClicked = { homeViewModel.onDismissBottomSheet() }
+                                onCancelBottomSheetClicked = { homeViewModel.onDismissBottomSheet() },
+                                onAddClicked = { /*TODO()*/ }
                             )
                         }
                     }
@@ -158,219 +161,204 @@ fun BottomSheetContent(
     currentPriority: Int?,
     selectedDate: String,
     selectedCategory: Int?,
-    maxHeight: Dp = 600.dp,
     onNewTaskTitleChange: (String) -> Unit,
     onNewDescriptionChange: (String) -> Unit,
     updateCurrentPriority: (Int) -> Unit,
     updateSelectedDate: (String) -> Unit,
     onClickCategory: (Int) -> Unit,
     enableAddTaskButton: Boolean,
-    onCancelBottomSheetClicked: (Boolean) -> Unit
+    onCancelBottomSheetClicked: (Boolean) -> Unit,
+    onAddClicked: () -> Unit
 
 ) {
-    var showDialog by remember { mutableStateOf(false) }
-    val priority = mapOf<Int, String>(
-        0 to stringResource(R.string.priority_high),
-        1 to stringResource(R.string.priority_medium),
-        2 to stringResource(R.string.priority_low)
+    // Persist dialog state across configuration changes
+    var showDialog by rememberSaveable { mutableStateOf(false) }
+
+
+    val prioritiesList = listOf(
+        stringResource(R.string.priority_high),
+        stringResource(R.string.priority_medium),
+        stringResource(R.string.priority_low)
     )
-    LazyColumn(
-        horizontalAlignment = Alignment.Start,
-        verticalArrangement = Arrangement.spacedBy(16.dp),
-        modifier = modifier
-            .heightIn(max = maxHeight)
-            .padding(horizontal = 16.dp)
-    ) {
-        item {
-            Text(
-                text = stringResource(R.string.add_new_task),
-                modifier = Modifier.fillMaxWidth(),
-                textAlign = TextAlign.Start,
-                style = Theme.textStyle.title.large,
-                lineHeight = 24.sp
-            )
-        }
-
-        item {
-            TudeeTextField(
-                value = newTaskTitle,
-                onValueChange = { onNewTaskTitleChange(it) },
-                hint = stringResource(R.string.task_title),
-                startIcon = painterResource(R.drawable.ic_document_outlined),
-                singleLine = true,
-                keyboardOptions = KeyboardOptions.Default,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(56.dp)
-            )
-        }
-
-        item {
-            TudeeTextField(
-                value = newDescription,
-                onValueChange = { onNewDescriptionChange(it) },
-                hint = stringResource(R.string.description),
-                singleLine = true,
-                keyboardOptions = KeyboardOptions.Default,
-                placeholderAlignment = Alignment.TopStart,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(168.dp)
-            )
-        }
-
-        item {
-            TudeeBoxWithIcon(
-                startIcon = painterResource(R.drawable.ic_calendar_add),
-                onClick = {
-                    // Don't update the ViewModel with the same value when opening the picker;
-                    // that can trigger a recomposition which may interfere with the dialog state
-                    showDialog = true
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(56.dp)
-            ) {
+    Box(modifier = Modifier.fillMaxSize()) {
+        LazyColumn(
+            horizontalAlignment = Alignment.Start,
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+            modifier = modifier
+                .padding(horizontal = 16.dp)
+        ) {
+            item {
                 Text(
-                    text = selectedDate,
-                    style = Theme.textStyle.body.medium,
-                    color = Theme.colors.body
+                    text = stringResource(R.string.add_new_task),
+                    modifier = Modifier.fillMaxWidth(),
+                    textAlign = TextAlign.Start,
+                    style = Theme.textStyle.title.large,
+                    lineHeight = 24.sp,
+                    color = Theme.colors.title
                 )
             }
-        }
 
-
-        item {
-            Text(
-                text = stringResource(R.string.priority),
-                modifier = Modifier.fillMaxWidth(),
-                textAlign = TextAlign.Start,
-                style = Theme.textStyle.title.medium,
-                lineHeight = 22.sp
-            )
-        }
-
-        item {
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                //High priority Button
-                PriorityButton(
-                    textContent = priority[0]!!,
-                    startIcon = R.drawable.ic_flag,
-                    buttonColor = if (currentPriority == 0) Theme.colors.error else Theme.colors.surfaceLow,
-                    textColor = if (currentPriority == 0) Theme.colors.onPrimary else Theme.colors.hint,
-                    onClicked = { updateCurrentPriority(0) }
-                )
-
-                //Medium priority Button
-                PriorityButton(
-                    textContent = priority[1]!!,
-                    startIcon = R.drawable.ic_alert,
-                    buttonColor = if (currentPriority == 1) Theme.colors.yellowAccent else Theme.colors.surfaceLow,
-                    textColor = if (currentPriority == 1) Theme.colors.onPrimary else Theme.colors.hint,
-                    onClicked = { updateCurrentPriority(1) }
-                )
-
-                //Low priority Button
-                PriorityButton(
-                    textContent = priority[2]!!,
-                    startIcon = R.drawable.ic_trade_down,
-                    buttonColor = if (currentPriority == 2) Theme.colors.greenAccent else Theme.colors.surfaceLow,
-                    textColor = if (currentPriority == 2) Theme.colors.onPrimary else Theme.colors.hint,
-                    onClicked = { updateCurrentPriority(2) }
+            item {
+                TudeeTextField(
+                    value = newTaskTitle,
+                    onValueChange = { onNewTaskTitleChange(it) },
+                    hint = stringResource(R.string.task_title),
+                    startIcon = painterResource(R.drawable.ic_document_outlined),
+                    singleLine = true,
+                    keyboardOptions = KeyboardOptions.Default,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(56.dp)
                 )
             }
-        }
 
-        item {
-            Text(
-                text = stringResource(R.string.category),
-                modifier = Modifier.fillMaxWidth(),
-                textAlign = TextAlign.Start,
-                style = Theme.textStyle.title.medium,
-                lineHeight = 22.sp
-            )
-        }
+            item {
+                TudeeTextField(
+                    value = newDescription,
+                    onValueChange = { onNewDescriptionChange(it) },
+                    hint = stringResource(R.string.description),
+                    singleLine = true,
+                    keyboardOptions = KeyboardOptions.Default,
+                    placeholderAlignment = Alignment.TopStart,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(168.dp)
+                )
+            }
 
-        item {
-            FlowRow(
-                maxItemsInEachRow = 3,
-                horizontalArrangement = Arrangement.SpaceBetween,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 13.dp)
-            ) {
-                categoryList.forEachIndexed { categoryIndex, category ->
-
-                    CategoryCard(
-                        icon = painterResource(id = category[1] as Int),
-                        label = category[0] as String,
-                        selected = (categoryIndex == selectedCategory),
-                        showCount = false,
-                        iconTint = Color.Unspecified,
-                        isPredefined = true,
-                        modifier = Modifier
-                            .padding(bottom = if (categoryList.indexOf(category) <= categoryList.size - 3) 24.dp else 0.dp),
-                        onClickCategory = { onClickCategory(categoryIndex) }
+            item {
+                TudeeBoxWithIcon(
+                    startIcon = painterResource(R.drawable.ic_calendar_add),
+                    onClick = {
+                        // Don't update the ViewModel with the same value when opening the picker;
+                        // that can trigger a recomposition which may interfere with the dialog state
+                        showDialog = true
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(56.dp)
+                ) {
+                    Text(
+                        text = selectedDate,
+                        style = Theme.textStyle.body.medium,
+                        color = Theme.colors.body
                     )
-
                 }
             }
+
+
+            item {
+                Text(
+                    text = stringResource(R.string.priority),
+                    modifier = Modifier.fillMaxWidth(),
+                    textAlign = TextAlign.Start,
+                    style = Theme.textStyle.title.medium,
+                    lineHeight = 22.sp,
+                    color = Theme.colors.title
+                )
+            }
+
+            item {
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    //High priority Button
+                    PriorityButton(
+                        textContent = prioritiesList[0],
+                        startIcon = R.drawable.ic_flag,
+                        buttonColor = if (currentPriority == 0) Theme.colors.error else Theme.colors.surfaceLow,
+                        textColor = if (currentPriority == 0) Theme.colors.onPrimary else Theme.colors.hint,
+                        onClicked = { updateCurrentPriority(0) }
+                    )
+
+                    //Medium priority Button
+                    PriorityButton(
+                        textContent = prioritiesList[1],
+                        startIcon = R.drawable.ic_alert,
+                        buttonColor = if (currentPriority == 1) Theme.colors.yellowAccent else Theme.colors.surfaceLow,
+                        textColor = if (currentPriority == 1) Theme.colors.onPrimary else Theme.colors.hint,
+                        onClicked = { updateCurrentPriority(1) }
+                    )
+
+                    //Low priority Button
+                    PriorityButton(
+                        textContent = prioritiesList[2],
+                        startIcon = R.drawable.ic_trade_down,
+                        buttonColor = if (currentPriority == 2) Theme.colors.greenAccent else Theme.colors.surfaceLow,
+                        textColor = if (currentPriority == 2) Theme.colors.onPrimary else Theme.colors.hint,
+                        onClicked = { updateCurrentPriority(2) }
+                    )
+                }
+            }
+
+            item {
+                Text(
+                    text = stringResource(R.string.category),
+                    modifier = Modifier.fillMaxWidth(),
+                    textAlign = TextAlign.Start,
+                    style = Theme.textStyle.title.medium,
+                    lineHeight = 22.sp,
+                    color = Theme.colors.title
+                )
+            }
+
+            item {
+                // remember the static categories list so it's not re-evaluated on every recomposition
+                val categories = remember { categoriesList }
+                FlowRow(
+                    maxItemsInEachRow = 3,
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 13.dp)
+                ) {
+                    categories.forEachIndexed { categoryIndex, category ->
+                        val bottomPadding =
+                            if (categoryIndex <= categories.size - 3) 24.dp else 0.dp
+                        CategoryCard(
+                            icon = painterResource(id = category.icon),
+                            label = category.name,
+                            selected = (categoryIndex == selectedCategory),
+                            showCount = false,
+                            iconTint = Color.Unspecified,
+                            isPredefined = true,
+                            modifier = Modifier
+                                .padding(bottom = bottomPadding),
+                            onClickCategory = { onClickCategory(categoryIndex) }
+                        )
+
+                    }
+                }
+            }
+
         }
 
-    }
+        if (showDialog) {
+            CustomDateRangePicker(
+                onDismissRequest = { showDialog = false },
+                onConfirm = { updateSelectedDate(it) }
+            )
+        }
 
-    if (showDialog) {
-        CustomDateRangePicker(
-            onDismissRequest = { showDialog = false },
-            onConfirm = { updateSelectedDate(it) }
-        )
-    }
-
-    Column(
-        Modifier
-            .background(Color.White)
-            .padding(vertical = 12.dp, horizontal = 16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
-    ) {
-        TudeeTextButton(
-            text = stringResource(R.string.add_bottom_sheet),
-            onClick = { /*TODO*/ },
+        Box(
             modifier = Modifier
-                .height(56.dp)
-                .background(
-                    color = if (enableAddTaskButton) Theme.colors.primary else Theme.colors.disable,
-                    shape = RoundedCornerShape(50.dp)
-                )
-                .fillMaxWidth(),
-            style = Theme.textStyle.label.large,
-            colors = if (enableAddTaskButton) Theme.colors.onPrimary else Theme.colors.stroke
-        )
-
-        TudeeTextButton(
-            text = stringResource(R.string.cancel_bottom_sheet),
-            onClick = { onCancelBottomSheetClicked(false) },
-            modifier = Modifier
-                .height(56.dp)
-                .border(
-                    width = 1.dp,
-                    color = Theme.colors.stroke,
-                    shape = RoundedCornerShape(50.dp)
-                )
-                .fillMaxWidth(),
-            style = Theme.textStyle.label.large,
-            colors = Theme.colors.primary
-        )
+                .align(Alignment.BottomCenter)
+                .fillMaxWidth()
+        ) {
+            BottomSheetButtons(
+                enableAddTaskButton = enableAddTaskButton,
+                onAddClicked = {onAddClicked()},
+                onCancelBottomSheetClicked = { onCancelBottomSheetClicked(false) }
+            )
+        }
     }
-
 
 }
 
 @RequiresApi(Build.VERSION_CODES.O)
-@Preview
+@Preview(showBackground = true)
 @Composable
 private fun BottomSheetContentPreview() {
     TudeeTheme {
@@ -386,7 +374,8 @@ private fun BottomSheetContentPreview() {
             updateCurrentPriority = {},
             updateSelectedDate = {},
             onClickCategory = {},
-            onCancelBottomSheetClicked = {}
+            onCancelBottomSheetClicked = {},
+            onAddClicked = {}
         )
     }
 }
