@@ -65,6 +65,8 @@ dependencies {
     implementation(libs.androidx.navigation.runtime.ktx)
     annotationProcessor(libs.androidx.room.compiler)
 
+    implementation(libs.coil.compose)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

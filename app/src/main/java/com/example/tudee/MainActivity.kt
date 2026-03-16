@@ -13,14 +13,15 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.tudee.navigation.AppNavHost
 import com.example.tudee.navigation.Screens
+import com.example.tudee.presentation.TudeeViewModel
 import com.example.tudee.presentation.components.BottomNavBar
 import com.example.tudee.presentation.designSystem.theme.Theme
 import com.example.tudee.presentation.designSystem.theme.TudeeTheme
-import com.example.tudee.presentation.screens.home.HomeScreen
-import com.example.tudee.presentation.screens.home.HomeViewModel
 
 //https://www.figma.com/design/Kc0YU5ycMGzo48f0suelUc/Tudee?node-id=4-138&p=f&t=JzUjibAXo4u2ypgb-0
 class MainActivity : ComponentActivity() {
@@ -48,15 +49,10 @@ class MainActivity : ComponentActivity() {
                     containerColor = Color.Transparent,
                     contentColor = Theme.colors.overlay,
                 ) { innerPadding ->
-//                    AppNavHost(
-//                        navController = navController,
-//                        modifier = Modifier.padding(innerPadding),
-//                        tudeeViewModel = TudeeViewModel(context = LocalContext.current)
-//                    )
-                    val homeViewModel = HomeViewModel()
-                    HomeScreen(
-                        modifier = Modifier.padding(innerPadding), navController,
-                        homeViewModel = homeViewModel
+                    AppNavHost(
+                        navController = navController,
+                        modifier = Modifier.padding(innerPadding),
+                        tudeeViewModel = TudeeViewModel(context = LocalContext.current)
                     )
                 }
             }
