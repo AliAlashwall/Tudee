@@ -25,4 +25,10 @@ class TasksViewModel : ViewModel() {
             it.copy(showDatePicker = true)
         }
     }
+
+    fun onTabClicked(tabIndex: Int) {
+        tasksUiState.update {
+            it.copy(selectedTabIndex = tabIndex)
+        }
+    }
 }

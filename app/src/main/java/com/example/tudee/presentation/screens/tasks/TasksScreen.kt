@@ -4,8 +4,10 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -38,7 +40,10 @@ fun TasksScreen(
             onDateSelected = { tasksViewModel.onDateSelected(it) },
             showDialog = tasksUiState.showDatePicker,
             onDismissDatePicker = { tasksViewModel.onDismissDatePicker() },
-            onShowDatePicker = { tasksViewModel.onShowDatePicker() }
+            onShowDatePicker = { tasksViewModel.onShowDatePicker() },
+            selectedTabIndex = tasksUiState.selectedTabIndex,
+            onTabClicked = { tasksViewModel.onTabClicked(it) }
+
         )
     }
 }
@@ -50,7 +55,9 @@ fun TasksScreenContent(
     onDateSelected: (date: String) -> Unit,
     showDialog: Boolean = false,
     onDismissDatePicker: () -> Unit,
-    onShowDatePicker: () -> Unit
+    onShowDatePicker: () -> Unit,
+    selectedTabIndex: Int,
+    onTabClicked: (Int) -> Unit
 ) {
     Column(
         modifier
@@ -66,8 +73,13 @@ fun TasksScreenContent(
 
         HorizontalDayPicker(
             onDateSelected = { onDateSelected(it) },
-            openDatePicker = {onShowDatePicker()}
+            openDatePicker = { onShowDatePicker() }
         )
+        Spacer(Modifier.height(8.dp))
+
+        TaskTabs(
+            selectedTabIndex = selectedTabIndex,
+            onTabClicked = { onTabClicked(it) })
     }
 
     if (showDialog) {
@@ -76,16 +88,16 @@ fun TasksScreenContent(
             onConfirm = { onDateSelected(it) }
         )
     }
-
 }
 
 @RequiresApi(Build.VERSION_CODES.O)
-@Preview
+@Preview(showBackground = true)
 @Composable
 private fun TasksScreenPreview() {
     TudeeTheme {
         TasksScreenContent(
-            onDateSelected = {}, onDismissDatePicker = {},onShowDatePicker = {}
+            onDateSelected = {}, onDismissDatePicker = {}, onShowDatePicker = {},
+            selectedTabIndex = 0, onTabClicked = { }
         )
     }
 }
