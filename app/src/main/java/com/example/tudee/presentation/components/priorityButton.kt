@@ -1,6 +1,5 @@
 package com.example.tudee.presentation.components
 
-import androidx.annotation.DrawableRes
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
@@ -13,23 +12,47 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.tudee.R
 import com.example.tudee.presentation.designSystem.theme.Theme
+import com.example.tudee.presentation.screens.home.prioritiesList
 
 @Composable
 fun PriorityButton(
     modifier: Modifier = Modifier,
-    textContent: String,
-    @DrawableRes startIcon: Int,
-    onClicked: () -> Unit = {},
-    buttonColor: Color,
-    textColor : Color = Theme.colors.hint
+    priorityLevel: Int,
+    selected: Boolean ,
+    onClicked: () -> Unit,
 ) {
+    val textContent = when (priorityLevel) {
+        0 -> stringResource(prioritiesList[0].name)
+        1 -> stringResource(prioritiesList[1].name)
+        2 -> stringResource(prioritiesList[2].name)
+        else -> stringResource(prioritiesList[0].name)
+    }
+
+    val startIcon = when (priorityLevel) {
+        0 -> prioritiesList[0].icon
+        1 -> prioritiesList[1].icon
+        2 -> prioritiesList[2].icon
+        else -> prioritiesList[0].icon
+    }
+
+    val textColor = if (selected) Theme.colors.onPrimary else Theme.colors.hint
+
+    val buttonColor = if (selected) {
+        when (priorityLevel) {
+            0 -> Theme.colors.error
+            1-> Theme.colors.yellowAccent
+            2->Theme.colors.greenAccent
+            else -> Theme.colors.surfaceLow
+        }
+    } else Theme.colors.surfaceLow
+
+
     Button(
         shape = RoundedCornerShape(50.dp),
         onClick = {
@@ -41,8 +64,8 @@ fun PriorityButton(
     ) {
         Icon(
             painter = painterResource(startIcon),
-            contentDescription = "high Priority",
-            tint = Theme.colors.hint,
+            contentDescription = stringResource(R.string.priority_high),
+            tint = textColor,
             modifier = Modifier.size(12.dp)
         )
 
@@ -60,10 +83,8 @@ fun PriorityButton(
 @Composable
 private fun PriorityButtonPreview() {
     PriorityButton(
-        textContent = stringResource(R.string.priority_high),
-        startIcon = R.drawable.ic_flag,
-        buttonColor =   Theme.colors.surfaceLow,
-        textColor =  Theme.colors.hint,
-        onClicked = { }
+        priorityLevel = 0,
+        selected = true,
+        onClicked = {  }
     )
 }

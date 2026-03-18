@@ -175,11 +175,7 @@ fun BottomSheetContent(
     var showDialog by rememberSaveable { mutableStateOf(false) }
 
 
-    val prioritiesList = listOf(
-        stringResource(R.string.priority_high),
-        stringResource(R.string.priority_medium),
-        stringResource(R.string.priority_low)
-    )
+
     Box(modifier = Modifier.fillMaxSize()) {
         LazyColumn(
             horizontalAlignment = Alignment.Start,
@@ -266,28 +262,22 @@ fun BottomSheetContent(
                 ) {
                     //High priority Button
                     PriorityButton(
-                        textContent = prioritiesList[0],
-                        startIcon = R.drawable.ic_flag,
-                        buttonColor = if (currentPriority == 0) Theme.colors.error else Theme.colors.surfaceLow,
-                        textColor = if (currentPriority == 0) Theme.colors.onPrimary else Theme.colors.hint,
+                        priorityLevel = 0,
+                        selected = currentPriority == 0,
                         onClicked = { updateCurrentPriority(0) }
                     )
 
                     //Medium priority Button
                     PriorityButton(
-                        textContent = prioritiesList[1],
-                        startIcon = R.drawable.ic_alert,
-                        buttonColor = if (currentPriority == 1) Theme.colors.yellowAccent else Theme.colors.surfaceLow,
-                        textColor = if (currentPriority == 1) Theme.colors.onPrimary else Theme.colors.hint,
+                        priorityLevel = 1,
+                        selected = currentPriority == 1,
                         onClicked = { updateCurrentPriority(1) }
                     )
 
                     //Low priority Button
                     PriorityButton(
-                        textContent = prioritiesList[2],
-                        startIcon = R.drawable.ic_trade_down,
-                        buttonColor = if (currentPriority == 2) Theme.colors.greenAccent else Theme.colors.surfaceLow,
-                        textColor = if (currentPriority == 2) Theme.colors.onPrimary else Theme.colors.hint,
+                        priorityLevel = 2,
+                        selected = currentPriority == 2,
                         onClicked = { updateCurrentPriority(2) }
                     )
                 }
@@ -349,7 +339,7 @@ fun BottomSheetContent(
         ) {
             BottomSheetButtons(
                 enableAddTaskButton = enableAddTaskButton,
-                onAddClicked = {onAddClicked()},
+                onAddClicked = { onAddClicked() },
                 onCancelBottomSheetClicked = { onCancelBottomSheetClicked(false) }
             )
         }
