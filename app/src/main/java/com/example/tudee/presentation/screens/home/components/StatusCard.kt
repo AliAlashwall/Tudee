@@ -50,7 +50,7 @@ fun StatusCard(task: TasksEntity) {
                 painterResource(R.drawable.dot),
                 contentDescription = stringResource(R.string.task_details),
                 modifier = Modifier.size(5.dp),
-                tint = Theme.colors.purpleAccent
+                tint = textColor
             )
 
             Spacer(Modifier.width(4.dp))
