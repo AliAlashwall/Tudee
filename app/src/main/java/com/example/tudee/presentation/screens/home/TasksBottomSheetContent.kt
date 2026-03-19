@@ -37,26 +37,28 @@ import com.example.tudee.presentation.components.TudeeTextField
 import com.example.tudee.presentation.components.bottomSheet.BottomSheetButtons
 import com.example.tudee.presentation.designSystem.theme.Theme
 import com.example.tudee.presentation.designSystem.theme.TudeeTheme
-import com.example.tudee.presentation.screens.category.Category
 import com.example.tudee.presentation.screens.category.TudeeCategories.categoriesList
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun AddTaskBottomSheetContent(
+fun TasksBottomSheetContent(
     modifier: Modifier = Modifier,
+    sheetTitle: String = stringResource(R.string.add_new_task),
+    primaryButtonText: String = stringResource(R.string.add_bottom_sheet),
+    secondaryButtonText: String = stringResource(R.string.cancel_bottom_sheet),
     newTaskTitle: String,
     newDescription: String,
     currentPriority: Int?,
     selectedDate: String,
-    selectedCategory: Category?,
+    selectedCategoryIcon: Int?,
     onNewTaskTitleChange: (String) -> Unit,
     onNewDescriptionChange: (String) -> Unit,
     updateCurrentPriority: (Int) -> Unit,
     updateSelectedDate: (String) -> Unit,
-    onClickCategory: (Category) -> Unit,
-    enableAddTaskButton: Boolean,
+    onClickCategory: (Int) -> Unit,
+    enablePrimaryTaskButton: Boolean,
     onCancelBottomSheetClicked: (Boolean) -> Unit,
-    onAddClicked: () -> Unit
+    onPrimaryButtonClicked: () -> Unit
 ) {
     // Persist dialog state across configuration changes
     var showDialog by rememberSaveable { mutableStateOf(false) }
@@ -70,7 +72,7 @@ fun AddTaskBottomSheetContent(
         ) {
             item {
                 Text(
-                    text = stringResource(R.string.add_new_task),
+                    text = sheetTitle,
                     modifier = Modifier.fillMaxWidth(),
                     textAlign = TextAlign.Start,
                     style = Theme.textStyle.title.large,
@@ -195,13 +197,13 @@ fun AddTaskBottomSheetContent(
                         CategoryCard(
                             icon = painterResource(id = category.icon),
                             label = category.name,
-                            selected = (categoryIndex == categoriesList.indexOf(selectedCategory)),
+                            selected = (category.icon == selectedCategoryIcon),
                             showCount = false,
                             iconTint = Color.Unspecified,
                             isPredefined = true,
                             modifier = Modifier
                                 .padding(bottom = bottomPadding),
-                            onClickCategory = { onClickCategory(category) }
+                            onClickCategory = { onClickCategory(category.icon) }
                         )
 
                     }
@@ -223,9 +225,11 @@ fun AddTaskBottomSheetContent(
                 .fillMaxWidth()
         ) {
             BottomSheetButtons(
-                enableAddTaskButton = enableAddTaskButton,
-                onAddClicked = { onAddClicked() },
-                onCancelBottomSheetClicked = { onCancelBottomSheetClicked(false) }
+                enableAddTaskButton = enablePrimaryTaskButton,
+                onPrimaryButtonClicked = { onPrimaryButtonClicked() },
+                onCancelBottomSheetClicked = { onCancelBottomSheetClicked(false) },
+                primaryButtonText = primaryButtonText,
+                secondaryButtonText = secondaryButtonText
             )
         }
     }
@@ -235,22 +239,22 @@ fun AddTaskBottomSheetContent(
 @RequiresApi(Build.VERSION_CODES.O)
 @Preview(showBackground = true)
 @Composable
-private fun AddTaskBottomSheetContentPreview() {
+private fun TasksBottomSheetContentPreview() {
     TudeeTheme {
-        AddTaskBottomSheetContent(
+        TasksBottomSheetContent(
             newTaskTitle = "",
             newDescription = "",
             currentPriority = 0,
-            enableAddTaskButton = false,
+            enablePrimaryTaskButton = false,
             selectedDate = "",
-            selectedCategory = null,
+            selectedCategoryIcon = null,
             onNewTaskTitleChange = {},
             onNewDescriptionChange = {},
             updateCurrentPriority = {},
             updateSelectedDate = {},
             onClickCategory = {},
             onCancelBottomSheetClicked = {},
-            onAddClicked = {}
+            onPrimaryButtonClicked = {}
         )
     }
 }

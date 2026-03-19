@@ -57,7 +57,7 @@ fun TaskDetailsBottomSheetContent(
         )
         Spacer(Modifier.height(12.dp))
         CategoryCard(
-            icon = painterResource(task.icon),
+            icon = painterResource(task.categoryIcon),
             label = "",
             count = null,
             showCount = false,
@@ -139,10 +139,11 @@ private fun TaskDetailsBottomSheetContentPreview() {
     TaskDetailsBottomSheetContent(
         task = TasksEntity(
             title = "Organize Study Desk",
-            icon = R.drawable.ic_book_open,
+            categoryIcon = R.drawable.ic_book_open,
             description = "Solve all exercises from page 45 to 50 in the textbook, Solve all exercises from page 45 to 50 in the textbook.",
             priority = 0,
-            status = TaskStatus.TO_DO.label
+            status = TaskStatus.TO_DO.label,
+            date = "22-6-2025"
         ),
         onMoveButtonClicked = {},
         onEditButtonClicked = {}

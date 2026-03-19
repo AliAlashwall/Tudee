@@ -21,8 +21,10 @@ import com.example.tudee.presentation.designSystem.theme.Theme
 fun BottomSheetButtons(
     modifier: Modifier = Modifier,
     enableAddTaskButton: Boolean,
-    onAddClicked: () -> Unit,
-    onCancelBottomSheetClicked: (Boolean) -> Unit
+    onPrimaryButtonClicked: () -> Unit,
+    onCancelBottomSheetClicked: (Boolean) -> Unit,
+    primaryButtonText: String = stringResource(R.string.add_bottom_sheet),
+    secondaryButtonText: String = stringResource(R.string.cancel_bottom_sheet)
 ) {
     Column(
         modifier = modifier
@@ -31,8 +33,8 @@ fun BottomSheetButtons(
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         TudeeTextButton(
-            text = stringResource(R.string.add_bottom_sheet),
-            onClick = { onAddClicked() },
+            text = primaryButtonText,
+            onClick = { onPrimaryButtonClicked() },
             modifier = Modifier
                 .height(56.dp)
                 .background(
@@ -45,7 +47,7 @@ fun BottomSheetButtons(
         )
 
         TudeeTextButton(
-            text = stringResource(R.string.cancel_bottom_sheet),
+            text = secondaryButtonText,
             onClick = { onCancelBottomSheetClicked(false) },
             modifier = Modifier
                 .height(56.dp)
