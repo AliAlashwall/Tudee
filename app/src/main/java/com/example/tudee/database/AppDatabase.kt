@@ -7,7 +7,7 @@ import androidx.room.RoomDatabase
 import com.example.tudee.database.dao.TasksDao
 import com.example.tudee.database.entity.TasksEntity
 
-@Database(entities = [TasksEntity::class], version = 5, exportSchema = false)
+@Database(entities = [TasksEntity::class], version = 1, exportSchema = false)
 
 abstract class AppDatabase : RoomDatabase() {
 
@@ -21,7 +21,7 @@ abstract class AppDatabase : RoomDatabase() {
 
             INSTANCE ?: synchronized(this) {
 
-                Room.databaseBuilder(context, AppDatabase::class.java, "app_db")
+                Room.databaseBuilder(context, AppDatabase::class.java, "db")
                     .fallbackToDestructiveMigration(false)
                     .build()
                     .also { INSTANCE = it }
