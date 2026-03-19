@@ -121,4 +121,6 @@
     <string name="self_care">self-care</string>
     <string name="event">event</string>
     <string name="no_tasks_in_reading_category">No tasks in %1$s category!</string>
+    <string name="move_to_done">Move to done</string>
+    <string name="move_to_in_progress">Move to in progress</string>
 </resources>
