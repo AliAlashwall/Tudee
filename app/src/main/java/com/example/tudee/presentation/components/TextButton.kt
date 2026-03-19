@@ -31,14 +31,13 @@ fun TudeeTextButton(
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center,
-        modifier = modifier
+        modifier = modifier .clickable(onClick = onClick)
     ) {
         TudeeText(
             text = text,
             style = style,
             color = colors,
             modifier = Modifier
-                .clickable(onClick = onClick)
                 .padding(8.dp),
             textAlign = TextAlign.Center
         )
