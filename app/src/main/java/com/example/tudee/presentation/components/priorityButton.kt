@@ -24,8 +24,8 @@ import com.example.tudee.presentation.screens.home.prioritiesList
 fun PriorityButton(
     modifier: Modifier = Modifier,
     priorityLevel: Int,
-    selected: Boolean ,
-    onClicked: () -> Unit,
+    selected: Boolean,
+    onClicked: () -> Unit = {},
 ) {
     val textContent = when (priorityLevel) {
         0 -> stringResource(prioritiesList[0].name)
@@ -45,9 +45,9 @@ fun PriorityButton(
 
     val buttonColor = if (selected) {
         when (priorityLevel) {
-            0 -> Theme.colors.error
-            1-> Theme.colors.yellowAccent
-            2->Theme.colors.greenAccent
+            0 -> Theme.colors.pinkAccent
+            1 -> Theme.colors.yellowAccent
+            2 -> Theme.colors.greenAccent
             else -> Theme.colors.surfaceLow
         }
     } else Theme.colors.surfaceLow
@@ -85,6 +85,6 @@ private fun PriorityButtonPreview() {
     PriorityButton(
         priorityLevel = 0,
         selected = true,
-        onClicked = {  }
+        onClicked = { }
     )
 }
