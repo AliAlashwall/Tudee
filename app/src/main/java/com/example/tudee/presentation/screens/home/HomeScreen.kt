@@ -2,6 +2,7 @@ package com.example.tudee.presentation.screens.home
 
 import android.annotation.SuppressLint
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -39,6 +40,7 @@ import com.example.tudee.presentation.components.TaskCard
 import com.example.tudee.presentation.components.bottomSheet.TudeeBottomSheet
 import com.example.tudee.presentation.designSystem.theme.Theme
 import com.example.tudee.presentation.designSystem.theme.TudeeTheme
+import kotlin.Int
 
 @RequiresApi(Build.VERSION_CODES.O)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -53,6 +55,10 @@ fun HomeScreen(
 
     val allTasks = homeViewModel.allTasks.collectAsStateWithLifecycle().value
     val homeUiState = homeViewModel.homeUiState.collectAsStateWithLifecycle().value
+    LaunchedEffect(allTasks) {
+        homeViewModel.updateOverviewCounter(allTasks)
+            Log.i("PO", "HomeScreen: updateOverviewCounter RECOMPOSED !!!!")
+    }
     Scaffold(
         containerColor = Theme.colors.surface,
         floatingActionButton = {
@@ -81,6 +87,9 @@ fun HomeScreen(
                 currentDate = homeUiState.currentDate,
                 allTasks = allTasks,
                 onTaskClicked = { homeViewModel.onTaskClicked(it) },
+                todoTasksCount = homeUiState.todoTasksCount,
+                inProgressTasksCount = homeUiState.inProgressTasksCount,
+                doneTasksCount = homeUiState.doneTasksCount,
             )
 
             if (homeUiState.showAddBottomSheet) {
@@ -157,6 +166,9 @@ fun HomeScreenContent(
     currentDate: String,
     allTasks: List<TasksEntity>,
     onTaskClicked: (TasksEntity) -> Unit,
+    todoTasksCount: Int,
+    inProgressTasksCount: Int,
+    doneTasksCount: Int
 ) {
     Box {
         Box(
@@ -178,7 +190,10 @@ fun HomeScreenContent(
                 statusIconId = R.drawable.ic_status_neutral,
                 tudeeStatusImgId = R.drawable.im_robot_neutral,
                 notificationTitle = stringResource(R.string.stay_working),
-                notificationDescription = stringResource(R.string.stay_working_description)
+                notificationDescription = stringResource(R.string.stay_working_description),
+                todoTasksCount = todoTasksCount,
+                inProgressTasksCount = inProgressTasksCount,
+                doneTasksCount = doneTasksCount,
             )
 
             Spacer(Modifier.height(48.dp))
@@ -213,8 +228,8 @@ private fun HomeScreenPreview() {
             allTasks = listOf(
                 TasksEntity(
                     id = 1,
-                    title = "po",
-                    description = "sdfsafgsagfdg",
+                    title = "First",
+                    description = "First description",
                     categoryIcon = (R.drawable.ic_quran),
                     priority = 0,
                     status = TaskStatus.TO_DO.label,
@@ -222,6 +237,9 @@ private fun HomeScreenPreview() {
                 )
             ),
             onTaskClicked = {},
+            todoTasksCount = 0,
+            inProgressTasksCount = 0,
+            doneTasksCount = 0
         )
     }
 }

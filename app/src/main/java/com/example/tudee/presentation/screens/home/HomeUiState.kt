@@ -12,7 +12,10 @@ data class HomeUiState(
     var currentDate: String = "22-6-2025",
     var currentPriority: Int? = null,
     var selectedCategoryIcon: Int? = null,
-    var selectedTask: TasksEntity? = null
+    var selectedTask: TasksEntity? = null,
+    val todoTasksCount: Int = 0,
+    val inProgressTasksCount: Int = 0,
+    val doneTasksCount: Int = 0
 )
 
 

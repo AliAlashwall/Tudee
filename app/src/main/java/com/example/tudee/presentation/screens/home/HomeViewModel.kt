@@ -31,6 +31,18 @@ class HomeViewModel(val tasksDao: TasksDao) : ViewModel() {
         }
     }
 
+    fun updateOverviewCounter(allTasks: List<TasksEntity>) {
+        val counts = allTasks.groupingBy { it.status }.eachCount()
+
+        homeUiState.update {
+            it.copy(
+                todoTasksCount = counts[TaskStatus.TO_DO.label] ?: 0,
+                inProgressTasksCount = counts[TaskStatus.IN_PROGRESS.label] ?: 0,
+                doneTasksCount = counts[TaskStatus.DONE.label] ?: 0
+            )
+        }
+    }
+
     fun onNewTaskDescriptionChange(newDescription: String) {
         homeUiState.update {
             it.copy(newDescription = newDescription)

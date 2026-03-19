@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import com.example.tudee.R
 import com.example.tudee.presentation.designSystem.theme.Theme
 import com.example.tudee.presentation.designSystem.theme.TudeeTheme
+import com.example.tudee.presentation.screens.home.TaskStatus
 
 @Composable
 fun OverviewCard(
@@ -37,7 +38,10 @@ fun OverviewCard(
     @DrawableRes statusIconId: Int,
     @DrawableRes tudeeStatusImgId: Int,
     notificationTitle: String,
-    notificationDescription: String
+    notificationDescription: String,
+    todoTasksCount: Int = 0,
+    inProgressTasksCount: Int = 0,
+    doneTasksCount: Int = 0
 ) {
     Card(
         colors = CardDefaults.cardColors(Theme.colors.surfaceHigh),
@@ -124,21 +128,24 @@ fun OverviewCard(
             verticalAlignment = Alignment.CenterVertically
         ) {
             ProgressOverviewCard(
+                state = TaskStatus.DONE.label,
                 cardColor = Theme.colors.greenAccent,
                 icon = R.drawable.ic_done_tasks,
-                progressCount = 0
+                progressCount = doneTasksCount
             )
 
             ProgressOverviewCard(
+                state = TaskStatus.IN_PROGRESS.label,
                 cardColor = Theme.colors.yellowAccent,
                 icon = R.drawable.ic_in_progress_tasks,
-                progressCount = 0
+                progressCount = inProgressTasksCount
             )
 
             ProgressOverviewCard(
+                state = TaskStatus.TO_DO.label,
                 cardColor = Theme.colors.purpleAccent,
                 icon = R.drawable.ic_to_do_tasks,
-                progressCount = 0
+                progressCount = todoTasksCount
             )
 
         }
@@ -153,7 +160,8 @@ fun ProgressOverviewCard(
     modifier: Modifier = Modifier,
     cardColor: Color = Theme.colors.greenAccent,
     @DrawableRes icon: Int = R.drawable.ic_done_tasks,
-    progressCount: Int = 0
+    progressCount: Int = 0,
+    state: String
 ) {
     Box(modifier = modifier.size(96.dp, 110.dp)) {
 
@@ -193,7 +201,7 @@ fun ProgressOverviewCard(
                     color = Theme.colors.onPrimary
                 )
                 Text(
-                    text = "Done",
+                    text = state,
                     style = Theme.textStyle.label.small,
                     color = Theme.colors.onPrimaryCaption
                 )
@@ -206,7 +214,7 @@ fun ProgressOverviewCard(
 @Composable
 private fun ProgressOverviewCardPreview() {
     TudeeTheme {
-        ProgressOverviewCard()
+        ProgressOverviewCard(state = "Done")
     }
 }
 
