@@ -274,7 +274,7 @@ fun BottomSheetContent(
         }
         BottomSheetButtons(
             enableAddTaskButton = enableAddTaskButton,
-            onAddClicked = { onAddClicked() },
+            onPrimaryButtonClicked = { onAddClicked() },
             onCancelBottomSheetClicked = { onCancelBottomSheetClicked(false) }
         )
     }

@@ -1,14 +1,18 @@
 package com.example.tudee.presentation.screens.home
 
+import com.example.tudee.database.entity.TasksEntity
+
 data class HomeUiState(
     var newTaskTitle: String = "",
     var newDescription: String = "",
-    var showBottomSheet: Boolean = false,
+    var showAddBottomSheet: Boolean = false,
+    var showEditTaskBottomSheet: Boolean = false,
+    var showDetailsBottomSheet: Boolean = false,
     var selectedDate: String = "22-6-2025",
     var currentDate: String = "22-6-2025",
     var currentPriority: Int? = null,
-    var selectedCategory: Int? = null,
-
+    var selectedCategoryIcon: Int? = null,
+    var selectedTask: TasksEntity? = null
 )
 
 

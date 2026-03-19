@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Update
 import com.example.tudee.database.entity.TasksEntity
 import kotlinx.coroutines.flow.Flow
 
@@ -14,7 +15,11 @@ interface TasksDao {
 
 
     @Insert
-    suspend fun insert(task: TasksEntity)
+    suspend fun insertTask(task: TasksEntity)
+
+    @Update
+    suspend fun updateTask(task: TasksEntity)
+
 
     @Delete
     suspend fun deleteTask(task: TasksEntity)

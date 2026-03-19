@@ -6,6 +6,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -16,12 +17,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.tudee.database.AppDatabase
 import com.example.tudee.navigation.AppNavHost
 import com.example.tudee.navigation.Screens
 import com.example.tudee.presentation.TudeeViewModel
 import com.example.tudee.presentation.components.BottomNavBar
 import com.example.tudee.presentation.designSystem.theme.Theme
 import com.example.tudee.presentation.designSystem.theme.TudeeTheme
+import com.example.tudee.presentation.screens.home.HomeViewModel
+import com.example.tudee.presentation.screens.home.TaskViewModelFactory
 
 //https://www.figma.com/design/Kc0YU5ycMGzo48f0suelUc/Tudee?node-id=4-138&p=f&t=JzUjibAXo4u2ypgb-0
 class MainActivity : ComponentActivity() {
@@ -49,13 +53,17 @@ class MainActivity : ComponentActivity() {
                     containerColor = Color.Transparent,
                     contentColor = Theme.colors.overlay,
                 ) { innerPadding ->
+                    val dao = AppDatabase.getInstance(applicationContext).tasksDao()
+                    val homeViewModel: HomeViewModel by viewModels { TaskViewModelFactory(dao) }
                     AppNavHost(
                         navController = navController,
                         modifier = Modifier.padding(innerPadding),
-                        tudeeViewModel = TudeeViewModel(context = LocalContext.current)
+                        tudeeViewModel = TudeeViewModel(context = LocalContext.current),
+                        homeViewModel = homeViewModel
                     )
                 }
             }
         }
+
     }
 }
