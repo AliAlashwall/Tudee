@@ -15,12 +15,12 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.tudee.presentation.TudeeViewModel
-import com.example.tudee.presentation.screens.tasks.TasksScreen
 import com.example.tudee.presentation.screens.category.CategoriesScreen
 import com.example.tudee.presentation.screens.category.CategoryViewModel
 import com.example.tudee.presentation.screens.home.HomeScreen
 import com.example.tudee.presentation.screens.home.HomeViewModel
 import com.example.tudee.presentation.screens.onBoarding.OnBoardingScreen
+import com.example.tudee.presentation.screens.tasks.TasksScreen
 import com.example.tudee.presentation.screens.tasks.TasksViewModel
 
 sealed class Screens(val route: String) {
@@ -37,7 +37,8 @@ sealed class Screens(val route: String) {
 fun AppNavHost(
     navController: NavHostController,
     modifier: Modifier,
-    tudeeViewModel: TudeeViewModel
+    tudeeViewModel: TudeeViewModel,
+    homeViewModel: HomeViewModel
 ) {
 
     val isOnboardingCompleted by tudeeViewModel.isOnboardingCompleted.collectAsState()
@@ -49,7 +50,6 @@ fun AppNavHost(
         }
         return
     }
-
     NavHost(
         navController = navController,
         startDestination = if (isOnboardingCompleted == true) {
@@ -64,7 +64,7 @@ fun AppNavHost(
         }
 
         composable(route = Screens.Home.route) {
-            val homeViewModel = HomeViewModel()
+
             HomeScreen(navController = navController, homeViewModel = homeViewModel)
         }
 
