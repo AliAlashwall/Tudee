@@ -1,6 +1,7 @@
 package com.example.tudee.presentation.components
 
 import androidx.annotation.DrawableRes
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -30,10 +31,11 @@ fun TaskCard(
     @DrawableRes taskIcon: Int,
     priorityLevel: Int,
     title: String,
-    body: String
+    description: String,
+    onClick: () -> Unit = {},
 ) {
     Card(
-        modifier = Modifier
+        modifier = Modifier.clickable{onClick()}
             .height(111.dp)
             .fillMaxWidth(),
         colors = CardDefaults.cardColors(Theme.colors.surfaceHigh),
@@ -63,6 +65,7 @@ fun TaskCard(
                     onClicked = {}
                 )
             }
+            Spacer(Modifier.height(16.dp))
             Text(
                 text = title,
                 color = Theme.colors.body,
@@ -70,7 +73,7 @@ fun TaskCard(
             )
 
             Text(
-                text = body,
+                text = description,
                 color = Theme.colors.hint,
                 style = Theme.textStyle.label.small,
                 maxLines = 1
@@ -86,7 +89,7 @@ private fun TaskCardPreview() {
         TaskCard(
             taskIcon = R.drawable.ic_quran,
             title = "Organize Study Desk",
-            body = "Review cell structure and functions for tomorrow...",
+            description = "Review cell structure and functions for tomorrow...",
             priorityLevel = 0
         )
     }
