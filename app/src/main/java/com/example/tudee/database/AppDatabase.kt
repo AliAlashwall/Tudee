@@ -7,7 +7,7 @@ import androidx.room.RoomDatabase
 import com.example.tudee.database.dao.TasksDao
 import com.example.tudee.database.entity.TasksEntity
 
-@Database(entities = [TasksEntity::class], version = 1, exportSchema = false)
+@Database(entities = [TasksEntity::class], version = 2, exportSchema = false)
 
 abstract class AppDatabase : RoomDatabase() {
 

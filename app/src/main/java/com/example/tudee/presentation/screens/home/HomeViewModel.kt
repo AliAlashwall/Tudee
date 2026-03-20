@@ -5,6 +5,7 @@ import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.example.tudee.R
 import com.example.tudee.database.dao.TasksDao
 import com.example.tudee.database.entity.TasksEntity
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -31,7 +32,12 @@ class HomeViewModel(val tasksDao: TasksDao) : ViewModel() {
         }
     }
 
-    fun updateOverviewCounter(allTasks: List<TasksEntity>) {
+    fun updateOverviewSection(allTasks: List<TasksEntity>) {
+        updateOverviewCounter(allTasks)
+        updateOverviewNotification()
+    }
+
+    private fun updateOverviewCounter(allTasks: List<TasksEntity>) {
         val counts = allTasks.groupingBy { it.status }.eachCount()
 
         homeUiState.update {
@@ -42,6 +48,39 @@ class HomeViewModel(val tasksDao: TasksDao) : ViewModel() {
             )
         }
     }
+
+    private fun updateOverviewNotification() {
+        val state = homeUiState.value
+        val todo = state.todoTasksCount
+        val inProgress = state.inProgressTasksCount
+        val done = state.doneTasksCount
+
+        val (title, description, icon) = when {
+            todo == 0 && inProgress == 0 && done == 0 -> Triple(
+                "Nothing on your list...",
+                "Fill your day with something awesome.",
+                R.drawable.ic_status_sad
+            )
+            todo == 0 && inProgress == 0 && done != 0 -> Triple(
+                "Tadaa!",
+                "You're doing amazing!!!\nTudee is proud of you.",
+                R.drawable.ic_status_happy
+            )
+            todo != 0 && inProgress == 0 && done == 0 -> Triple(
+                "Zero progress?!",
+                "You just scrolling, not working. Tudee is watching. back to work!!!",
+                R.drawable.ic_status_angry
+            )
+            else -> Triple(
+                "Stay working",
+                "You've completed $done out of ${inProgress + todo + done} tasks. Keep going!",
+                R.drawable.ic_status_neutral
+            )
+        }
+
+        homeUiState.update { it.copy(notificationTitle = title, notificationDescription = description, notificationIcon = icon) }
+    }
+
 
     fun onNewTaskDescriptionChange(newDescription: String) {
         homeUiState.update {

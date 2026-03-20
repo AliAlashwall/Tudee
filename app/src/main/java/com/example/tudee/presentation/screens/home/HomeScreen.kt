@@ -56,8 +56,8 @@ fun HomeScreen(
     val allTasks = homeViewModel.allTasks.collectAsStateWithLifecycle().value
     val homeUiState = homeViewModel.homeUiState.collectAsStateWithLifecycle().value
     LaunchedEffect(allTasks) {
-        homeViewModel.updateOverviewCounter(allTasks)
-            Log.i("PO", "HomeScreen: updateOverviewCounter RECOMPOSED !!!!")
+        homeViewModel.updateOverviewSection(allTasks)
+        Log.i("PO", "HomeScreen: updateOverviewCounter RECOMPOSED !!!!")
     }
     Scaffold(
         containerColor = Theme.colors.surface,
@@ -86,6 +86,10 @@ fun HomeScreen(
             HomeScreenContent(
                 currentDate = homeUiState.currentDate,
                 allTasks = allTasks,
+                statusIconId = homeUiState.notificationIcon,
+                tudeeStatusImgId = R.drawable.im_robot_neutral,
+                notificationTitle = homeUiState.notificationTitle,
+                notificationDescription = homeUiState.notificationDescription,
                 onTaskClicked = { homeViewModel.onTaskClicked(it) },
                 todoTasksCount = homeUiState.todoTasksCount,
                 inProgressTasksCount = homeUiState.inProgressTasksCount,
@@ -125,7 +129,8 @@ fun HomeScreen(
                     TaskDetailsBottomSheetContent(
                         task = homeUiState.selectedTask!!,
                         onMoveButtonClicked = { homeViewModel.onMoveTaskStatusClicked(homeUiState.selectedTask!!) },
-                        onEditButtonClicked = { homeViewModel.onEditTaskClicked() }
+                        onEditButtonClicked = { homeViewModel.onEditTaskClicked() },
+                        modifier = Modifier.heightIn(max = 373.dp)
                     )
                 }
             }
@@ -164,6 +169,10 @@ fun HomeScreen(
 fun HomeScreenContent(
     modifier: Modifier = Modifier,
     currentDate: String,
+    statusIconId: Int,
+    tudeeStatusImgId: Int,
+    notificationTitle: String,
+    notificationDescription: String,
     allTasks: List<TasksEntity>,
     onTaskClicked: (TasksEntity) -> Unit,
     todoTasksCount: Int,
@@ -187,10 +196,10 @@ fun HomeScreenContent(
 
             OverviewCard(
                 currentDate = "today, $currentDate",
-                statusIconId = R.drawable.ic_status_neutral,
-                tudeeStatusImgId = R.drawable.im_robot_neutral,
-                notificationTitle = stringResource(R.string.stay_working),
-                notificationDescription = stringResource(R.string.stay_working_description),
+                statusIconId = statusIconId,
+                tudeeStatusImgId = tudeeStatusImgId,
+                notificationTitle = notificationTitle,
+                notificationDescription = notificationDescription,
                 todoTasksCount = todoTasksCount,
                 inProgressTasksCount = inProgressTasksCount,
                 doneTasksCount = doneTasksCount,
@@ -236,6 +245,10 @@ private fun HomeScreenPreview() {
                     date = "22-6-2025"
                 )
             ),
+            statusIconId = 0,
+            tudeeStatusImgId = 0,
+            notificationTitle = "",
+            notificationDescription = "",
             onTaskClicked = {},
             todoTasksCount = 0,
             inProgressTasksCount = 0,

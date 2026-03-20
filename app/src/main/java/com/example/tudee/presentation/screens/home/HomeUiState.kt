@@ -1,5 +1,6 @@
 package com.example.tudee.presentation.screens.home
 
+import com.example.tudee.R
 import com.example.tudee.database.entity.TasksEntity
 
 data class HomeUiState(
@@ -15,7 +16,10 @@ data class HomeUiState(
     var selectedTask: TasksEntity? = null,
     val todoTasksCount: Int = 0,
     val inProgressTasksCount: Int = 0,
-    val doneTasksCount: Int = 0
+    val doneTasksCount: Int = 0,
+    val notificationTitle: String = "title empty",
+    val notificationDescription: String = "desc empty",
+    val notificationIcon: Int = R.drawable.ic_status_neutral,
 )
 
 
