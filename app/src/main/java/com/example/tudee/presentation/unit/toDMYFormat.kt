@@ -8,6 +8,6 @@ import java.time.format.DateTimeFormatter
 // Extension function for formatting
 @RequiresApi(Build.VERSION_CODES.O)
 fun LocalDate.toDMYFormat(): String {
-    val formatter = DateTimeFormatter.ofPattern("d-M-yyyy")
+    val formatter = DateTimeFormatter.ofPattern("dd MMM yyyy")
     return this.format(formatter)
 }

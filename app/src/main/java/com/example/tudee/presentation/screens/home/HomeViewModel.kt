@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.tudee.R
 import com.example.tudee.database.dao.TasksDao
 import com.example.tudee.database.entity.TasksEntity
+import com.example.tudee.presentation.unit.toDMYFormat
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -15,7 +16,6 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 
 @RequiresApi(Build.VERSION_CODES.O)
 class HomeViewModel(val tasksDao: TasksDao) : ViewModel() {
@@ -38,22 +38,27 @@ class HomeViewModel(val tasksDao: TasksDao) : ViewModel() {
     }
 
     private fun updateOverviewCounter(allTasks: List<TasksEntity>) {
-        val counts = allTasks.groupingBy { it.status }.eachCount()
+        val counts = allTasks.groupBy { it.status }
+        val todoTasks = counts[TaskStatus.TO_DO.label]
+        val inProgressTasks = counts[TaskStatus.IN_PROGRESS.label]
+        val doneTasks = counts[TaskStatus.DONE.label]
+
+
 
         homeUiState.update {
             it.copy(
-                todoTasksCount = counts[TaskStatus.TO_DO.label] ?: 0,
-                inProgressTasksCount = counts[TaskStatus.IN_PROGRESS.label] ?: 0,
-                doneTasksCount = counts[TaskStatus.DONE.label] ?: 0
+                todoTasksCount = todoTasks,
+                inProgressTasksCount = inProgressTasks,
+                doneTasksCount = doneTasks
             )
         }
     }
 
     private fun updateOverviewNotification() {
         val state = homeUiState.value
-        val todo = state.todoTasksCount
-        val inProgress = state.inProgressTasksCount
-        val done = state.doneTasksCount
+        val todo = state.todoTasksCount?.size ?: 0
+        val inProgress = state.inProgressTasksCount?.size ?: 0
+        val done = state.doneTasksCount?.size ?: 0
 
         val (title, description, icon) = when {
             todo == 0 && inProgress == 0 && done == 0 -> Triple(
@@ -61,16 +66,19 @@ class HomeViewModel(val tasksDao: TasksDao) : ViewModel() {
                 "Fill your day with something awesome.",
                 R.drawable.ic_status_sad
             )
+
             todo == 0 && inProgress == 0 && done != 0 -> Triple(
                 "Tadaa!",
                 "You're doing amazing!!!\nTudee is proud of you.",
                 R.drawable.ic_status_happy
             )
+
             todo != 0 && inProgress == 0 && done == 0 -> Triple(
                 "Zero progress?!",
                 "You just scrolling, not working. Tudee is watching. back to work!!!",
                 R.drawable.ic_status_angry
             )
+
             else -> Triple(
                 "Stay working",
                 "You've completed $done out of ${inProgress + todo + done} tasks. Keep going!",
@@ -78,7 +86,13 @@ class HomeViewModel(val tasksDao: TasksDao) : ViewModel() {
             )
         }
 
-        homeUiState.update { it.copy(notificationTitle = title, notificationDescription = description, notificationIcon = icon) }
+        homeUiState.update {
+            it.copy(
+                notificationTitle = title,
+                notificationDescription = description,
+                notificationIcon = icon
+            )
+        }
     }
 
 
@@ -96,7 +110,7 @@ class HomeViewModel(val tasksDao: TasksDao) : ViewModel() {
 
 
     fun getCurrentDate() {
-        val currDate = LocalDate.now().format(DateTimeFormatter.ofPattern("dd MMM yyyy"))
+        val currDate = LocalDate.now().toDMYFormat()
         homeUiState.update {
             it.copy(currentDate = currDate, selectedDate = currDate)
         }
