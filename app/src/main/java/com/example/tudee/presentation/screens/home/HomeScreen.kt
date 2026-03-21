@@ -6,7 +6,6 @@ import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -16,11 +15,13 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
@@ -40,10 +41,8 @@ import com.example.tudee.presentation.components.TaskCard
 import com.example.tudee.presentation.components.bottomSheet.TudeeBottomSheet
 import com.example.tudee.presentation.designSystem.theme.Theme
 import com.example.tudee.presentation.designSystem.theme.TudeeTheme
-import kotlin.Int
 
 @RequiresApi(Build.VERSION_CODES.O)
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier, navController: NavController,
@@ -53,14 +52,20 @@ fun HomeScreen(
         homeViewModel.getCurrentDate()
     }
 
-    val allTasks = homeViewModel.allTasks.collectAsStateWithLifecycle().value
+    val allDayTasks =
+        homeViewModel.allTasks.collectAsStateWithLifecycle().value
+            .filter { it.date == homeViewModel.homeUiState.value.currentDate }
     val homeUiState = homeViewModel.homeUiState.collectAsStateWithLifecycle().value
-    LaunchedEffect(allTasks) {
-        homeViewModel.updateOverviewSection(allTasks)
+
+    LaunchedEffect(allDayTasks) {
+        homeViewModel.updateOverviewSection(allDayTasks)
         Log.i("PO", "HomeScreen: updateOverviewCounter RECOMPOSED !!!!")
     }
     Scaffold(
         containerColor = Theme.colors.surface,
+        topBar = {
+            HomeTopBar()
+        },
         floatingActionButton = {
             FloatingActionButton(
                 onClick = { homeViewModel.onFABClicked() },
@@ -76,24 +81,25 @@ fun HomeScreen(
                 )
             }
         })
-    {
+    { paddingValues ->
         Column(
             modifier = modifier
-                .fillMaxSize(),
+                .fillMaxSize()
+                .padding(paddingValues),
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             HomeScreenContent(
                 currentDate = homeUiState.currentDate,
-                allTasks = allTasks,
+                allTasks = allDayTasks,
                 statusIconId = homeUiState.notificationIcon,
                 tudeeStatusImgId = R.drawable.im_robot_neutral,
                 notificationTitle = homeUiState.notificationTitle,
                 notificationDescription = homeUiState.notificationDescription,
                 onTaskClicked = { homeViewModel.onTaskClicked(it) },
-                todoTasksCount = homeUiState.todoTasksCount,
-                inProgressTasksCount = homeUiState.inProgressTasksCount,
-                doneTasksCount = homeUiState.doneTasksCount,
+                todoTasks = homeUiState.todoTasksCount,
+                inProgressTasks = homeUiState.inProgressTasksCount,
+                doneTasks = homeUiState.doneTasksCount,
             )
 
             if (homeUiState.showAddBottomSheet) {
@@ -175,52 +181,132 @@ fun HomeScreenContent(
     notificationDescription: String,
     allTasks: List<TasksEntity>,
     onTaskClicked: (TasksEntity) -> Unit,
-    todoTasksCount: Int,
-    inProgressTasksCount: Int,
-    doneTasksCount: Int
+    todoTasks: List<TasksEntity>?,
+    inProgressTasks: List<TasksEntity>?,
+    doneTasks: List<TasksEntity>?
 ) {
-    Box {
-        Box(
-            modifier = modifier
-                .fillMaxWidth()
-                .height(167.dp)
-                .background(Theme.colors.primary)
-        )
-
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp)
-        ) {
-            HomeTopBar(modifier = Modifier.padding(vertical = 12.dp))
-
+    LazyColumn(
+        modifier = Modifier.fillMaxWidth(),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        item {
             OverviewCard(
                 currentDate = "today, $currentDate",
                 statusIconId = statusIconId,
                 tudeeStatusImgId = tudeeStatusImgId,
                 notificationTitle = notificationTitle,
                 notificationDescription = notificationDescription,
-                todoTasksCount = todoTasksCount,
-                inProgressTasksCount = inProgressTasksCount,
-                doneTasksCount = doneTasksCount,
+                todoTasksCount = todoTasks?.size ?: 0,
+                inProgressTasksCount = inProgressTasks?.size ?: 0,
+                doneTasksCount = doneTasks?.size ?: 0,
             )
+        }
 
-            Spacer(Modifier.height(48.dp))
+        item { Spacer(Modifier.height(16.dp)) }
 
-            if (allTasks.isNotEmpty()) {
-                LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    items(allTasks) { task ->
-                        TaskCard(
-                            taskIcon = task.categoryIcon,
-                            priorityLevel = task.priority,
-                            title = task.title,
-                            description = task.description,
-                            onClick = { onTaskClicked(task) }
-                        )
+        if (allTasks.isNotEmpty()) {
+
+            if (inProgressTasks != null) {
+                item {
+                    Text(
+                        text = stringResource(R.string.in_progress_status),
+                        style = Theme.textStyle.title.large,
+                        color = Theme.colors.title,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp)
+                    )
+                    Spacer(Modifier.height(2.dp))
+                }
+                item {
+                    LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                        items(allTasks.filter { it.status == TaskStatus.IN_PROGRESS.label }) { task ->
+                            TaskCard(
+                                taskIcon = task.categoryIcon,
+                                priorityLevel = task.priority,
+                                title = task.title,
+                                description = task.description,
+                                onClick = { onTaskClicked(task) },
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 16.dp)
+                            )
+                        }
+                    }
+
+                    Spacer(Modifier.height(16.dp))
+                }
+            }
+            if (todoTasks != null) {
+                item {
+                    Text(
+                        text = stringResource(R.string.to_do),
+                        style = Theme.textStyle.title.large,
+                        color = Theme.colors.title,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp)
+                    )
+                }
+                item {
+                    LazyRow(
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp)
+                    ) {
+                        items(allTasks.filter { it.status == TaskStatus.TO_DO.label }) { task ->
+                            TaskCard(
+                                taskIcon = task.categoryIcon,
+                                priorityLevel = task.priority,
+                                title = task.title,
+                                description = task.description,
+                                onClick = { onTaskClicked(task) }
+                            )
+                            Spacer(Modifier.height(16.dp))
+                        }
                     }
                 }
-            } else {
-                EmptyTasks(modifier = Modifier.fillMaxWidth())
+            }
+
+            if (doneTasks != null) {
+                item {
+                    Text(
+                        text = stringResource(R.string.done),
+                        style = Theme.textStyle.title.large,
+                        color = Theme.colors.title,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp)
+                    )
+                }
+                item {
+                    LazyRow(
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp)
+                    ) {
+                        items(allTasks.filter { it.status == TaskStatus.DONE.label }) { task ->
+                            TaskCard(
+                                taskIcon = task.categoryIcon,
+                                priorityLevel = task.priority,
+                                title = task.title,
+                                description = task.description,
+                                onClick = { onTaskClicked(task) }
+                            )
+                            Spacer(Modifier.height(16.dp))
+                        }
+                    }
+                }
+            }
+        } else {
+            item {
+                EmptyTasks(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp)
+                )
             }
         }
     }
@@ -233,7 +319,7 @@ fun HomeScreenContent(
 private fun HomeScreenPreview() {
     TudeeTheme {
         HomeScreenContent(
-            currentDate = "",
+            currentDate = "22-6-2025",
             allTasks = listOf(
                 TasksEntity(
                     id = 1,
@@ -245,14 +331,14 @@ private fun HomeScreenPreview() {
                     date = "22-6-2025"
                 )
             ),
-            statusIconId = 0,
-            tudeeStatusImgId = 0,
-            notificationTitle = "",
-            notificationDescription = "",
+            statusIconId = R.drawable.ic_status_neutral,
+            tudeeStatusImgId = R.drawable.im_robot_neutral,
+            notificationTitle = "Stay working",
+            notificationDescription = "You have 3 tasks to do today, let's get it done!",
             onTaskClicked = {},
-            todoTasksCount = 0,
-            inProgressTasksCount = 0,
-            doneTasksCount = 0
+            todoTasks = emptyList(),
+            inProgressTasks = emptyList(),
+            doneTasks = emptyList()
         )
     }
 }

@@ -34,6 +34,7 @@ import com.example.tudee.presentation.screens.home.TaskStatus
 
 @Composable
 fun OverviewCard(
+    modifier: Modifier = Modifier,
     currentDate: String,
     @DrawableRes statusIconId: Int,
     @DrawableRes tudeeStatusImgId: Int,
@@ -41,115 +42,127 @@ fun OverviewCard(
     notificationDescription: String,
     todoTasksCount: Int = 0,
     inProgressTasksCount: Int = 0,
-    doneTasksCount: Int = 0
+    doneTasksCount: Int = 0,
 ) {
-    Card(
-        colors = CardDefaults.cardColors(Theme.colors.surfaceHigh),
-        shape = RoundedCornerShape(16.dp),
-        elevation = CardDefaults.cardElevation(10.dp),
-    ) {
-        OverviewDateRow(
-            modifier = Modifier
+    Box {
+        Box(
+            modifier = modifier
                 .fillMaxWidth()
-                .padding(top = 8.dp),
-            currentDate = currentDate
+                .height(60.dp)
+                .background(Theme.colors.primary)
         )
 
-        Row(
+        Card(
+            colors = CardDefaults.cardColors(Theme.colors.surfaceHigh),
+            shape = RoundedCornerShape(16.dp),
+            elevation = CardDefaults.cardElevation(10.dp),
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 6.dp),
-            verticalAlignment = Alignment.Top,
-            horizontalArrangement = Arrangement.Start,
+                .padding(horizontal = 16.dp)
         ) {
-            Column(
-                horizontalAlignment = Alignment.Start,
-                verticalArrangement = Arrangement.Center,
+            OverviewDateRow(
                 modifier = Modifier
-                    .padding(top = 16.dp)
-                    .weight(1f)
+                    .fillMaxWidth()
+                    .padding(top = 8.dp),
+                currentDate = currentDate
+            )
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 6.dp),
+                verticalAlignment = Alignment.Top,
+                horizontalArrangement = Arrangement.Start,
             ) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
+                Column(
+                    horizontalAlignment = Alignment.Start,
+                    verticalArrangement = Arrangement.Center,
+                    modifier = Modifier
+                        .padding(top = 16.dp)
+                        .weight(1f)
+                ) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Text(
+                            text = notificationTitle,
+                            style = Theme.textStyle.title.medium,
+                            color = Theme.colors.title,
+                            textAlign = TextAlign.Start
+                        )
+                        Spacer(Modifier.width(8.dp))
+
+                        Image(
+                            painterResource(statusIconId),
+                            contentDescription = "status icon",
+                            modifier = Modifier.size(20.dp)
+                        )
+                    }
+
                     Text(
-                        text = notificationTitle,
-                        style = Theme.textStyle.title.medium,
-                        color = Theme.colors.title,
+                        text = notificationDescription,
+                        style = Theme.textStyle.body.medium,
+                        color = Theme.colors.body,
                         textAlign = TextAlign.Start
                     )
-                    Spacer(Modifier.width(8.dp))
-
-                    Image(
-                        painterResource(statusIconId),
-                        contentDescription = "status icon",
-                        modifier = Modifier.size(20.dp)
-                    )
                 }
-
-                Text(
-                    text = notificationDescription,
-                    style = Theme.textStyle.body.medium,
-                    color = Theme.colors.body,
-                    textAlign = TextAlign.Start
-                )
-            }
 //            Spacer(Modifier.weight(1f))
 
-            Box(contentAlignment = Alignment.Center) {
-                Image(
-                    painterResource(R.drawable.circle_background),
-                    contentDescription = "circle bg",
-                    modifier = Modifier.size(76.dp)
-                )
-                Image(
-                    modifier = Modifier.size(61.dp, 92.dp),
-                    painter = painterResource(tudeeStatusImgId),
-                    contentDescription = "tudee overview img"
-                )
+                Box(contentAlignment = Alignment.Center) {
+                    Image(
+                        painterResource(R.drawable.circle_background),
+                        contentDescription = "circle bg",
+                        modifier = Modifier.size(76.dp)
+                    )
+                    Image(
+                        modifier = Modifier.size(61.dp, 92.dp),
+                        painter = painterResource(tudeeStatusImgId),
+                        contentDescription = "tudee overview img"
+                    )
+                }
             }
+
+            Spacer(Modifier.height(8.dp))
+
+            Text(
+                text = "Overview",
+                style = Theme.textStyle.title.large,
+                color = Theme.colors.title,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 6.dp, vertical = 8.dp),
+                textAlign = TextAlign.Start
+            )
+
+            Row(
+                Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 6.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                ProgressOverviewCard(
+                    state = TaskStatus.DONE.label,
+                    cardColor = Theme.colors.greenAccent,
+                    icon = R.drawable.ic_done_tasks,
+                    progressCount = doneTasksCount
+                )
+
+                ProgressOverviewCard(
+                    state = TaskStatus.IN_PROGRESS.label,
+                    cardColor = Theme.colors.yellowAccent,
+                    icon = R.drawable.ic_in_progress_tasks,
+                    progressCount = inProgressTasksCount
+                )
+
+                ProgressOverviewCard(
+                    state = TaskStatus.TO_DO.label,
+                    cardColor = Theme.colors.purpleAccent,
+                    icon = R.drawable.ic_to_do_tasks,
+                    progressCount = todoTasksCount
+                )
+
+            }
+            Spacer(Modifier.height(12.dp))
         }
-
-        Spacer(Modifier.height(8.dp))
-
-        Text(
-            text = "Overview",
-            style = Theme.textStyle.title.large,
-            color = Theme.colors.title,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 6.dp, vertical = 8.dp),
-            textAlign = TextAlign.Start
-        )
-
-        Row(
-            Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 6.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            ProgressOverviewCard(
-                state = TaskStatus.DONE.label,
-                cardColor = Theme.colors.greenAccent,
-                icon = R.drawable.ic_done_tasks,
-                progressCount = doneTasksCount
-            )
-
-            ProgressOverviewCard(
-                state = TaskStatus.IN_PROGRESS.label,
-                cardColor = Theme.colors.yellowAccent,
-                icon = R.drawable.ic_in_progress_tasks,
-                progressCount = inProgressTasksCount
-            )
-
-            ProgressOverviewCard(
-                state = TaskStatus.TO_DO.label,
-                cardColor = Theme.colors.purpleAccent,
-                icon = R.drawable.ic_to_do_tasks,
-                progressCount = todoTasksCount
-            )
-
-        }
-        Spacer(Modifier.height(12.dp))
     }
 
 }
