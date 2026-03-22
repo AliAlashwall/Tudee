@@ -48,12 +48,12 @@ import java.util.Locale
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun HorizontalDayPicker(
-    initialDate: LocalDate = LocalDate.now(),
+    selectedDate: LocalDate,
     onDateSelected: (String) -> Unit,
     openDatePicker: () -> Unit
 ) {
-    var selectedDate by remember { mutableStateOf(initialDate) }
-    var currentMonth by remember { mutableStateOf(YearMonth.from(initialDate)) }
+
+    var currentMonth by remember { mutableStateOf(YearMonth.from(selectedDate)) }
 
     // Build list of all days in the current month
     val days: List<DayItem> = remember(currentMonth) {
@@ -63,7 +63,7 @@ fun HorizontalDayPicker(
     }
 
     LaunchedEffect(Unit) {
-        onDateSelected(initialDate.toDMYFormat())
+        onDateSelected(selectedDate.toDMYFormat())
     }
     // Auto-scroll so the selected date is roughly centred
     //TODO - this doesn't work when choose the day from the picker dialog
@@ -96,8 +96,7 @@ fun HorizontalDayPicker(
                     .border(width = 1.dp, color = Theme.colors.stroke)
                     .clickable {
                         currentMonth = currentMonth.minusMonths(1)
-                        selectedDate = currentMonth.atDay(1)
-                        onDateSelected(selectedDate.toDMYFormat())
+                        onDateSelected(currentMonth.atDay(1).toDMYFormat())
                     },
                 contentAlignment = Alignment.Center
             ) {
@@ -144,8 +143,7 @@ fun HorizontalDayPicker(
                     .border(width = 1.dp, color = Theme.colors.stroke)
                     .clickable {
                         currentMonth = currentMonth.plusMonths(1)
-                        selectedDate = currentMonth.atDay(1)
-                        onDateSelected(selectedDate.toDMYFormat())
+                        onDateSelected(currentMonth.atDay(1).toDMYFormat())
                     },
                 contentAlignment = Alignment.Center
             ) {
@@ -171,7 +169,6 @@ fun HorizontalDayPicker(
                     day = item,
                     isSelected = item.date == selectedDate,
                     onClick = {
-                        selectedDate = item.date
                         onDateSelected(item.date.toDMYFormat())
                     }
                 )
@@ -229,6 +226,7 @@ private fun DayCell(
 fun HorizontalDayPickerPreview() {
     TudeeTheme {
         // Use a fixed initial date for a stable preview
-        HorizontalDayPicker(openDatePicker = {}, onDateSelected = {})
+        HorizontalDayPicker(
+            selectedDate = LocalDate.now(), openDatePicker = {}, onDateSelected = {})
     }
 }

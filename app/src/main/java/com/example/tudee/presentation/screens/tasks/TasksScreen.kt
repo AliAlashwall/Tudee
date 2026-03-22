@@ -1,7 +1,6 @@
 package com.example.tudee.presentation.screens.tasks
 
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -26,6 +25,7 @@ import com.example.tudee.presentation.components.CustomDateRangePicker
 import com.example.tudee.presentation.designSystem.theme.Theme
 import com.example.tudee.presentation.designSystem.theme.TudeeTheme
 import com.example.tudee.presentation.screens.home.TaskStatus
+import com.example.tudee.presentation.unit.fromDMYtoLocalDate
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -45,6 +45,7 @@ fun TasksScreen(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         TasksScreenContent(
+            selectedDate = tasksUiState.selectedDate,
             onDateSelected = { tasksViewModel.onDateSelected(it) },
             showDialog = tasksUiState.showDatePicker,
             onDismissDatePicker = { tasksViewModel.onDismissDatePicker() },
@@ -60,13 +61,13 @@ fun TasksScreen(
             ),
         )
     }
-    Log.i("POLO", "selectedDate:${tasksUiState.selectedDate}")
 }
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun TasksScreenContent(
     modifier: Modifier = Modifier,
+    selectedDate: String,
     onDateSelected: (date: String) -> Unit,
     showDialog: Boolean = false,
     onDismissDatePicker: () -> Unit,
@@ -90,6 +91,7 @@ fun TasksScreenContent(
         )
 
         HorizontalDayPicker(
+            selectedDate = selectedDate.fromDMYtoLocalDate(),
             onDateSelected = { onDateSelected(it) },
             openDatePicker = { onShowDatePicker() }
         )
@@ -116,6 +118,7 @@ fun TasksScreenContent(
 private fun TasksScreenPreview() {
     TudeeTheme {
         TasksScreenContent(
+            selectedDate = "22 Mar 2025",
             onDateSelected = {},
             onDismissDatePicker = {},
             onShowDatePicker = {},
