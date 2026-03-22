@@ -38,6 +38,7 @@ import androidx.compose.ui.unit.dp
 import com.example.tudee.R
 import com.example.tudee.presentation.designSystem.theme.Theme
 import com.example.tudee.presentation.designSystem.theme.TudeeTheme
+import com.example.tudee.presentation.unit.toDMYFormat
 import java.time.LocalDate
 import java.time.YearMonth
 import java.time.format.TextStyle
@@ -61,6 +62,9 @@ fun HorizontalDayPicker(
         }
     }
 
+    LaunchedEffect(Unit) {
+        onDateSelected(initialDate.toDMYFormat())
+    }
     // Auto-scroll so the selected date is roughly centred
     //TODO - this doesn't work when choose the day from the picker dialog
     val listState = rememberLazyListState()
@@ -93,7 +97,7 @@ fun HorizontalDayPicker(
                     .clickable {
                         currentMonth = currentMonth.minusMonths(1)
                         selectedDate = currentMonth.atDay(1)
-                        onDateSelected(selectedDate.toString())
+                        onDateSelected(selectedDate.toDMYFormat())
                     },
                 contentAlignment = Alignment.Center
             ) {
@@ -141,7 +145,7 @@ fun HorizontalDayPicker(
                     .clickable {
                         currentMonth = currentMonth.plusMonths(1)
                         selectedDate = currentMonth.atDay(1)
-                        onDateSelected(selectedDate.toString())
+                        onDateSelected(selectedDate.toDMYFormat())
                     },
                 contentAlignment = Alignment.Center
             ) {
@@ -168,7 +172,7 @@ fun HorizontalDayPicker(
                     isSelected = item.date == selectedDate,
                     onClick = {
                         selectedDate = item.date
-                        onDateSelected(item.date.toString())
+                        onDateSelected(item.date.toDMYFormat())
                     }
                 )
             }
@@ -225,6 +229,6 @@ private fun DayCell(
 fun HorizontalDayPickerPreview() {
     TudeeTheme {
         // Use a fixed initial date for a stable preview
-        HorizontalDayPicker(openDatePicker = {},onDateSelected={})
+        HorizontalDayPicker(openDatePicker = {}, onDateSelected = {})
     }
 }

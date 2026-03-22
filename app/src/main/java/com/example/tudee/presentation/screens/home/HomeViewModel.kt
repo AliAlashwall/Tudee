@@ -43,8 +43,6 @@ class HomeViewModel(val tasksDao: TasksDao) : ViewModel() {
         val inProgressTasks = counts[TaskStatus.IN_PROGRESS.label]
         val doneTasks = counts[TaskStatus.DONE.label]
 
-
-
         homeUiState.update {
             it.copy(
                 todoTasksCount = todoTasks,
@@ -250,7 +248,7 @@ class HomeViewModel(val tasksDao: TasksDao) : ViewModel() {
     }
 }
 
-class TaskViewModelFactory(private val dao: TasksDao) : ViewModelProvider.Factory {
+class TaskViewModelFactoryForHome(private val dao: TasksDao) : ViewModelProvider.Factory {
 // A Factory class — needed because NoteViewModel has a custom constructor parameter (dao)
 // By default, ViewModelProvider can only create ViewModels with empty constructors
 

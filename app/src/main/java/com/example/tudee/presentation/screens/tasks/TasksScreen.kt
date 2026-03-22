@@ -1,6 +1,7 @@
 package com.example.tudee.presentation.screens.tasks
 
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -19,9 +20,11 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.example.tudee.R
+import com.example.tudee.database.entity.TasksEntity
 import com.example.tudee.presentation.components.CustomDateRangePicker
 import com.example.tudee.presentation.designSystem.theme.Theme
 import com.example.tudee.presentation.designSystem.theme.TudeeTheme
+import com.example.tudee.presentation.screens.home.TaskStatus
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -31,6 +34,7 @@ fun TasksScreen(
     tasksViewModel: TasksViewModel
 ) {
     val tasksUiState = tasksViewModel.tasksUiState.collectAsStateWithLifecycle().value
+    val allTasks = tasksViewModel.allTasks.collectAsStateWithLifecycle().value
 
     Column(
         modifier = modifier.fillMaxSize(), verticalArrangement = Arrangement.Center,
@@ -41,11 +45,18 @@ fun TasksScreen(
             showDialog = tasksUiState.showDatePicker,
             onDismissDatePicker = { tasksViewModel.onDismissDatePicker() },
             onShowDatePicker = { tasksViewModel.onShowDatePicker() },
-            selectedTabIndex = tasksUiState.selectedTabIndex,
-            onTabClicked = { tasksViewModel.onTabClicked(it) }
-
+            selectedTab = tasksUiState.selectedTab,
+            onTabClicked = {
+                tasksViewModel.onTabClicked(it)
+            },
+            statusTasksList = tasksViewModel.getTasksByDateAndState(
+                allTasks,
+                tasksUiState.selectedDate,
+                tasksUiState.selectedTab.label
+            ),
         )
     }
+    Log.i("POLO", "selectedDate:${tasksUiState.selectedDate}")
 }
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -56,17 +67,18 @@ fun TasksScreenContent(
     showDialog: Boolean = false,
     onDismissDatePicker: () -> Unit,
     onShowDatePicker: () -> Unit,
-    selectedTabIndex: Int,
-    onTabClicked: (Int) -> Unit
+    selectedTab: TaskStatus,
+    onTabClicked: (TaskStatus) -> Unit,
+    statusTasksList: List<TasksEntity>,
 ) {
     Column(
         modifier
             .fillMaxSize()
-            .padding(top = 20.dp, start = 20.dp, end = 20.dp)
+            .padding(top = 20.dp)
     ) {
         Text(
             text = stringResource(R.string.tasks),
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
             color = Theme.colors.title,
             style = Theme.textStyle.title.large,
         )
@@ -78,8 +90,10 @@ fun TasksScreenContent(
         Spacer(Modifier.height(8.dp))
 
         TaskTabs(
-            selectedTabIndex = selectedTabIndex,
-            onTabClicked = { onTabClicked(it) })
+            selectedTab = selectedTab,
+            onTabClicked = { onTabClicked(it) },
+            statusTasksList = statusTasksList,
+        )
     }
 
     if (showDialog) {
@@ -96,8 +110,12 @@ fun TasksScreenContent(
 private fun TasksScreenPreview() {
     TudeeTheme {
         TasksScreenContent(
-            onDateSelected = {}, onDismissDatePicker = {}, onShowDatePicker = {},
-            selectedTabIndex = 0, onTabClicked = { }
+            onDateSelected = {},
+            onDismissDatePicker = {},
+            onShowDatePicker = {},
+            onTabClicked = { },
+            selectedTab = TaskStatus.IN_PROGRESS,
+            statusTasksList = emptyList(),
         )
     }
 }
