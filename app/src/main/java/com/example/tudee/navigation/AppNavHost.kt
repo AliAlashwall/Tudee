@@ -38,7 +38,9 @@ fun AppNavHost(
     navController: NavHostController,
     modifier: Modifier,
     tudeeViewModel: TudeeViewModel,
-    homeViewModel: HomeViewModel
+    homeViewModel: HomeViewModel,
+    tasksViewModel: TasksViewModel
+
 ) {
 
     val isOnboardingCompleted by tudeeViewModel.isOnboardingCompleted.collectAsState()
@@ -69,7 +71,6 @@ fun AppNavHost(
         }
 
         composable(Screens.Tasks.route) {
-            val tasksViewModel = TasksViewModel()
             TasksScreen(
                 navController = navController,
                 tasksViewModel = tasksViewModel

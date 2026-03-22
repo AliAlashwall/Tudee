@@ -25,7 +25,9 @@ import com.example.tudee.presentation.components.BottomNavBar
 import com.example.tudee.presentation.designSystem.theme.Theme
 import com.example.tudee.presentation.designSystem.theme.TudeeTheme
 import com.example.tudee.presentation.screens.home.HomeViewModel
-import com.example.tudee.presentation.screens.home.TaskViewModelFactory
+import com.example.tudee.presentation.screens.home.TaskViewModelFactoryForHome
+import com.example.tudee.presentation.screens.tasks.TaskViewModelFactoryForTask
+import com.example.tudee.presentation.screens.tasks.TasksViewModel
 
 //https://www.figma.com/design/Kc0YU5ycMGzo48f0suelUc/Tudee?node-id=4-138&p=f&t=JzUjibAXo4u2ypgb-0
 class MainActivity : ComponentActivity() {
@@ -54,12 +56,15 @@ class MainActivity : ComponentActivity() {
                     contentColor = Theme.colors.overlay,
                 ) { innerPadding ->
                     val dao = AppDatabase.getInstance(applicationContext).tasksDao()
-                    val homeViewModel: HomeViewModel by viewModels { TaskViewModelFactory(dao) }
+                    val homeViewModel: HomeViewModel by viewModels { TaskViewModelFactoryForHome(dao) }
+                    val tasksViewModel: TasksViewModel by viewModels { TaskViewModelFactoryForTask(dao) }
                     AppNavHost(
                         navController = navController,
                         modifier = Modifier.padding(innerPadding),
                         tudeeViewModel = TudeeViewModel(context = LocalContext.current),
-                        homeViewModel = homeViewModel
+                        homeViewModel = homeViewModel,
+                        tasksViewModel = tasksViewModel
+
                     )
                 }
             }
