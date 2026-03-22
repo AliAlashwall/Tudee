@@ -3,6 +3,7 @@ package com.example.tudee.presentation.screens.tasks
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -37,7 +38,10 @@ fun TasksScreen(
     val allTasks = tasksViewModel.allTasks.collectAsStateWithLifecycle().value
 
     Column(
-        modifier = modifier.fillMaxSize(), verticalArrangement = Arrangement.Center,
+        modifier = modifier
+            .background(color = Theme.colors.surfaceHigh)
+            .fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         TasksScreenContent(
@@ -78,7 +82,9 @@ fun TasksScreenContent(
     ) {
         Text(
             text = stringResource(R.string.tasks),
-            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp),
             color = Theme.colors.title,
             style = Theme.textStyle.title.large,
         )

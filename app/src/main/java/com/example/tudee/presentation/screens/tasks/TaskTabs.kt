@@ -1,23 +1,29 @@
 package com.example.tudee.presentation.screens.tasks
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.PrimaryTabRow
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRowDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.tudee.R
 import com.example.tudee.database.entity.TasksEntity
 import com.example.tudee.presentation.components.TaskCard
 import com.example.tudee.presentation.designSystem.theme.Theme
@@ -37,9 +43,10 @@ fun TaskTabs(
         tabs.indexOf(selectedTab)
     }
 
-    Column(modifier = modifier) {
+    Column(modifier = modifier.background(Theme.colors.surface)) {
         PrimaryTabRow(
             selectedTabIndex = selectedTabIndex,
+            containerColor = Theme.colors.surfaceHigh,
             indicator = {
                 TabRowDefaults.PrimaryIndicator(
                     modifier = Modifier.tabIndicatorOffset(tabs.indexOf(selectedTab)),
@@ -55,18 +62,31 @@ fun TaskTabs(
                     selected = isSelected,
                     onClick = { onTabClicked(taskStatus) },
                     text = {
-                        Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                        Row(
+                            horizontalArrangement = Arrangement.spacedBy(6.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
                             Text(
                                 text = taskStatus.label,
                                 color = if (isSelected) Theme.colors.title else Theme.colors.hint,
                                 style = textStyle
                             )
                             if (isSelected && statusTasksList.isNotEmpty()) {
-                                Text(
-                                    text = statusTasksList.size.toString(),
-                                    color = Theme.colors.body,
-                                    style = textStyle
-                                )
+                                Box(
+                                    modifier = Modifier
+                                        .size(28.dp)
+                                        .background(
+                                            color = Theme.colors.surface,
+                                            shape = RoundedCornerShape(14.dp),
+                                        ),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Text(
+                                        text = statusTasksList.size.toString(),
+                                        color = Theme.colors.body,
+                                        style = textStyle
+                                    )
+                                }
                             }
                         }
                     }
@@ -110,6 +130,16 @@ private fun TaskTabsPreview() {
     TaskTabs(
         selectedTab = TaskStatus.IN_PROGRESS,
         onTabClicked = {},
-        statusTasksList = emptyList(),
+        statusTasksList = listOf(
+            TasksEntity(
+                id = 1,
+                title = "First",
+                description = "First description",
+                categoryIcon = (R.drawable.ic_quran),
+                priority = 0,
+                status = TaskStatus.TO_DO.label,
+                date = "22-6-2025"
+            )
+        )
     )
 }
