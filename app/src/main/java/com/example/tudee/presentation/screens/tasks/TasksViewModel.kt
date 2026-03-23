@@ -13,9 +13,10 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
 @RequiresApi(Build.VERSION_CODES.O)
-class TasksViewModel(tasksDao: TasksDao) : ViewModel() {
+class TasksViewModel(val tasksDao: TasksDao) : ViewModel() {
 
     val tasksUiState = MutableStateFlow(TasksUiState())
 
@@ -28,9 +29,37 @@ class TasksViewModel(tasksDao: TasksDao) : ViewModel() {
         }
     }
 
+    fun deleteTask(task: TasksEntity) {
+        viewModelScope.launch {
+            tasksDao.deleteTask(task)
+        }
+        tasksUiState.update {
+            it.copy(
+                showDeleteBottomSheet = false,
+                swapedTask = null
+            )
+        }
+    }
+
+    fun onSwapTaskCard(task: TasksEntity) {
+        tasksUiState.update {
+            it.copy(
+                showDeleteBottomSheet = true,
+                swapedTask = task
+            )
+        }
+
+    }
+
     fun onDismissDatePicker() {
         tasksUiState.update {
             it.copy(showDatePicker = false)
+        }
+    }
+
+    fun onDismissBottomSheet() {
+        tasksUiState.update {
+            it.copy(showDeleteBottomSheet = false)
         }
     }
 

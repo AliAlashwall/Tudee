@@ -25,16 +25,16 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.tudee.R
 import com.example.tudee.database.entity.TasksEntity
-import com.example.tudee.presentation.components.TaskCard
 import com.example.tudee.presentation.designSystem.theme.Theme
 import com.example.tudee.presentation.screens.home.TaskStatus
 
 @Composable
 fun TaskTabs(
+    modifier: Modifier = Modifier,
     selectedTab: TaskStatus,
     statusTasksList: List<TasksEntity>,
     onTabClicked: (TaskStatus) -> Unit,
-    modifier: Modifier = Modifier,
+    onSwapTaskCard: (TasksEntity) -> Unit
 ) {
     val tabs = TaskStatus.entries
 
@@ -107,15 +107,12 @@ fun TaskTabs(
                     items = statusTasksList,
                     key = { it.id }
                 ) { task ->
-                    TaskCard(
-                        taskIcon = task.categoryIcon,
-                        priorityLevel = task.priority,
-                        title = task.title,
-                        description = task.description,
-                        onClick = { },
+                    SwipeableTaskCard(
+                        task = task,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(horizontal = 16.dp)
+                            .padding(horizontal = 16.dp),
+                        onSwap = { onSwapTaskCard(it) }
                     )
                 }
             }
@@ -140,6 +137,7 @@ private fun TaskTabsPreview() {
                 status = TaskStatus.TO_DO.label,
                 date = "22-6-2025"
             )
-        )
+        ),
+        onSwapTaskCard = {}
     )
 }
