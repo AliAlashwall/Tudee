@@ -2,6 +2,7 @@ package com.example.tudee.presentation.screens.tasks
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -10,11 +11,14 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -22,6 +26,8 @@ import androidx.navigation.NavController
 import com.example.tudee.R
 import com.example.tudee.database.entity.TasksEntity
 import com.example.tudee.presentation.components.CustomDateRangePicker
+import com.example.tudee.presentation.components.bottomSheet.BottomSheetButtons
+import com.example.tudee.presentation.components.bottomSheet.TudeeBottomSheet
 import com.example.tudee.presentation.designSystem.theme.Theme
 import com.example.tudee.presentation.designSystem.theme.TudeeTheme
 import com.example.tudee.presentation.screens.home.TaskStatus
@@ -59,7 +65,23 @@ fun TasksScreen(
                 tasksUiState.selectedDate,
                 tasksUiState.selectedTab.label
             ),
+            onSwapTaskCard = { tasksViewModel.onSwapTaskCard(it) }
         )
+    }
+    if (tasksUiState.showDeleteBottomSheet) {
+        TudeeBottomSheet(
+            onDismissRequest = { tasksViewModel.onDismissBottomSheet() },
+            expanded = false
+        ) {
+            BottomSheetDeleteContent(
+                onDeleteClicked = {
+                    if (tasksUiState.swapedTask != null) {
+                        tasksViewModel.deleteTask(tasksUiState.swapedTask!!)
+                    }
+                },
+                onCancelClicked = { tasksViewModel.onDismissBottomSheet() }
+            )
+        }
     }
 }
 
@@ -75,6 +97,7 @@ fun TasksScreenContent(
     selectedTab: TaskStatus,
     onTabClicked: (TaskStatus) -> Unit,
     statusTasksList: List<TasksEntity>,
+    onSwapTaskCard: (TasksEntity) -> Unit
 ) {
     Column(
         modifier
@@ -101,6 +124,7 @@ fun TasksScreenContent(
             selectedTab = selectedTab,
             onTabClicked = { onTabClicked(it) },
             statusTasksList = statusTasksList,
+            onSwapTaskCard = { onSwapTaskCard(it) }
         )
     }
 
@@ -108,6 +132,58 @@ fun TasksScreenContent(
         CustomDateRangePicker(
             onDismissRequest = { onDismissDatePicker() },
             onConfirm = { onDateSelected(it) }
+        )
+    }
+}
+
+@Composable
+fun BottomSheetDeleteContent(
+    modifier: Modifier = Modifier,
+    onDeleteClicked: () -> Unit = {},
+    onCancelClicked: () -> Unit = {},
+) {
+
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = modifier.background(Theme.colors.surface)
+    ) {
+        Text(
+            stringResource(R.string.delete_task),
+            style = Theme.textStyle.title.large,
+            color = Theme.colors.title,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp),
+            textAlign = TextAlign.Start
+        )
+        Spacer(Modifier.height(12.dp))
+
+        Text(
+            stringResource(R.string.are_you_sure_to_continue),
+            style = Theme.textStyle.body.large,
+            color = Theme.colors.body,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp),
+            textAlign = TextAlign.Start
+        )
+        Spacer(Modifier.height(12.dp))
+
+        Image(
+            painterResource(R.drawable.im_robot_normal),
+            contentDescription = stringResource(R.string.tudee_robot),
+            Modifier.size(107.dp, 100.dp)
+        )
+
+        Spacer(Modifier.height(24.dp))
+
+        BottomSheetButtons(
+            onPrimaryButtonClicked = { onDeleteClicked() },
+            onCancelBottomSheetClicked = { onCancelClicked() },
+            primaryButtonText = stringResource(R.string.delete),
+            primaryButtonColor = Theme.colors.errorVariant,
+            onPrimaryButtonColor = Theme.colors.error,
+            onSecondaryButtonColor = Theme.colors.primary
         )
     }
 }
@@ -125,6 +201,14 @@ private fun TasksScreenPreview() {
             onTabClicked = { },
             selectedTab = TaskStatus.IN_PROGRESS,
             statusTasksList = emptyList(),
+            onSwapTaskCard = {}
         )
     }
+}
+
+@RequiresApi(Build.VERSION_CODES.O)
+@Preview(showBackground = true)
+@Composable
+private fun BottomSheetDeleteContentPreview() {
+    TudeeTheme { BottomSheetDeleteContent() }
 }

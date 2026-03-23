@@ -107,7 +107,9 @@ fun CategoriesScreen(
 @Composable
 fun CategoryScreenContent(modifier: Modifier = Modifier) {
     Column(
-        modifier = modifier.fillMaxSize().padding(horizontal = 16.dp),
+        modifier = modifier
+            .fillMaxSize()
+            .padding(horizontal = 16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(20.dp)
     ) {
@@ -273,9 +275,11 @@ fun BottomSheetContent(
             }
         }
         BottomSheetButtons(
-            enableAddTaskButton = enableAddTaskButton,
             onPrimaryButtonClicked = { onAddClicked() },
-            onCancelBottomSheetClicked = { onCancelBottomSheetClicked(false) }
+            onCancelBottomSheetClicked = { onCancelBottomSheetClicked(false) },
+            primaryButtonColor = if (enableAddTaskButton) Theme.colors.primary else Theme.colors.disable,
+            onPrimaryButtonColor = if (enableAddTaskButton) Theme.colors.onPrimary else Theme.colors.stroke,
+            onSecondaryButtonColor = Theme.colors.primary,
         )
     }
 }

@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.tudee.R
@@ -20,11 +21,14 @@ import com.example.tudee.presentation.designSystem.theme.Theme
 @Composable
 fun BottomSheetButtons(
     modifier: Modifier = Modifier,
-    enableAddTaskButton: Boolean,
     onPrimaryButtonClicked: () -> Unit,
     onCancelBottomSheetClicked: (Boolean) -> Unit,
     primaryButtonText: String = stringResource(R.string.add_bottom_sheet),
-    secondaryButtonText: String = stringResource(R.string.cancel_bottom_sheet)
+    secondaryButtonText: String = stringResource(R.string.cancel_bottom_sheet),
+    primaryButtonColor: Color,
+    onPrimaryButtonColor: Color,
+    secondaryButtonBorderColor: Color = Theme.colors.stroke,
+    onSecondaryButtonColor: Color
 ) {
     Column(
         modifier = modifier
@@ -38,12 +42,12 @@ fun BottomSheetButtons(
             modifier = Modifier
                 .height(56.dp)
                 .background(
-                    color = if (enableAddTaskButton) Theme.colors.primary else Theme.colors.disable,
+                    color = primaryButtonColor,
                     shape = RoundedCornerShape(50.dp)
                 )
                 .fillMaxWidth(),
             style = Theme.textStyle.label.large,
-            colors = if (enableAddTaskButton) Theme.colors.onPrimary else Theme.colors.stroke
+            colors = onPrimaryButtonColor
         )
 
         TudeeTextButton(
@@ -53,12 +57,12 @@ fun BottomSheetButtons(
                 .height(56.dp)
                 .border(
                     width = 1.dp,
-                    color = Theme.colors.stroke,
+                    color = secondaryButtonBorderColor,
                     shape = RoundedCornerShape(50.dp)
                 )
                 .fillMaxWidth(),
             style = Theme.textStyle.label.large,
-            colors = Theme.colors.primary
+            colors = onSecondaryButtonColor
         )
     }
 }

@@ -206,12 +206,6 @@ class HomeViewModel(val tasksDao: TasksDao) : ViewModel() {
         onDismissBottomSheet()
     }
 
-    fun deleteTask(task: TasksEntity) {
-        viewModelScope.launch {
-            tasksDao.deleteTask(task)
-        }
-    }
-
     fun updateTask(
         task: TasksEntity
     ) {

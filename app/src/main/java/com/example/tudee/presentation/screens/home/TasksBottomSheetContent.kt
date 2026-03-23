@@ -46,6 +46,10 @@ fun TasksBottomSheetContent(
     sheetTitle: String = stringResource(R.string.add_new_task),
     primaryButtonText: String = stringResource(R.string.add_bottom_sheet),
     secondaryButtonText: String = stringResource(R.string.cancel_bottom_sheet),
+    primaryButtonColor :Color,
+    onPrimaryButtonColor:Color,
+    secondaryButtonColor:Color,
+    onSecondaryButtonColor:Color,
     newTaskTitle: String,
     newDescription: String,
     currentPriority: Int?,
@@ -56,7 +60,6 @@ fun TasksBottomSheetContent(
     updateCurrentPriority: (Int) -> Unit,
     updateSelectedDate: (String) -> Unit,
     onClickCategory: (Int) -> Unit,
-    enablePrimaryTaskButton: Boolean,
     onCancelBottomSheetClicked: (Boolean) -> Unit,
     onPrimaryButtonClicked: () -> Unit
 ) {
@@ -225,11 +228,14 @@ fun TasksBottomSheetContent(
                 .fillMaxWidth()
         ) {
             BottomSheetButtons(
-                enableAddTaskButton = enablePrimaryTaskButton,
                 onPrimaryButtonClicked = { onPrimaryButtonClicked() },
                 onCancelBottomSheetClicked = { onCancelBottomSheetClicked(false) },
                 primaryButtonText = primaryButtonText,
-                secondaryButtonText = secondaryButtonText
+                secondaryButtonText = secondaryButtonText,
+                primaryButtonColor =   primaryButtonColor ,
+                onPrimaryButtonColor = onPrimaryButtonColor,
+                secondaryButtonBorderColor = secondaryButtonColor,
+                onSecondaryButtonColor=onSecondaryButtonColor
             )
         }
     }
@@ -245,7 +251,6 @@ private fun TasksBottomSheetContentPreview() {
             newTaskTitle = "",
             newDescription = "",
             currentPriority = 0,
-            enablePrimaryTaskButton = false,
             selectedDate = "",
             selectedCategoryIcon = null,
             onNewTaskTitleChange = {},
@@ -254,7 +259,11 @@ private fun TasksBottomSheetContentPreview() {
             updateSelectedDate = {},
             onClickCategory = {},
             onCancelBottomSheetClicked = {},
-            onPrimaryButtonClicked = {}
+            onPrimaryButtonClicked = {},
+            primaryButtonColor = Theme.colors.primary,
+            onPrimaryButtonColor = Theme.colors.onPrimary
+            ,secondaryButtonColor = Theme.colors.secondary,
+            onSecondaryButtonColor = Theme.colors.onPrimary
         )
     }
 }

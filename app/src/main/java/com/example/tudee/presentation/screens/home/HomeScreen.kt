@@ -24,6 +24,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -107,6 +108,8 @@ fun HomeScreen(
                     modifier = Modifier.heightIn(max = 700.dp),
                     onDismissRequest = { homeViewModel.onDismissBottomSheet() })
                 {
+                    val enableAddTaskButton =
+                        remember(homeViewModel.enableAddTaskButton()) { homeViewModel.enableAddTaskButton() }
 //                    Add Task Bottom Sheet
                     TasksBottomSheetContent(
                         modifier = Modifier.background(Theme.colors.surface),
@@ -120,9 +123,12 @@ fun HomeScreen(
                         updateCurrentPriority = { homeViewModel.updateCurrentPriority(it) },
                         updateSelectedDate = { homeViewModel.updateSelectedDate(it) },
                         onClickCategory = { homeViewModel.updateSelectedCategory(it) },
-                        enablePrimaryTaskButton = homeViewModel.enableAddTaskButton(),
                         onCancelBottomSheetClicked = { homeViewModel.onDismissBottomSheet() },
-                        onPrimaryButtonClicked = { homeViewModel.onAddClicked() }
+                        onPrimaryButtonClicked = { homeViewModel.onAddClicked() },
+                        primaryButtonColor = if (enableAddTaskButton) Theme.colors.primary else Theme.colors.disable,
+                        onPrimaryButtonColor = if (enableAddTaskButton) Theme.colors.onPrimary else Theme.colors.stroke,
+                        secondaryButtonColor = Theme.colors.stroke,
+                        onSecondaryButtonColor = Theme.colors.primary,
                     )
                 }
             }
@@ -160,10 +166,13 @@ fun HomeScreen(
                         updateCurrentPriority = { homeViewModel.updateCurrentPriority(it) },
                         updateSelectedDate = { homeViewModel.updateSelectedDate(it) },
                         onClickCategory = { homeViewModel.updateSelectedCategory(it) },
-                        enablePrimaryTaskButton = true,
                         onCancelBottomSheetClicked = { homeViewModel.onDismissBottomSheet() },
                         onPrimaryButtonClicked = { homeViewModel.onSaveTaskEditClicked() },
-                        primaryButtonText = stringResource(R.string.save)
+                        primaryButtonText = stringResource(R.string.save),
+                        primaryButtonColor = Theme.colors.primary,
+                        onPrimaryButtonColor =Theme.colors.onPrimary,
+                        secondaryButtonColor = Theme.colors.stroke,
+                        onSecondaryButtonColor = Theme.colors.primary
                     )
                 }
             }
@@ -186,7 +195,7 @@ fun HomeScreenContent(
     doneTasks: List<TasksEntity>?
 ) {
     LazyColumn(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         item {

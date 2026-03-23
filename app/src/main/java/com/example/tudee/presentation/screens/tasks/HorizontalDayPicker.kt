@@ -66,7 +66,6 @@ fun HorizontalDayPicker(
         onDateSelected(selectedDate.toDMYFormat())
     }
     // Auto-scroll so the selected date is roughly centred
-    //TODO - this doesn't work when choose the day from the picker dialog
     val listState = rememberLazyListState()
     val selectedIndex = days.indexOfFirst { it.date == selectedDate }.coerceAtLeast(0)
     LaunchedEffect(selectedDate, currentMonth) {
