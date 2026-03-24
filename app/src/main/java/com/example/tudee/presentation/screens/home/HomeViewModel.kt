@@ -12,6 +12,7 @@ import com.example.tudee.presentation.unit.toDMYFormat
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -24,10 +25,12 @@ class HomeViewModel(val tasksDao: TasksDao) : ViewModel() {
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
 
-    val homeUiState = MutableStateFlow(HomeUiState())
+    private val _homeUiState = MutableStateFlow(HomeUiState())
+    val homeUiState: StateFlow<HomeUiState> = _homeUiState.asStateFlow()
+
 
     fun onNewTaskTitleChange(newTitle: String) {
-        homeUiState.update {
+        _homeUiState.update {
             it.copy(newTaskTitle = newTitle)
         }
     }
@@ -43,7 +46,7 @@ class HomeViewModel(val tasksDao: TasksDao) : ViewModel() {
         val inProgressTasks = counts[TaskStatus.IN_PROGRESS.label]
         val doneTasks = counts[TaskStatus.DONE.label]
 
-        homeUiState.update {
+        _homeUiState.update {
             it.copy(
                 todoTasksCount = todoTasks,
                 inProgressTasksCount = inProgressTasks,
@@ -53,7 +56,7 @@ class HomeViewModel(val tasksDao: TasksDao) : ViewModel() {
     }
 
     private fun updateOverviewNotification() {
-        val state = homeUiState.value
+        val state = _homeUiState.value
         val todo = state.todoTasksCount?.size ?: 0
         val inProgress = state.inProgressTasksCount?.size ?: 0
         val done = state.doneTasksCount?.size ?: 0
@@ -84,7 +87,7 @@ class HomeViewModel(val tasksDao: TasksDao) : ViewModel() {
             )
         }
 
-        homeUiState.update {
+        _homeUiState.update {
             it.copy(
                 notificationTitle = title,
                 notificationDescription = description,
@@ -95,13 +98,13 @@ class HomeViewModel(val tasksDao: TasksDao) : ViewModel() {
 
 
     fun onNewTaskDescriptionChange(newDescription: String) {
-        homeUiState.update {
+        _homeUiState.update {
             it.copy(newDescription = newDescription)
         }
     }
 
     fun updateCurrentPriority(newPriority: Int) {
-        homeUiState.update {
+        _homeUiState.update {
             it.copy(currentPriority = newPriority)
         }
     }
@@ -109,7 +112,7 @@ class HomeViewModel(val tasksDao: TasksDao) : ViewModel() {
 
     fun getCurrentDate() {
         val currDate = LocalDate.now().toDMYFormat()
-        homeUiState.update {
+        _homeUiState.update {
             it.copy(currentDate = currDate, selectedDate = currDate)
         }
     }
@@ -120,25 +123,25 @@ class HomeViewModel(val tasksDao: TasksDao) : ViewModel() {
 
     // Update the selectedDate field (used by the BottomSheet) instead of currentDate.
     fun updateSelectedDate(selectedDate: String) {
-        homeUiState.update {
+        _homeUiState.update {
             it.copy(selectedDate = selectedDate)
         }
     }
 
     fun enableAddTaskButton(): Boolean {
-        return homeUiState.value.newTaskTitle.isNotBlank() &&
-                homeUiState.value.selectedCategoryIcon.let { it != null } &&
-                homeUiState.value.currentPriority.let { it != null }
+        return _homeUiState.value.newTaskTitle.isNotBlank() &&
+                _homeUiState.value.selectedCategoryIcon.let { it != null } &&
+                _homeUiState.value.currentPriority.let { it != null }
     }
 
     fun updateSelectedCategory(categoryIcon: Int) {
-        homeUiState.update {
+        _homeUiState.update {
             it.copy(selectedCategoryIcon = categoryIcon)
         }
     }
 
     fun onTaskClicked(task: TasksEntity) {
-        homeUiState.update {
+        _homeUiState.update {
             it.copy(
                 selectedTask = task,
                 showDetailsBottomSheet = true
@@ -147,15 +150,15 @@ class HomeViewModel(val tasksDao: TasksDao) : ViewModel() {
     }
 
     fun onEditTaskClicked() {
-        homeUiState.update {
+        _homeUiState.update {
             it.copy(
                 showDetailsBottomSheet = false,
                 showEditTaskBottomSheet = true,
-                newTaskTitle = homeUiState.value.selectedTask!!.title,
-                newDescription = homeUiState.value.selectedTask!!.description,
-                currentPriority = homeUiState.value.selectedTask!!.priority,
-                selectedDate = homeUiState.value.selectedTask!!.date,
-                selectedCategoryIcon = homeUiState.value.selectedTask!!.categoryIcon,
+                newTaskTitle = _homeUiState.value.selectedTask!!.title,
+                newDescription = _homeUiState.value.selectedTask!!.description,
+                currentPriority = _homeUiState.value.selectedTask!!.priority,
+                selectedDate = _homeUiState.value.selectedTask!!.date,
+                selectedCategoryIcon = _homeUiState.value.selectedTask!!.categoryIcon,
             )
         }
     }
@@ -168,7 +171,7 @@ class HomeViewModel(val tasksDao: TasksDao) : ViewModel() {
         if (task.status == TaskStatus.IN_PROGRESS.label) {
             updateTask(task.copy(status = TaskStatus.DONE.label))
         }
-        homeUiState.update {
+        _homeUiState.update {
             it.copy(showDetailsBottomSheet = false)
         }
     }
@@ -176,11 +179,11 @@ class HomeViewModel(val tasksDao: TasksDao) : ViewModel() {
     fun onAddClicked() {
         // All values are exists, because the button is enabled only if they are.
         val task = TasksEntity(
-            title = homeUiState.value.newTaskTitle,
-            description = homeUiState.value.newDescription,
-            date = homeUiState.value.selectedDate,
-            categoryIcon = homeUiState.value.selectedCategoryIcon!!,
-            priority = homeUiState.value.currentPriority!!,
+            title = _homeUiState.value.newTaskTitle,
+            description = _homeUiState.value.newDescription,
+            date = _homeUiState.value.selectedDate,
+            categoryIcon = _homeUiState.value.selectedCategoryIcon!!,
+            priority = _homeUiState.value.currentPriority!!,
             status = TaskStatus.TO_DO.label,
         )
 
@@ -191,14 +194,14 @@ class HomeViewModel(val tasksDao: TasksDao) : ViewModel() {
     }
 
     fun onSaveTaskEditClicked() {
-        val updatedTask = homeUiState.value.selectedTask!!
+        val updatedTask = _homeUiState.value.selectedTask!!
             .copy(
-                title = homeUiState.value.newTaskTitle,
-                description = homeUiState.value.newDescription,
-                date = homeUiState.value.selectedDate,
-                categoryIcon = homeUiState.value.selectedCategoryIcon!!,
-                priority = homeUiState.value.currentPriority!!,
-                status = homeUiState.value.selectedTask!!.status,
+                title = _homeUiState.value.newTaskTitle,
+                description = _homeUiState.value.newDescription,
+                date = _homeUiState.value.selectedDate,
+                categoryIcon = _homeUiState.value.selectedCategoryIcon!!,
+                priority = _homeUiState.value.currentPriority!!,
+                status = _homeUiState.value.selectedTask!!.status,
             )
         viewModelScope.launch {
             tasksDao.updateTask(updatedTask)
@@ -220,7 +223,7 @@ class HomeViewModel(val tasksDao: TasksDao) : ViewModel() {
     }
 
     private fun resetBottomSheetState() {
-        homeUiState.update {
+        _homeUiState.update {
             it.copy(
                 newTaskTitle = "",
                 newDescription = "",
@@ -236,7 +239,7 @@ class HomeViewModel(val tasksDao: TasksDao) : ViewModel() {
 
     // Helper to control the bottom sheet visibility
     fun showAddBottomSheet(visibility: Boolean) {
-        homeUiState.update {
+        _homeUiState.update {
             it.copy(showAddBottomSheet = visibility)
         }
     }

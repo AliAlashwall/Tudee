@@ -11,6 +11,7 @@ import com.example.tudee.presentation.screens.home.TaskStatus
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -18,13 +19,15 @@ import kotlinx.coroutines.launch
 @RequiresApi(Build.VERSION_CODES.O)
 class TasksViewModel(val tasksDao: TasksDao) : ViewModel() {
 
-    val tasksUiState = MutableStateFlow(TasksUiState())
+    private val _tasksUiState = MutableStateFlow(TasksUiState())
+    val tasksUiState: StateFlow<TasksUiState> = _tasksUiState.asStateFlow()
+
 
     val allTasks: StateFlow<List<TasksEntity>> = tasksDao.getAllTasks()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
     fun onDateSelected(date: String) {
-        tasksUiState.update {
+        _tasksUiState.update {
             it.copy(selectedDate = date)
         }
     }
@@ -33,7 +36,7 @@ class TasksViewModel(val tasksDao: TasksDao) : ViewModel() {
         viewModelScope.launch {
             tasksDao.deleteTask(task)
         }
-        tasksUiState.update {
+        _tasksUiState.update {
             it.copy(
                 showDeleteBottomSheet = false,
                 swapedTask = null
@@ -42,7 +45,7 @@ class TasksViewModel(val tasksDao: TasksDao) : ViewModel() {
     }
 
     fun onSwapTaskCard(task: TasksEntity) {
-        tasksUiState.update {
+        _tasksUiState.update {
             it.copy(
                 showDeleteBottomSheet = true,
                 swapedTask = task
@@ -52,25 +55,25 @@ class TasksViewModel(val tasksDao: TasksDao) : ViewModel() {
     }
 
     fun onDismissDatePicker() {
-        tasksUiState.update {
+        _tasksUiState.update {
             it.copy(showDatePicker = false)
         }
     }
 
     fun onDismissBottomSheet() {
-        tasksUiState.update {
+        _tasksUiState.update {
             it.copy(showDeleteBottomSheet = false)
         }
     }
 
     fun onShowDatePicker() {
-        tasksUiState.update {
+        _tasksUiState.update {
             it.copy(showDatePicker = true)
         }
     }
 
     fun onTabClicked(selectedTab: TaskStatus) {
-        tasksUiState.update {
+        _tasksUiState.update {
             it.copy(selectedTab = selectedTab)
         }
     }
@@ -87,15 +90,9 @@ class TasksViewModel(val tasksDao: TasksDao) : ViewModel() {
 }
 
 class TaskViewModelFactoryForTask(private val dao: TasksDao) : ViewModelProvider.Factory {
-// A Factory class — needed because NoteViewModel has a custom constructor parameter (dao)
-// By default, ViewModelProvider can only create ViewModels with empty constructors
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun <T : ViewModel> create(modelClass: Class<T>): T =
-    // Called by the framework when a ViewModel is first requested
-        // modelClass — the class of ViewModel being requested
-
         TasksViewModel(dao) as T
-    // Creates a new NoteViewModel, passing the dao
-    // as T — unchecked cast to the expected ViewModel type
+
 }
