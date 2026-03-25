@@ -15,6 +15,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -23,26 +24,21 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import coil.compose.AsyncImage
-import coil.compose.rememberAsyncImagePainter
 import com.example.tudee.R
 import com.example.tudee.presentation.designSystem.theme.Theme
 import com.example.tudee.presentation.designSystem.theme.TudeeTheme
+import com.example.tudee.presentation.unit.isValidUri
 
 @Composable
 fun TaskCard(
     modifier: Modifier = Modifier,
     taskIcon: String,
-    isCustomCategory: Boolean = false,
     priorityLevel: Int,
     title: String,
     description: String,
     onClick: () -> Unit = {},
 ) {
-    val painter = if (isCustomCategory) {
-        rememberAsyncImagePainter(model = taskIcon.toUri())
-    } else {
-        painterResource(id = taskIcon.toInt())
-    }
+    val isCustomCategory = remember { taskIcon.isValidUri() }
     Card(
         modifier = modifier
             .clickable { onClick() }
@@ -62,14 +58,14 @@ fun TaskCard(
             ) {
                 if (isCustomCategory) {
                     AsyncImage(
-                        model = painter,
+                        model = taskIcon.toUri(),
                         contentDescription = stringResource(R.string.task_card_icon),
                         modifier = Modifier.size(32.dp),
 //                        colorFilter = ColorFilter.tint(Color.Unspecified)
                     )
                 } else {
                     Image(
-                        painter = painter,
+                        painter = painterResource(taskIcon.toInt()),
                         contentDescription = stringResource(R.string.task_card_icon),
                         modifier = Modifier.size(32.dp),
 //                        colorFilter = ColorFilter.tint(Color.Unspecified)
@@ -107,7 +103,6 @@ private fun TaskCardPreview() {
     TudeeTheme {
         TaskCard(
             taskIcon = R.drawable.ic_quran.toString(),
-            isCustomCategory = false,
             title = "Organize Study Desk",
             description = "Review cell structure and functions for tomorrow...",
             priorityLevel = 0

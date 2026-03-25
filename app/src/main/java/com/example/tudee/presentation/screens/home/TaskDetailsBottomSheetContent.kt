@@ -23,8 +23,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.core.net.toUri
-import coil.compose.rememberAsyncImagePainter
 import com.example.tudee.R
 import com.example.tudee.database.entity.TasksEntity
 import com.example.tudee.presentation.components.CategoryCard
@@ -37,7 +35,6 @@ import com.example.tudee.presentation.screens.home.components.StatusCard
 fun TaskDetailsBottomSheetContent(
     modifier: Modifier = Modifier,
     task: TasksEntity,
-    isCustom: Boolean = false,
     onMoveButtonClicked: () -> Unit,
     onEditButtonClicked: () -> Unit
 ) {
@@ -45,11 +42,6 @@ fun TaskDetailsBottomSheetContent(
         TaskStatus.TO_DO.label -> stringResource(R.string.move_to_in_progress)
         TaskStatus.IN_PROGRESS.label -> stringResource(R.string.move_to_done)
         else -> ""
-    }
-    val painter = if (isCustom) {
-        rememberAsyncImagePainter(model = task.categoryIcon.toUri())
-    } else {
-        painterResource(task.categoryIcon.toInt())
     }
     Column(
         modifier = modifier
@@ -65,11 +57,12 @@ fun TaskDetailsBottomSheetContent(
         Spacer(Modifier.height(12.dp))
 
         CategoryCard(
-            icon = painter,
+            icon = task.categoryIcon,
             label = "",
             count = null,
             showCount = false,
             isPredefined = false,
+
         )
 
         Spacer(Modifier.height(8.dp))
@@ -158,6 +151,6 @@ private fun TaskDetailsBottomSheetContentPreview() {
             date = "22-6-2025"
         ),
         onMoveButtonClicked = {},
-        onEditButtonClicked = {}
+        onEditButtonClicked = {},
     )
 }

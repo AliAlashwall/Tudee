@@ -1,6 +1,7 @@
 package com.example.tudee.database.dao
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
@@ -18,5 +19,8 @@ interface CategoryDao {
 
     @Update
     suspend fun updateCategory(category: CategoryEntity)
+
+    @Query("Delete from category_table where id = :categoryId")
+    suspend fun deleteCategory(categoryId: Int)
 
 }

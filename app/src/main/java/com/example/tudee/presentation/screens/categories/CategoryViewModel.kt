@@ -22,7 +22,12 @@ class CategoryViewModel(
     val categoryDao: CategoryDao
 ) : ViewModel() {
 
-
+/*    init {
+        viewModelScope.launch {
+            categoryDao.deleteCategory(21)
+            categoryDao.deleteCategory(22)
+        }
+    }*/
 
     /*fun insertInitCategories() {
         val categories = listOf(

@@ -2,9 +2,11 @@ package com.example.tudee.presentation.screens.categories
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
@@ -35,16 +37,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.core.net.toUri
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
-import coil.compose.rememberAsyncImagePainter
 import com.example.tudee.R
 import com.example.tudee.database.entity.CategoryEntity
 import com.example.tudee.presentation.components.CategoryCard
@@ -143,17 +144,17 @@ fun CategoryScreenContent(
             items(categories, key = { it.name }) { category ->
 
                 val painter = if (category.isCustom) {
-                    rememberAsyncImagePainter(model = category.uriImage.toUri())
+                    category.uriImage
                 } else {
-                    painterResource(id = category.icon ?: R.drawable.reading_novels)
+                    category.icon.toString()
                 }
 
                 CategoryCard(
                     icon = painter,
-                    isCustom = category.isCustom,
                     label = category.name,
                     onClickCategory = { /*TODO*/ },
-                    count = category.count
+                    count = category.count,
+                    isPredefined = !category.isCustom
                 )
             }
         }
@@ -202,6 +203,8 @@ fun BottomSheetContent(
             color = Theme.colors.title,
         )
 
+        val context = LocalContext.current
+
         val requiredPermission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             Manifest.permission.READ_MEDIA_IMAGES
         } else {
@@ -209,24 +212,29 @@ fun BottomSheetContent(
         }
 
         val imagePickerLauncher = rememberLauncherForActivityResult(
-            contract = ActivityResultContracts.GetContent()
+            // Use PickVisualMedia for better compatibility, persist the URI permission so it survives app restarts.
+            contract = ActivityResultContracts.PickVisualMedia()
         ) { uri: Uri? ->
-            updateSelectedCategoryImage(uri)
-        }
-
-        val permissionLauncher = rememberLauncherForActivityResult(
-            contract = ActivityResultContracts.RequestPermission()
-        ) { isGranted ->
-            if (isGranted) {
-                // Open picker once permission is granted
-                imagePickerLauncher.launch("image/*")
+            if (uri != null) {
+                // Persist the permission so it works after app restarts
+                context.contentResolver.takePersistableUriPermission(
+                    /* uri = */ uri,
+                    /* modeFlags = */ Intent.FLAG_GRANT_READ_URI_PERMISSION
+                )
+                updateSelectedCategoryImage(uri)
             }
         }
+
+
 
         Box(
             contentAlignment = Alignment.Center,
             modifier = Modifier
-                .clickable { permissionLauncher.launch(requiredPermission) }
+                .clickable {
+                    imagePickerLauncher.launch(
+                        PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                    )
+                }
                 .size(width = 112.dp, height = 113.dp)
         ) {
             Canvas(

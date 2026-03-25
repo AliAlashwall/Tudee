@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -28,8 +29,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.net.toUri
-import coil.compose.rememberAsyncImagePainter
 import com.example.tudee.R
 import com.example.tudee.database.entity.CategoryEntity
 import com.example.tudee.presentation.components.CategoryCard
@@ -195,8 +194,6 @@ fun TasksBottomSheetContent(
                         .fillMaxWidth()
                         .padding(horizontal = 13.dp)
                 ) {
-
-
                     categories.forEachIndexed { categoryIndex, category ->
 
                         val categoryImage = remember {
@@ -207,16 +204,11 @@ fun TasksBottomSheetContent(
                             })
                         }
 
-                        val painter = if (category.isCustom) {
-                            rememberAsyncImagePainter(model = categoryImage.toUri())
-                        } else {
-                            painterResource(id = categoryImage.toInt())
-                        }
                         val bottomPadding =
                             if (categoryIndex <= categories.size - 3) 24.dp else 0.dp
 
                         CategoryCard(
-                            icon = painter,
+                            icon = categoryImage,
                             label = category.name,
                             selected = categoryImage == selectedCategoryIcon.toString(),
                             showCount = false,
@@ -229,6 +221,9 @@ fun TasksBottomSheetContent(
                     }
                 }
             }
+
+            item { Spacer(Modifier.height(140.dp)) }
+
 
         }
 

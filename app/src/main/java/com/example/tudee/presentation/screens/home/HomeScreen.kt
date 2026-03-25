@@ -234,7 +234,7 @@ fun HomeScreenContent(
                 }
                 item {
                     LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                        items(allTasks.filter { it.status == TaskStatus.IN_PROGRESS.label }) { task ->
+                        items(allTasks.filter { it.status == TaskStatus.IN_PROGRESS.label }, key = {it.id} ) { task ->
                             TaskCard(
                                 taskIcon = task.categoryIcon,
                                 priorityLevel = task.priority,
