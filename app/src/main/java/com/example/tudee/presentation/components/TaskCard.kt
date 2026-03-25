@@ -38,7 +38,7 @@ fun TaskCard(
     description: String,
     onClick: () -> Unit = {},
 ) {
-    val isCustomCategory = remember { taskIcon.isValidUri() }
+    val isCustom = remember(taskIcon) { taskIcon.isValidUri() }
     Card(
         modifier = modifier
             .clickable { onClick() }
@@ -56,7 +56,7 @@ fun TaskCard(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.padding(start = 4.dp, end = 12.dp, top = 14.dp)
             ) {
-                if (isCustomCategory) {
+                if (isCustom) {
                     AsyncImage(
                         model = taskIcon.toUri(),
                         contentDescription = stringResource(R.string.task_card_icon),
