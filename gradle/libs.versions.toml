@@ -17,6 +17,7 @@ roomCompiler = "2.8.4"
 material3 = "1.4.0"
 navigationRuntimeKtx = "2.9.6"
 lottieCompose = "6.0.0"
+room3Runtime = "3.0.0-alpha01"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -41,6 +42,7 @@ androidx-compose-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-te
 androidx-compose-material3 = { group = "androidx.compose.material3", name = "material3" }
 androidx-material3 = { group = "androidx.compose.material3", name = "material3", version.ref = "material3" }
 androidx-navigation-runtime-ktx = { group = "androidx.navigation", name = "navigation-runtime-ktx", version.ref = "navigationRuntimeKtx" }
+androidx-room3-runtime = { group = "androidx.room3", name = "room3-runtime", version.ref = "room3Runtime" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

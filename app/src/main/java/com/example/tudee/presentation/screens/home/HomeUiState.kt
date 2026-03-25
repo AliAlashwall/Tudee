@@ -9,7 +9,7 @@ data class HomeUiState(
     var selectedDate: String = "21 Mar 2026",
     var currentDate: String = "21 Mar 2026",
     var currentPriority: Int? = null,
-    var selectedCategoryIcon: Int? = null,
+    var selectedCategoryIcon: String? = null,
     var selectedTask: TasksEntity? = null,
     var showAddBottomSheet: Boolean = false,
     var showEditTaskBottomSheet: Boolean = false,

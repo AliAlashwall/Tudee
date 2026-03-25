@@ -24,6 +24,8 @@ import com.example.tudee.presentation.TudeeViewModel
 import com.example.tudee.presentation.components.BottomNavBar
 import com.example.tudee.presentation.designSystem.theme.Theme
 import com.example.tudee.presentation.designSystem.theme.TudeeTheme
+import com.example.tudee.presentation.screens.categories.CategoryViewModel
+import com.example.tudee.presentation.screens.categories.TaskViewModelFactoryForCategories
 import com.example.tudee.presentation.screens.home.HomeViewModel
 import com.example.tudee.presentation.screens.home.TaskViewModelFactoryForHome
 import com.example.tudee.presentation.screens.tasks.TaskViewModelFactoryForTask
@@ -55,15 +57,30 @@ class MainActivity : ComponentActivity() {
                     containerColor = Color.Transparent,
                     contentColor = Theme.colors.overlay,
                 ) { innerPadding ->
-                    val dao = AppDatabase.getInstance(applicationContext).tasksDao()
-                    val homeViewModel: HomeViewModel by viewModels { TaskViewModelFactoryForHome(dao) }
-                    val tasksViewModel: TasksViewModel by viewModels { TaskViewModelFactoryForTask(dao) }
+                    val tasksDao = AppDatabase.getInstance(applicationContext).tasksDao()
+                    val categoryDao = AppDatabase.getInstance(applicationContext).categoryDao()
+
+                    val homeViewModel: HomeViewModel by viewModels {
+                        TaskViewModelFactoryForHome(
+                            tasksDao,
+                            categoryDao
+                        )
+                    }
+                    val tasksViewModel: TasksViewModel by viewModels {
+                        TaskViewModelFactoryForTask(
+                            tasksDao
+                        )
+                    }
+                    val categoryViewModel: CategoryViewModel by viewModels {
+                        TaskViewModelFactoryForCategories(tasksDao, categoryDao)
+                    }
                     AppNavHost(
                         navController = navController,
                         modifier = Modifier.padding(innerPadding),
                         tudeeViewModel = TudeeViewModel(context = LocalContext.current),
                         homeViewModel = homeViewModel,
-                        tasksViewModel = tasksViewModel
+                        tasksViewModel = tasksViewModel,
+                        categoryViewModel = categoryViewModel
 
                     )
                 }

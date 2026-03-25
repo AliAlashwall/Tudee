@@ -1,4 +1,4 @@
-package com.example.tudee.presentation.screens.category
+package com.example.tudee.presentation.screens.categories
 
 import android.Manifest
 import android.annotation.SuppressLint
@@ -27,7 +27,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -41,18 +40,19 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
+import coil.compose.rememberAsyncImagePainter
 import com.example.tudee.R
+import com.example.tudee.database.entity.CategoryEntity
 import com.example.tudee.presentation.components.CategoryCard
 import com.example.tudee.presentation.components.TudeeTextField
 import com.example.tudee.presentation.components.bottomSheet.BottomSheetButtons
 import com.example.tudee.presentation.components.bottomSheet.TudeeBottomSheet
 import com.example.tudee.presentation.designSystem.theme.Theme
 import com.example.tudee.presentation.designSystem.theme.TudeeTheme
-import com.example.tudee.presentation.screens.category.TudeeCategories.categoriesList
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
@@ -81,7 +81,7 @@ fun CategoriesScreen(
         modifier = modifier.fillMaxSize(),
     ) {
 
-        CategoryScreenContent()
+        CategoryScreenContent(categories = categoryUiState.categories)
 
         if (categoryUiState.showBottomSheet) {
             TudeeBottomSheet(
@@ -93,8 +93,17 @@ fun CategoriesScreen(
                         onCategoryTitleChanges = { categoryViewModel.onCategoryTitleChange(it) },
                         enableAddTaskButton = categoryViewModel.enableAddTaskButton(),
                         onCancelBottomSheetClicked = { categoryViewModel.onDismissBottomSheet() },
-                        onAddClicked = {/*TODO*/ },
-                        updateSelectedCategoryImage = { categoryViewModel.updateCategoryImage(it) },
+                        onAddClicked = {
+                            categoryViewModel.onAddCategoryClicked(
+                                name = categoryUiState.categoryTitle,
+                                imageUri = categoryUiState.selectedCategoryImage ?: ""
+                            )
+                        },
+                        updateSelectedCategoryImage = { selectedUri ->
+                            categoryViewModel.updateCategoryImage(
+                                selectedUri.toString()
+                            )
+                        },
                         selectedImage = categoryUiState.selectedCategoryImage
                     )
                 }
@@ -105,7 +114,10 @@ fun CategoriesScreen(
 }
 
 @Composable
-fun CategoryScreenContent(modifier: Modifier = Modifier) {
+fun CategoryScreenContent(
+    modifier: Modifier = Modifier,
+    categories: List<CategoryEntity>
+) {
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -121,8 +133,6 @@ fun CategoryScreenContent(modifier: Modifier = Modifier) {
             textAlign = TextAlign.Start
 
         )
-        // remember the static categories list so it's not re-evaluated on every recomposition
-        val categories = remember { categoriesList }
 
         LazyVerticalGrid(
             modifier = Modifier.fillMaxWidth(),
@@ -131,12 +141,19 @@ fun CategoryScreenContent(modifier: Modifier = Modifier) {
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             items(categories, key = { it.name }) { category ->
+
+                val painter = if (category.isCustom) {
+                    rememberAsyncImagePainter(model = category.uriImage.toUri())
+                } else {
+                    painterResource(id = category.icon ?: R.drawable.reading_novels)
+                }
+
                 CategoryCard(
-                    icon = painterResource(category.icon),
+                    icon = painter,
+                    isCustom = category.isCustom,
                     label = category.name,
                     onClickCategory = { /*TODO*/ },
-                    iconTint = Color.Unspecified,
-                    count = 0 //TODO
+                    count = category.count
                 )
             }
         }
@@ -153,7 +170,7 @@ fun BottomSheetContent(
     onCancelBottomSheetClicked: (Boolean) -> Unit,
     onAddClicked: () -> Unit,
     updateSelectedCategoryImage: (Uri?) -> Unit,
-    selectedImage: Uri?
+    selectedImage: String?
 ) {
     Column(
         modifier = modifier
@@ -257,7 +274,6 @@ fun BottomSheetContent(
 
                 Box(
                     modifier = Modifier
-//                        .align(Alignment.TopEnd)
                         .size(32.dp)
                         .background(
                             Theme.colors.surfaceHigh,
@@ -284,13 +300,11 @@ fun BottomSheetContent(
     }
 }
 
-@SuppressLint("ViewModelConstructorInComposable")
+
 @Preview(showBackground = true)
 @Composable
 private fun CategoriesScreenPreview() {
-    val navController = rememberNavController()
-    val categoryViewModel = CategoryViewModel()
     TudeeTheme {
-        CategoriesScreen(navController = navController, categoryViewModel = categoryViewModel)
+        CategoryScreenContent(categories = emptyList())
     }
 }

@@ -15,8 +15,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.tudee.presentation.TudeeViewModel
-import com.example.tudee.presentation.screens.category.CategoriesScreen
-import com.example.tudee.presentation.screens.category.CategoryViewModel
+import com.example.tudee.presentation.screens.categories.CategoriesScreen
+import com.example.tudee.presentation.screens.categories.CategoryViewModel
 import com.example.tudee.presentation.screens.home.HomeScreen
 import com.example.tudee.presentation.screens.home.HomeViewModel
 import com.example.tudee.presentation.screens.onBoarding.OnBoardingScreen
@@ -39,7 +39,8 @@ fun AppNavHost(
     modifier: Modifier,
     tudeeViewModel: TudeeViewModel,
     homeViewModel: HomeViewModel,
-    tasksViewModel: TasksViewModel
+    tasksViewModel: TasksViewModel,
+    categoryViewModel: CategoryViewModel
 
 ) {
 
@@ -80,7 +81,6 @@ fun AppNavHost(
         composable(
             route = Screens.Categories.route
         ) {
-            val categoryViewModel = CategoryViewModel()
             CategoriesScreen(
                 navController = navController,
                 categoryViewModel = categoryViewModel

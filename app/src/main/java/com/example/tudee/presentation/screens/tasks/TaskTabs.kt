@@ -132,7 +132,7 @@ private fun TaskTabsPreview() {
                 id = 1,
                 title = "First",
                 description = "First description",
-                categoryIcon = (R.drawable.ic_quran),
+                categoryIcon = (R.drawable.ic_quran).toString(),
                 priority = 0,
                 status = TaskStatus.TO_DO.label,
                 date = "22-6-2025"

@@ -28,7 +28,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.net.toUri
+import coil.compose.rememberAsyncImagePainter
 import com.example.tudee.R
+import com.example.tudee.database.entity.CategoryEntity
 import com.example.tudee.presentation.components.CategoryCard
 import com.example.tudee.presentation.components.CustomDateRangePicker
 import com.example.tudee.presentation.components.PriorityButton
@@ -37,7 +40,6 @@ import com.example.tudee.presentation.components.TudeeTextField
 import com.example.tudee.presentation.components.bottomSheet.BottomSheetButtons
 import com.example.tudee.presentation.designSystem.theme.Theme
 import com.example.tudee.presentation.designSystem.theme.TudeeTheme
-import com.example.tudee.presentation.screens.category.TudeeCategories.categoriesList
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -46,22 +48,23 @@ fun TasksBottomSheetContent(
     sheetTitle: String = stringResource(R.string.add_new_task),
     primaryButtonText: String = stringResource(R.string.add_bottom_sheet),
     secondaryButtonText: String = stringResource(R.string.cancel_bottom_sheet),
-    primaryButtonColor :Color,
-    onPrimaryButtonColor:Color,
-    secondaryButtonColor:Color,
-    onSecondaryButtonColor:Color,
+    primaryButtonColor: Color,
+    onPrimaryButtonColor: Color,
+    secondaryButtonColor: Color,
+    onSecondaryButtonColor: Color,
     newTaskTitle: String,
     newDescription: String,
     currentPriority: Int?,
     selectedDate: String,
-    selectedCategoryIcon: Int?,
+    selectedCategoryIcon: String?,
     onNewTaskTitleChange: (String) -> Unit,
     onNewDescriptionChange: (String) -> Unit,
     updateCurrentPriority: (Int) -> Unit,
     updateSelectedDate: (String) -> Unit,
-    onClickCategory: (Int) -> Unit,
+    onClickCategory: (String) -> Unit,
     onCancelBottomSheetClicked: (Boolean) -> Unit,
-    onPrimaryButtonClicked: () -> Unit
+    onPrimaryButtonClicked: () -> Unit,
+    categories: List<CategoryEntity>
 ) {
     // Persist dialog state across configuration changes
     var showDialog by rememberSaveable { mutableStateOf(false) }
@@ -185,8 +188,6 @@ fun TasksBottomSheetContent(
             }
 
             item {
-                // remember the static categories list so it's not re-evaluated on every recomposition
-                val categories = remember { categoriesList }
                 FlowRow(
                     maxItemsInEachRow = 3,
                     horizontalArrangement = Arrangement.SpaceBetween,
@@ -194,19 +195,35 @@ fun TasksBottomSheetContent(
                         .fillMaxWidth()
                         .padding(horizontal = 13.dp)
                 ) {
+
+
                     categories.forEachIndexed { categoryIndex, category ->
+
+                        val categoryImage = remember {
+                            (if (category.isCustom) {
+                                category.uriImage
+                            } else {
+                                category.icon.toString()
+                            })
+                        }
+
+                        val painter = if (category.isCustom) {
+                            rememberAsyncImagePainter(model = categoryImage.toUri())
+                        } else {
+                            painterResource(id = categoryImage.toInt())
+                        }
                         val bottomPadding =
                             if (categoryIndex <= categories.size - 3) 24.dp else 0.dp
+
                         CategoryCard(
-                            icon = painterResource(id = category.icon),
+                            icon = painter,
                             label = category.name,
-                            selected = (category.icon == selectedCategoryIcon),
+                            selected = categoryImage == selectedCategoryIcon.toString(),
                             showCount = false,
-                            iconTint = Color.Unspecified,
                             isPredefined = true,
                             modifier = Modifier
                                 .padding(bottom = bottomPadding),
-                            onClickCategory = { onClickCategory(category.icon) }
+                            onClickCategory = { onClickCategory(categoryImage) }
                         )
 
                     }
@@ -232,10 +249,10 @@ fun TasksBottomSheetContent(
                 onCancelBottomSheetClicked = { onCancelBottomSheetClicked(false) },
                 primaryButtonText = primaryButtonText,
                 secondaryButtonText = secondaryButtonText,
-                primaryButtonColor =   primaryButtonColor ,
+                primaryButtonColor = primaryButtonColor,
                 onPrimaryButtonColor = onPrimaryButtonColor,
                 secondaryButtonBorderColor = secondaryButtonColor,
-                onSecondaryButtonColor=onSecondaryButtonColor
+                onSecondaryButtonColor = onSecondaryButtonColor
             )
         }
     }
@@ -261,9 +278,10 @@ private fun TasksBottomSheetContentPreview() {
             onCancelBottomSheetClicked = {},
             onPrimaryButtonClicked = {},
             primaryButtonColor = Theme.colors.primary,
-            onPrimaryButtonColor = Theme.colors.onPrimary
-            ,secondaryButtonColor = Theme.colors.secondary,
-            onSecondaryButtonColor = Theme.colors.onPrimary
+            onPrimaryButtonColor = Theme.colors.onPrimary,
+            secondaryButtonColor = Theme.colors.secondary,
+            onSecondaryButtonColor = Theme.colors.onPrimary,
+            categories = emptyList()
         )
     }
 }

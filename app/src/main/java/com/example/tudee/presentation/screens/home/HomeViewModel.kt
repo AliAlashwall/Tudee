@@ -6,7 +6,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.tudee.R
+import com.example.tudee.database.dao.CategoryDao
 import com.example.tudee.database.dao.TasksDao
+import com.example.tudee.database.entity.CategoryEntity
 import com.example.tudee.database.entity.TasksEntity
 import com.example.tudee.presentation.unit.toDMYFormat
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,11 +21,16 @@ import kotlinx.coroutines.launch
 import java.time.LocalDate
 
 @RequiresApi(Build.VERSION_CODES.O)
-class HomeViewModel(val tasksDao: TasksDao) : ViewModel() {
+class HomeViewModel(
+    val tasksDao: TasksDao,
+    val categoryDao: CategoryDao
+) : ViewModel() {
 
     val allTasks: StateFlow<List<TasksEntity>> = tasksDao.getAllTasks()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
+    val allCategories: StateFlow<List<CategoryEntity>> = categoryDao.getAllCategories()
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
     private val _homeUiState = MutableStateFlow(HomeUiState())
     val homeUiState: StateFlow<HomeUiState> = _homeUiState.asStateFlow()
@@ -134,7 +141,7 @@ class HomeViewModel(val tasksDao: TasksDao) : ViewModel() {
                 _homeUiState.value.currentPriority.let { it != null }
     }
 
-    fun updateSelectedCategory(categoryIcon: Int) {
+    fun updateSelectedCategory(categoryIcon: String) {
         _homeUiState.update {
             it.copy(selectedCategoryIcon = categoryIcon)
         }
@@ -245,7 +252,10 @@ class HomeViewModel(val tasksDao: TasksDao) : ViewModel() {
     }
 }
 
-class TaskViewModelFactoryForHome(private val dao: TasksDao) : ViewModelProvider.Factory {
+class TaskViewModelFactoryForHome(
+    private val tasksDao: TasksDao,
+    private val categoryDao: CategoryDao
+) : ViewModelProvider.Factory {
 // A Factory class — needed because NoteViewModel has a custom constructor parameter (dao)
 // By default, ViewModelProvider can only create ViewModels with empty constructors
 
@@ -254,7 +264,7 @@ class TaskViewModelFactoryForHome(private val dao: TasksDao) : ViewModelProvider
     // Called by the framework when a ViewModel is first requested
         // modelClass — the class of ViewModel being requested
 
-        HomeViewModel(dao) as T
+        HomeViewModel(tasksDao, categoryDao) as T
     // Creates a new NoteViewModel, passing the dao
     // as T — unchecked cast to the expected ViewModel type
 }

@@ -1,6 +1,6 @@
 package com.example.tudee.presentation.components
 
-import androidx.annotation.DrawableRes
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -13,16 +13,17 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
+import coil.compose.AsyncImage
+import coil.compose.rememberAsyncImagePainter
 import com.example.tudee.R
 import com.example.tudee.presentation.designSystem.theme.Theme
 import com.example.tudee.presentation.designSystem.theme.TudeeTheme
@@ -30,12 +31,18 @@ import com.example.tudee.presentation.designSystem.theme.TudeeTheme
 @Composable
 fun TaskCard(
     modifier: Modifier = Modifier,
-    @DrawableRes taskIcon: Int,
+    taskIcon: String,
+    isCustomCategory: Boolean = false,
     priorityLevel: Int,
     title: String,
     description: String,
     onClick: () -> Unit = {},
 ) {
+    val painter = if (isCustomCategory) {
+        rememberAsyncImagePainter(model = taskIcon.toUri())
+    } else {
+        painterResource(id = taskIcon.toInt())
+    }
     Card(
         modifier = modifier
             .clickable { onClick() }
@@ -53,12 +60,21 @@ fun TaskCard(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.padding(start = 4.dp, end = 12.dp, top = 14.dp)
             ) {
-                Icon(
-                    painter = painterResource(taskIcon),
-                    contentDescription = stringResource(R.string.task_card_icon),
-                    modifier = Modifier.size(32.dp),
-                    tint = Color.Unspecified
-                )
+                if (isCustomCategory) {
+                    AsyncImage(
+                        model = painter,
+                        contentDescription = stringResource(R.string.task_card_icon),
+                        modifier = Modifier.size(32.dp),
+//                        colorFilter = ColorFilter.tint(Color.Unspecified)
+                    )
+                } else {
+                    Image(
+                        painter = painter,
+                        contentDescription = stringResource(R.string.task_card_icon),
+                        modifier = Modifier.size(32.dp),
+//                        colorFilter = ColorFilter.tint(Color.Unspecified)
+                    )
+                }
 
                 Spacer(Modifier.weight(1f))
 
@@ -90,7 +106,8 @@ fun TaskCard(
 private fun TaskCardPreview() {
     TudeeTheme {
         TaskCard(
-            taskIcon = R.drawable.ic_quran,
+            taskIcon = R.drawable.ic_quran.toString(),
+            isCustomCategory = false,
             title = "Organize Study Desk",
             description = "Review cell structure and functions for tomorrow...",
             priorityLevel = 0

@@ -4,14 +4,18 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import com.example.tudee.database.dao.CategoryDao
 import com.example.tudee.database.dao.TasksDao
+import com.example.tudee.database.entity.CategoryEntity
 import com.example.tudee.database.entity.TasksEntity
 
-@Database(entities = [TasksEntity::class], version = 3, exportSchema = false)
+@Database(entities = [TasksEntity::class, CategoryEntity::class], version = 7, exportSchema = false)
 
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun tasksDao(): TasksDao
+    abstract fun categoryDao(): CategoryDao
+
 
     companion object {
 

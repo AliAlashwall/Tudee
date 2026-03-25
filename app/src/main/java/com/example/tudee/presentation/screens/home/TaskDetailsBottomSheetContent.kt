@@ -23,6 +23,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
+import coil.compose.rememberAsyncImagePainter
 import com.example.tudee.R
 import com.example.tudee.database.entity.TasksEntity
 import com.example.tudee.presentation.components.CategoryCard
@@ -35,6 +37,7 @@ import com.example.tudee.presentation.screens.home.components.StatusCard
 fun TaskDetailsBottomSheetContent(
     modifier: Modifier = Modifier,
     task: TasksEntity,
+    isCustom: Boolean = false,
     onMoveButtonClicked: () -> Unit,
     onEditButtonClicked: () -> Unit
 ) {
@@ -42,6 +45,11 @@ fun TaskDetailsBottomSheetContent(
         TaskStatus.TO_DO.label -> stringResource(R.string.move_to_in_progress)
         TaskStatus.IN_PROGRESS.label -> stringResource(R.string.move_to_done)
         else -> ""
+    }
+    val painter = if (isCustom) {
+        rememberAsyncImagePainter(model = task.categoryIcon.toUri())
+    } else {
+        painterResource(task.categoryIcon.toInt())
     }
     Column(
         modifier = modifier
@@ -55,8 +63,9 @@ fun TaskDetailsBottomSheetContent(
             textAlign = TextAlign.Start
         )
         Spacer(Modifier.height(12.dp))
+
         CategoryCard(
-            icon = painterResource(task.categoryIcon),
+            icon = painter,
             label = "",
             count = null,
             showCount = false,
@@ -142,7 +151,7 @@ private fun TaskDetailsBottomSheetContentPreview() {
     TaskDetailsBottomSheetContent(
         task = TasksEntity(
             title = "Organize Study Desk",
-            categoryIcon = R.drawable.ic_book_open,
+            categoryIcon = (R.drawable.ic_book_open).toString(),
             description = "Solve all exercises from page 45 to 50 in the textbook, Solve all exercises from page 45 to 50 in the textbook.",
             priority = 0,
             status = TaskStatus.TO_DO.label,

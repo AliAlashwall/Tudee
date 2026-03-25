@@ -106,7 +106,7 @@ private fun SwipeableTaskCardPreview() {
             id = 1,
             title = "First",
             description = "First description",
-            categoryIcon = (R.drawable.ic_quran),
+            categoryIcon = (R.drawable.ic_quran).toString(),
             priority = 0,
             status = "To Do",
             date = "22-6-2025"

@@ -56,6 +56,9 @@ fun HomeScreen(
     val allDayTasks =
         homeViewModel.allTasks.collectAsStateWithLifecycle().value
             .filter { it.date == homeViewModel.homeUiState.value.currentDate }
+
+    val allCategories = homeViewModel.allCategories.collectAsStateWithLifecycle().value
+
     val homeUiState = homeViewModel.homeUiState.collectAsStateWithLifecycle().value
 
     LaunchedEffect(allDayTasks) {
@@ -129,6 +132,7 @@ fun HomeScreen(
                         onPrimaryButtonColor = if (enableAddTaskButton) Theme.colors.onPrimary else Theme.colors.stroke,
                         secondaryButtonColor = Theme.colors.stroke,
                         onSecondaryButtonColor = Theme.colors.primary,
+                        categories = allCategories
                     )
                 }
             }
@@ -170,9 +174,10 @@ fun HomeScreen(
                         onPrimaryButtonClicked = { homeViewModel.onSaveTaskEditClicked() },
                         primaryButtonText = stringResource(R.string.save),
                         primaryButtonColor = Theme.colors.primary,
-                        onPrimaryButtonColor =Theme.colors.onPrimary,
+                        onPrimaryButtonColor = Theme.colors.onPrimary,
                         secondaryButtonColor = Theme.colors.stroke,
-                        onSecondaryButtonColor = Theme.colors.primary
+                        onSecondaryButtonColor = Theme.colors.primary,
+                        categories = allCategories
                     )
                 }
             }
@@ -334,7 +339,7 @@ private fun HomeScreenPreview() {
                     id = 1,
                     title = "First",
                     description = "First description",
-                    categoryIcon = (R.drawable.ic_quran),
+                    categoryIcon = (R.drawable.ic_quran.toString()),
                     priority = 0,
                     status = TaskStatus.TO_DO.label,
                     date = "22-6-2025"
