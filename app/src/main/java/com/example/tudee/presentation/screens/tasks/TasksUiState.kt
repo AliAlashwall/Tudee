@@ -13,5 +13,6 @@ data class TasksUiState(
     var showDatePicker: Boolean = false,
     var showDeleteBottomSheet: Boolean = false,
     var selectedTab: TaskStatus = TaskStatus.IN_PROGRESS,
-    var swapedTask: TasksEntity? = null
+    var swapedTask: TasksEntity? = null,
+    val allTasks : List<TasksEntity> = emptyList()
 )

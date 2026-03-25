@@ -11,7 +11,7 @@ import com.example.tudee.presentation.screens.home.TaskStatus
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -20,11 +20,18 @@ import kotlinx.coroutines.launch
 class TasksViewModel(val tasksDao: TasksDao) : ViewModel() {
 
     private val _tasksUiState = MutableStateFlow(TasksUiState())
-    val tasksUiState: StateFlow<TasksUiState> = _tasksUiState.asStateFlow()
-
 
     val allTasks: StateFlow<List<TasksEntity>> = tasksDao.getAllTasks()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+
+    val tasksUiState: StateFlow<TasksUiState> = combine(
+        _tasksUiState,
+        allTasks
+    ) { state, tasks ->
+        state.copy(
+            allTasks = tasks
+        )
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), TasksUiState())
 
     fun onDateSelected(date: String) {
         _tasksUiState.update {

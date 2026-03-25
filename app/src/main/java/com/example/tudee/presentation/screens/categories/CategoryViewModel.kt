@@ -22,12 +22,12 @@ class CategoryViewModel(
     val categoryDao: CategoryDao
 ) : ViewModel() {
 
-/*    init {
-        viewModelScope.launch {
-            categoryDao.deleteCategory(21)
-            categoryDao.deleteCategory(22)
-        }
-    }*/
+    /*    init {
+            viewModelScope.launch {
+                categoryDao.deleteCategory(21)
+                categoryDao.deleteCategory(22)
+            }
+        }*/
 
     /*fun insertInitCategories() {
         val categories = listOf(
@@ -156,13 +156,12 @@ class CategoryViewModel(
     private val _categoryUiState =
         MutableStateFlow(CategoryUiState(categories = allCategories.value))
 
-    val categoryUiState: StateFlow<CategoryUiState> = combine(
-        _categoryUiState,
-        allCategories,
-        allTasks
-    ) { state, categories, tasks ->
-        // Map through categories and update their count based on the tasks list
-        val updatedCategories = categories.map { category ->
+    // Every time one of the combine's flows changed its block would be executed
+    val categoriesWithCount: StateFlow<List<CategoryEntity>> = combine(
+        flow = allCategories,
+        flow2 = allTasks
+    ) { categories, tasks ->
+        categories.map { category ->
             val taskCountPerCategory = tasks.count { task ->
                 if (category.isCustom) {
                     task.categoryIcon == category.uriImage
@@ -172,8 +171,15 @@ class CategoryViewModel(
             }
             category.copy(count = taskCountPerCategory)
         }
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
-        state.copy(categories = updatedCategories)
+
+    val categoryUiState: StateFlow<CategoryUiState> = combine(
+        _categoryUiState,
+        categoriesWithCount
+    ) { state, categoriesCounted ->
+
+        state.copy(categories = categoriesCounted)
     }.stateIn(
         viewModelScope,
         SharingStarted.WhileSubscribed(5000),

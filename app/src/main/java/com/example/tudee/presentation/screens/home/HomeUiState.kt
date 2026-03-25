@@ -1,6 +1,7 @@
 package com.example.tudee.presentation.screens.home
 
 import com.example.tudee.R
+import com.example.tudee.database.entity.CategoryEntity
 import com.example.tudee.database.entity.TasksEntity
 
 data class HomeUiState(
@@ -14,12 +15,14 @@ data class HomeUiState(
     var showAddBottomSheet: Boolean = false,
     var showEditTaskBottomSheet: Boolean = false,
     var showDetailsBottomSheet: Boolean = false,
-    val todoTasksCount:  List<TasksEntity>? = emptyList(),
-    val inProgressTasksCount:  List<TasksEntity>? = emptyList(),
-    val doneTasksCount:  List<TasksEntity>? = emptyList(),
+    val todoTasks: List<TasksEntity>? = emptyList(),
+    val inProgressTasks: List<TasksEntity>? = emptyList(),
+    val doneTasks: List<TasksEntity>? = emptyList(),
     val notificationTitle: String = "title empty",
     val notificationDescription: String = "desc empty",
     val notificationIcon: Int = R.drawable.ic_status_neutral,
+    val allTasks: List<TasksEntity> = emptyList(),
+    val allCategories: List<CategoryEntity> = emptyList()
 )
 
 

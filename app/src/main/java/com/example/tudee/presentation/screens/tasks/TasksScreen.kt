@@ -41,7 +41,6 @@ fun TasksScreen(
     tasksViewModel: TasksViewModel
 ) {
     val tasksUiState = tasksViewModel.tasksUiState.collectAsStateWithLifecycle().value
-    val allTasks = tasksViewModel.allTasks.collectAsStateWithLifecycle().value
 
     Column(
         modifier = modifier
@@ -61,9 +60,9 @@ fun TasksScreen(
                 tasksViewModel.onTabClicked(it)
             },
             statusTasksList = tasksViewModel.getTasksByDateAndState(
-                allTasks,
-                tasksUiState.selectedDate,
-                tasksUiState.selectedTab.label
+                allTasksList = tasksUiState.allTasks,
+                date = tasksUiState.selectedDate,
+                state = tasksUiState.selectedTab.label
             ),
             onSwapTaskCard = { tasksViewModel.onSwapTaskCard(it) }
         )

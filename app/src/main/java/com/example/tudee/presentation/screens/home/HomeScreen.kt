@@ -2,7 +2,6 @@ package com.example.tudee.presentation.screens.home
 
 import android.annotation.SuppressLint
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -53,18 +52,10 @@ fun HomeScreen(
         homeViewModel.getCurrentDate()
     }
 
-    val allDayTasks =
-        homeViewModel.allTasks.collectAsStateWithLifecycle().value
-            .filter { it.date == homeViewModel.homeUiState.value.currentDate }
-
-    val allCategories = homeViewModel.allCategories.collectAsStateWithLifecycle().value
-
     val homeUiState = homeViewModel.homeUiState.collectAsStateWithLifecycle().value
 
-    LaunchedEffect(allDayTasks) {
-        homeViewModel.updateOverviewSection(allDayTasks)
-        Log.i("PO", "HomeScreen: updateOverviewCounter RECOMPOSED !!!!")
-    }
+    val allDayTasks =
+        remember(homeUiState.allTasks) { homeUiState.allTasks.filter { it.date == homeViewModel.homeUiState.value.currentDate } }
     Scaffold(
         containerColor = Theme.colors.surface,
         topBar = {
@@ -101,9 +92,9 @@ fun HomeScreen(
                 notificationTitle = homeUiState.notificationTitle,
                 notificationDescription = homeUiState.notificationDescription,
                 onTaskClicked = { homeViewModel.onTaskClicked(it) },
-                todoTasks = homeUiState.todoTasksCount,
-                inProgressTasks = homeUiState.inProgressTasksCount,
-                doneTasks = homeUiState.doneTasksCount,
+                todoTasks = homeUiState.todoTasks,
+                inProgressTasks = homeUiState.inProgressTasks,
+                doneTasks = homeUiState.doneTasks,
             )
 
             if (homeUiState.showAddBottomSheet) {
@@ -132,7 +123,7 @@ fun HomeScreen(
                         onPrimaryButtonColor = if (enableAddTaskButton) Theme.colors.onPrimary else Theme.colors.stroke,
                         secondaryButtonColor = Theme.colors.stroke,
                         onSecondaryButtonColor = Theme.colors.primary,
-                        categories = allCategories
+                        categories = homeUiState.allCategories
                     )
                 }
             }
@@ -177,7 +168,7 @@ fun HomeScreen(
                         onPrimaryButtonColor = Theme.colors.onPrimary,
                         secondaryButtonColor = Theme.colors.stroke,
                         onSecondaryButtonColor = Theme.colors.primary,
-                        categories = allCategories
+                        categories = homeUiState.allCategories
                     )
                 }
             }
@@ -234,7 +225,9 @@ fun HomeScreenContent(
                 }
                 item {
                     LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                        items(allTasks.filter { it.status == TaskStatus.IN_PROGRESS.label }, key = {it.id} ) { task ->
+                        items(
+                            allTasks.filter { it.status == TaskStatus.IN_PROGRESS.label },
+                            key = { it.id }) { task ->
                             TaskCard(
                                 taskIcon = task.categoryIcon,
                                 priorityLevel = task.priority,

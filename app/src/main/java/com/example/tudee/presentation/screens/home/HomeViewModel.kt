@@ -14,7 +14,7 @@ import com.example.tudee.presentation.unit.toDMYFormat
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -33,7 +33,24 @@ class HomeViewModel(
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
     private val _homeUiState = MutableStateFlow(HomeUiState())
-    val homeUiState: StateFlow<HomeUiState> = _homeUiState.asStateFlow()
+    val homeUiState: StateFlow<HomeUiState> = combine(
+        _homeUiState,
+        allTasks,
+        allCategories
+    ) { state, tasks, categories ->
+
+        val stateWithOverview = updateOverviewSection(state = state, allTasks = tasks)
+
+        // 2. Return the final copy including tasks and categories
+        stateWithOverview.copy(
+            allTasks = tasks,
+            allCategories = categories
+        )
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = HomeUiState()
+    )
 
 
     fun onNewTaskTitleChange(newTitle: String) {
@@ -42,31 +59,34 @@ class HomeViewModel(
         }
     }
 
-    fun updateOverviewSection(allTasks: List<TasksEntity>) {
-        updateOverviewCounter(allTasks)
-        updateOverviewNotification()
+    private fun updateOverviewSection(
+        state: HomeUiState,
+        allTasks: List<TasksEntity>
+    ): HomeUiState {
+        val stateWithCounters = updateOverviewCounter(state, allTasks)
+        return updateOverviewNotification(stateWithCounters)
     }
 
-    private fun updateOverviewCounter(allTasks: List<TasksEntity>) {
+    private fun updateOverviewCounter(
+        state: HomeUiState,
+        allTasks: List<TasksEntity>
+    ): HomeUiState {
         val counts = allTasks.groupBy { it.status }
         val todoTasks = counts[TaskStatus.TO_DO.label]
         val inProgressTasks = counts[TaskStatus.IN_PROGRESS.label]
         val doneTasks = counts[TaskStatus.DONE.label]
 
-        _homeUiState.update {
-            it.copy(
-                todoTasksCount = todoTasks,
-                inProgressTasksCount = inProgressTasks,
-                doneTasksCount = doneTasks
-            )
-        }
+        return state.copy(
+            todoTasks = todoTasks,
+            inProgressTasks = inProgressTasks,
+            doneTasks = doneTasks
+        )
     }
 
-    private fun updateOverviewNotification() {
-        val state = _homeUiState.value
-        val todo = state.todoTasksCount?.size ?: 0
-        val inProgress = state.inProgressTasksCount?.size ?: 0
-        val done = state.doneTasksCount?.size ?: 0
+    private fun updateOverviewNotification(state: HomeUiState): HomeUiState {
+        val todo = state.todoTasks?.size ?: 0
+        val inProgress = state.inProgressTasks?.size ?: 0
+        val done = state.doneTasks?.size ?: 0
 
         val (title, description, icon) = when {
             todo == 0 && inProgress == 0 && done == 0 -> Triple(
@@ -94,13 +114,11 @@ class HomeViewModel(
             )
         }
 
-        _homeUiState.update {
-            it.copy(
-                notificationTitle = title,
-                notificationDescription = description,
-                notificationIcon = icon
-            )
-        }
+        return state.copy(
+            notificationTitle = title,
+            notificationDescription = description,
+            notificationIcon = icon
+        )
     }
 
 
