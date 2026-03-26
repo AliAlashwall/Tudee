@@ -6,6 +6,7 @@ import com.example.tudee.domain.model.Category
 import com.example.tudee.domain.model.Task
 import com.example.tudee.domain.repository.CategoryRepository
 import com.example.tudee.domain.repository.TaskRepository
+import com.example.tudee.presentation.screens.home.TaskStatus
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -28,127 +29,127 @@ class CategoryViewModel @Inject constructor(
             categoryDao.deleteCategory(24)
         }
     }*/
-/*    init {
-        insertInitCategories()
-    }
-
-    fun insertInitCategories() {
-        val categories = listOf(
-            CategoryEntity(
-                name = "Education",
-                icon = R.drawable.ic_book_open,
-                count = 0,
-                isCustom = false
-            ),
-            CategoryEntity(
-                name = "Shopping",
-                icon = R.drawable.ic_shopping_cart,
-                count = 0,
-                isCustom = false
-            ),
-            CategoryEntity(
-                name = "Medical",
-                icon = R.drawable.ic_hospital_location,
-                count = 0,
-                isCustom = false
-            ),
-            CategoryEntity(
-                name = "Jym",
-                icon = R.drawable.ic_body_part_muscle,
-                count = 0,
-                isCustom = false
-            ),
-            CategoryEntity(
-                name = "Entertainment",
-                icon = R.drawable.ic_baseball_bat,
-                count = 0,
-                isCustom = false
-            ),
-            CategoryEntity(
-                name = "Cooking",
-                icon = R.drawable.ic_chef,
-                count = 0,
-                isCustom = false
-            ),
-            CategoryEntity(
-                name = "family & friend",
-                icon = R.drawable.ic_user_multiple,
-                count = 0,
-                isCustom = false
-            ),
-            CategoryEntity(
-                name = "traveling",
-                icon = R.drawable.ic_airplane,
-                count = 0,
-                isCustom = false
-            ),
-            CategoryEntity(
-                name = "agriculture",
-                icon = R.drawable.ic_plant,
-                count = 0,
-                isCustom = false
-            ),
-            CategoryEntity(
-                name = "coding",
-                icon = R.drawable.ic_developer,
-                count = 0,
-                isCustom = false
-            ),
-            CategoryEntity(
-                name = "adoration",
-                icon = R.drawable.ic_quran,
-                count = 0,
-                isCustom = false
-            ),
-            CategoryEntity(
-                name = "fixing bugs",
-                icon = R.drawable.ic_bug,
-                count = 0,
-                isCustom = false
-            ),
-            CategoryEntity(
-                name = "cleaning",
-                icon = R.drawable.ic_blush_brush,
-                count = 0,
-                isCustom = false
-            ),
-            CategoryEntity(
-                name = "work",
-                icon = R.drawable.ic_money_bag,
-                count = 0,
-                isCustom = false
-            ),
-            CategoryEntity(
-                name = "budgeting",
-                icon = R.drawable.ic_money_bag,
-                count = 0,
-                isCustom = false
-            ),
-            CategoryEntity(
-                name = "self - care",
-                icon = R.drawable.ic_in_love,
-                count = 0,
-                isCustom = false
-            ),
-            CategoryEntity(
-                name = "event",
-                icon = R.drawable.ic_birthday_cake,
-                count = 0,
-                isCustom = false
-            ),
-            CategoryEntity(
-                name = "Reading novels",
-                icon = R.drawable.reading_novels,
-                count = 0,
-                isCustom = false
-            ),
-        )
-        categories.forEach {
-            viewModelScope.launch {
-                categoryRepository.insertCategory(it.toDomain())
-            }
+    /*    init {
+            insertInitCategories()
         }
-    }*/
+
+        fun insertInitCategories() {
+            val categories = listOf(
+                CategoryEntity(
+                    name = "Education",
+                    icon = R.drawable.ic_book_open,
+                    count = 0,
+                    isCustom = false
+                ),
+                CategoryEntity(
+                    name = "Shopping",
+                    icon = R.drawable.ic_shopping_cart,
+                    count = 0,
+                    isCustom = false
+                ),
+                CategoryEntity(
+                    name = "Medical",
+                    icon = R.drawable.ic_hospital_location,
+                    count = 0,
+                    isCustom = false
+                ),
+                CategoryEntity(
+                    name = "Jym",
+                    icon = R.drawable.ic_body_part_muscle,
+                    count = 0,
+                    isCustom = false
+                ),
+                CategoryEntity(
+                    name = "Entertainment",
+                    icon = R.drawable.ic_baseball_bat,
+                    count = 0,
+                    isCustom = false
+                ),
+                CategoryEntity(
+                    name = "Cooking",
+                    icon = R.drawable.ic_chef,
+                    count = 0,
+                    isCustom = false
+                ),
+                CategoryEntity(
+                    name = "family & friend",
+                    icon = R.drawable.ic_user_multiple,
+                    count = 0,
+                    isCustom = false
+                ),
+                CategoryEntity(
+                    name = "traveling",
+                    icon = R.drawable.ic_airplane,
+                    count = 0,
+                    isCustom = false
+                ),
+                CategoryEntity(
+                    name = "agriculture",
+                    icon = R.drawable.ic_plant,
+                    count = 0,
+                    isCustom = false
+                ),
+                CategoryEntity(
+                    name = "coding",
+                    icon = R.drawable.ic_developer,
+                    count = 0,
+                    isCustom = false
+                ),
+                CategoryEntity(
+                    name = "adoration",
+                    icon = R.drawable.ic_quran,
+                    count = 0,
+                    isCustom = false
+                ),
+                CategoryEntity(
+                    name = "fixing bugs",
+                    icon = R.drawable.ic_bug,
+                    count = 0,
+                    isCustom = false
+                ),
+                CategoryEntity(
+                    name = "cleaning",
+                    icon = R.drawable.ic_blush_brush,
+                    count = 0,
+                    isCustom = false
+                ),
+                CategoryEntity(
+                    name = "work",
+                    icon = R.drawable.ic_money_bag,
+                    count = 0,
+                    isCustom = false
+                ),
+                CategoryEntity(
+                    name = "budgeting",
+                    icon = R.drawable.ic_money_bag,
+                    count = 0,
+                    isCustom = false
+                ),
+                CategoryEntity(
+                    name = "self - care",
+                    icon = R.drawable.ic_in_love,
+                    count = 0,
+                    isCustom = false
+                ),
+                CategoryEntity(
+                    name = "event",
+                    icon = R.drawable.ic_birthday_cake,
+                    count = 0,
+                    isCustom = false
+                ),
+                CategoryEntity(
+                    name = "Reading novels",
+                    icon = R.drawable.reading_novels,
+                    count = 0,
+                    isCustom = false
+                ),
+            )
+            categories.forEach {
+                viewModelScope.launch {
+                    categoryRepository.insertCategory(it.toDomain())
+                }
+            }
+        }*/
 
     val allTasks: StateFlow<List<Task>> =
         taskRepository.getAllTasks()
@@ -248,12 +249,24 @@ class CategoryViewModel @Inject constructor(
     // I also want to change categoryIcon to categoryId into TaskEntity
     fun onCategoryClicked(category: Category) {
         viewModelScope.launch {
+            val tasksPerCategory = taskRepository.getTasksByCategoryId(category.id)
+            val todoTasks = tasksPerCategory.filter { it.status == TaskStatus.TO_DO.label }
+            val inProgressTasks =
+                tasksPerCategory.filter { it.status == TaskStatus.IN_PROGRESS.label }
+            val doneTasks = tasksPerCategory.filter { it.status == TaskStatus.DONE.label }
             _categoryUiState.update {
                 it.copy(
-                    tasksPerCategory = taskRepository.getTasksByCategoryId(category.id),
-                    clickedCategory = category
+                    tasksPerCategory = tasksPerCategory,
+                    clickedCategory = category,
+                    todoTasks = todoTasks,
+                    inProgressTasks = inProgressTasks,
+                    doneTasks = doneTasks
                 )
             }
         }
+    }
+
+    fun onTabClicked(status: TaskStatus) {
+        _categoryUiState.update { it.copy(selectedTab = status) }
     }
 }

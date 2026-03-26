@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -27,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import com.example.tudee.R
 import com.example.tudee.domain.model.Category
 import com.example.tudee.domain.model.Task
+import com.example.tudee.presentation.components.EmptyTasks
 import com.example.tudee.presentation.designSystem.theme.Theme
 import com.example.tudee.presentation.screens.home.TaskStatus
 
@@ -128,6 +130,13 @@ fun TaskTabs(
                         onSwap = { onSwapTaskCard(it) },
                     )
                 }
+            }
+        } else {
+            Column(Modifier.fillMaxSize().padding(horizontal = 16.dp)){
+                EmptyTasks(
+                    title = "No tasks",
+                    body = ""
+                )
             }
         }
     }

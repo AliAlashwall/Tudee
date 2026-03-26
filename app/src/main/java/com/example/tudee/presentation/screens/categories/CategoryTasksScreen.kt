@@ -37,14 +37,18 @@ fun CategoryTasksScreen(categoryViewModel: CategoryViewModel, navController: Nav
     CategoryTasksScreenContent(
         category = categoryUiState.clickedCategory ?: Category(
             name = "Error",
-            icon = R.drawable.reading_novels,
+            icon = R.drawable.ic_alert,
             count = 0
         ),
         selectedTab = categoryUiState.selectedTab,
         onBackClicked = { navController.popBackStack() },
         onEditClicked = {},
-        tasksList = categoryUiState.tasksPerCategory,
-        onTaBClicked = {},
+        tasksList = when (categoryUiState.selectedTab) {
+            TaskStatus.IN_PROGRESS -> categoryUiState.inProgressTasks ?: emptyList()
+            TaskStatus.TO_DO -> categoryUiState.todoTasks ?: emptyList()
+            TaskStatus.DONE -> categoryUiState.doneTasks ?: emptyList()
+        },
+        onTabClicked = { categoryViewModel.onTabClicked(it) },
         onSwapTaskCard = {}
     )
 }
@@ -57,7 +61,7 @@ fun CategoryTasksScreenContent(
     onBackClicked: () -> Unit,
     onEditClicked: () -> Unit,
     tasksList: List<Task>,
-    onTaBClicked: () -> Unit,
+    onTabClicked: (TaskStatus) -> Unit,
     onSwapTaskCard: () -> Unit
 ) {
     Column(
@@ -113,14 +117,12 @@ fun CategoryTasksScreenContent(
                     tint = Theme.colors.body
                 )
             }
-
-
         }
 
         TaskTabs(
             selectedTab = selectedTab,
             statusTasksList = tasksList,
-            onTabClicked = { onTaBClicked() },
+            onTabClicked = { onTabClicked(it) },
             onSwapTaskCard = { onSwapTaskCard() },
             allCategories = mapOf(          // as it has only the selected category
                 Pair(
@@ -129,8 +131,6 @@ fun CategoryTasksScreenContent(
                 )
             )
         )
-
-
     }
 
 }
@@ -159,7 +159,7 @@ private fun CategoryTasksScreenPreview() {
                     date = "22-6-2025"
                 )
             ),
-            onTaBClicked = { },
+            onTabClicked = { },
             onSwapTaskCard = {},
         )
     }
