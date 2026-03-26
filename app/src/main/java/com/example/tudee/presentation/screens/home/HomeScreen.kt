@@ -54,8 +54,6 @@ fun HomeScreen(
 
     val homeUiState = homeViewModel.homeUiState.collectAsStateWithLifecycle().value
 
-    val allDayTasks =
-        remember(homeUiState.allTasks) { homeUiState.allTasks.filter { it.date == homeViewModel.homeUiState.value.currentDate } }
     Scaffold(
         containerColor = Theme.colors.surface,
         topBar = {
@@ -86,7 +84,6 @@ fun HomeScreen(
         ) {
             HomeScreenContent(
                 currentDate = homeUiState.currentDate,
-                allTasks = allDayTasks,
                 statusIconId = homeUiState.notificationIcon,
                 tudeeStatusImgId = R.drawable.im_robot_neutral,
                 notificationTitle = homeUiState.notificationTitle,
@@ -184,7 +181,6 @@ fun HomeScreenContent(
     tudeeStatusImgId: Int,
     notificationTitle: String,
     notificationDescription: String,
-    allTasks: List<Task>,
     onTaskClicked: (Task) -> Unit,
     todoTasks: List<Task>?,
     inProgressTasks: List<Task>?,
@@ -209,101 +205,97 @@ fun HomeScreenContent(
 
         item { Spacer(Modifier.height(16.dp)) }
 
-        if (allTasks.isNotEmpty()) {
 
-            if (inProgressTasks != null) {
-                item {
-                    Text(
-                        text = stringResource(R.string.in_progress_status),
-                        style = Theme.textStyle.title.large,
-                        color = Theme.colors.title,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 16.dp)
-                    )
-                    Spacer(Modifier.height(2.dp))
-                }
-                item {
-                    LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                        items(
-                            allTasks.filter { it.status == TaskStatus.IN_PROGRESS.label },
-                            key = { it.id }) { task ->
-                            TaskCard(
-                                taskIcon = task.categoryIcon,
-                                priorityLevel = task.priority,
-                                title = task.title,
-                                description = task.description,
-                                onClick = { onTaskClicked(task) },
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(horizontal = 16.dp)
-                            )
-                        }
-                    }
-
-                    Spacer(Modifier.height(16.dp))
-                }
+        if (inProgressTasks != null) {
+            item {
+                Text(
+                    text = stringResource(R.string.in_progress_status),
+                    style = Theme.textStyle.title.large,
+                    color = Theme.colors.title,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp)
+                )
+                Spacer(Modifier.height(2.dp))
             }
-            if (todoTasks != null) {
-                item {
-                    Text(
-                        text = stringResource(R.string.to_do),
-                        style = Theme.textStyle.title.large,
-                        color = Theme.colors.title,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 16.dp)
-                    )
+            item {
+                LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    items(inProgressTasks, key = { it.id }) { task ->
+                        TaskCard(
+                            taskIcon = task.categoryIcon,
+                            priorityLevel = task.priority,
+                            title = task.title,
+                            description = task.description,
+                            onClick = { onTaskClicked(task) },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 16.dp)
+                        )
+                    }
                 }
-                item {
-                    LazyRow(
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 16.dp)
-                    ) {
-                        items(allTasks.filter { it.status == TaskStatus.TO_DO.label }) { task ->
-                            TaskCard(
-                                taskIcon = task.categoryIcon,
-                                priorityLevel = task.priority,
-                                title = task.title,
-                                description = task.description,
-                                onClick = { onTaskClicked(task) }
-                            )
-                            Spacer(Modifier.height(16.dp))
-                        }
+
+                Spacer(Modifier.height(16.dp))
+            }
+        }
+        if (todoTasks != null) {
+            item {
+                Text(
+                    text = stringResource(R.string.to_do),
+                    style = Theme.textStyle.title.large,
+                    color = Theme.colors.title,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp)
+                )
+            }
+            item {
+                LazyRow(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp)
+                ) {
+                    items(todoTasks, key = { it.id }) { task ->
+                        TaskCard(
+                            taskIcon = task.categoryIcon,
+                            priorityLevel = task.priority,
+                            title = task.title,
+                            description = task.description,
+                            onClick = { onTaskClicked(task) }
+                        )
+                        Spacer(Modifier.height(16.dp))
                     }
                 }
             }
+        }
 
-            if (doneTasks != null) {
-                item {
-                    Text(
-                        text = stringResource(R.string.done),
-                        style = Theme.textStyle.title.large,
-                        color = Theme.colors.title,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 16.dp)
-                    )
-                }
-                item {
-                    LazyRow(
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 16.dp)
-                    ) {
-                        items(allTasks.filter { it.status == TaskStatus.DONE.label }) { task ->
-                            TaskCard(
-                                taskIcon = task.categoryIcon,
-                                priorityLevel = task.priority,
-                                title = task.title,
-                                description = task.description,
-                                onClick = { onTaskClicked(task) }
-                            )
-                            Spacer(Modifier.height(16.dp))
-                        }
+        if (doneTasks != null) {
+            item {
+                Text(
+                    text = stringResource(R.string.done),
+                    style = Theme.textStyle.title.large,
+                    color = Theme.colors.title,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp)
+                )
+            }
+            item {
+                LazyRow(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp)
+                ) {
+                    items(doneTasks, key = { it.id }) { task ->
+                        TaskCard(
+                            taskIcon = task.categoryIcon,
+                            priorityLevel = task.priority,
+                            title = task.title,
+                            description = task.description,
+                            onClick = { onTaskClicked(task) }
+                        )
+                        Spacer(Modifier.height(16.dp))
                     }
                 }
             }
@@ -327,17 +319,6 @@ private fun HomeScreenPreview() {
     TudeeTheme {
         HomeScreenContent(
             currentDate = "22-6-2025",
-            allTasks = listOf(
-                Task(
-                    id = 1,
-                    title = "First",
-                    description = "First description",
-                    categoryIcon = (R.drawable.ic_quran.toString()),
-                    priority = 0,
-                    status = TaskStatus.TO_DO.label,
-                    date = "22-6-2025"
-                )
-            ),
             statusIconId = R.drawable.ic_status_neutral,
             tudeeStatusImgId = R.drawable.im_robot_neutral,
             notificationTitle = "Stay working",
