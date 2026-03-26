@@ -5,32 +5,29 @@ import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.example.tudee.database.dao.CategoryDao
-import com.example.tudee.database.dao.TasksDao
-import com.example.tudee.database.mapper.toCategoryEntity
-import com.example.tudee.database.mapper.toDomain
 import com.example.tudee.domain.model.Category
 import com.example.tudee.domain.model.Task
+import com.example.tudee.domain.repository.CategoryRepository
+import com.example.tudee.domain.repository.TaskRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class CategoryViewModel(
-    tasksDao: TasksDao,
-    val categoryDao: CategoryDao
+    val taskRepository: TaskRepository,
+    val categoryRepository: CategoryRepository
 ) : ViewModel() {
 
-        /*init {
-            viewModelScope.launch {
-                categoryDao.deleteCategory(23)
-                categoryDao.deleteCategory(24)
-            }
-        }*/
+    /*init {
+        viewModelScope.launch {
+            categoryDao.deleteCategory(23)
+            categoryDao.deleteCategory(24)
+        }
+    }*/
 
     /*fun insertInitCategories() {
         val categories = listOf(
@@ -151,12 +148,10 @@ class CategoryViewModel(
     }*/
 
     val allTasks: StateFlow<List<Task>> =
-        tasksDao.getAllTasks().map { tasksEntities -> tasksEntities.map { it.toDomain() } }
+        taskRepository.getAllTasks()
             .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
-    val allCategories: StateFlow<List<Category>> = categoryDao.getAllCategories().map { categoriesEntities ->
-        categoriesEntities.map { it.toDomain() }
-    }
+    val allCategories: StateFlow<List<Category>> = categoryRepository.getAllCategories()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
     private val _categoryUiState =
@@ -223,7 +218,7 @@ class CategoryViewModel(
                 count = 0,
                 isCustom = true   // it is always equal true, as every entered image would be URI
             )
-            categoryDao.insertCategory(newCategory.toCategoryEntity())
+            categoryRepository.insertCategory(newCategory)
         }
         onDismissBottomSheet()
     }
@@ -254,12 +249,12 @@ class CategoryViewModel(
 
 
 class TaskViewModelFactoryForCategories(
-    private val tasksDao: TasksDao,
-    private val categoryDao: CategoryDao
+    val taskRepository: TaskRepository,
+    val categoryRepository: CategoryRepository
 ) : ViewModelProvider.Factory {
 
     @RequiresApi(Build.VERSION_CODES.O)
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T =
-        CategoryViewModel(tasksDao, categoryDao) as T
+        CategoryViewModel(taskRepository, categoryRepository) as T
 }

@@ -17,6 +17,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.tudee.data.repository.CategoryRepositoryImpl
+import com.example.tudee.data.repository.TaskRepositoryImpl
 import com.example.tudee.database.AppDatabase
 import com.example.tudee.navigation.AppNavHost
 import com.example.tudee.navigation.Screens
@@ -60,19 +62,23 @@ class MainActivity : ComponentActivity() {
                     val tasksDao = AppDatabase.getInstance(applicationContext).tasksDao()
                     val categoryDao = AppDatabase.getInstance(applicationContext).categoryDao()
 
+                    val taskRepository = TaskRepositoryImpl(tasksDao)
+                    val categoryRepository = CategoryRepositoryImpl(categoryDao)
+
+
                     val homeViewModel: HomeViewModel by viewModels {
                         TaskViewModelFactoryForHome(
-                            tasksDao,
-                            categoryDao
+                            taskRepository,
+                            categoryRepository
                         )
                     }
                     val tasksViewModel: TasksViewModel by viewModels {
                         TaskViewModelFactoryForTask(
-                            tasksDao
+                            taskRepository
                         )
                     }
                     val categoryViewModel: CategoryViewModel by viewModels {
-                        TaskViewModelFactoryForCategories(tasksDao, categoryDao)
+                        TaskViewModelFactoryForCategories(taskRepository, categoryRepository)
                     }
                     AppNavHost(
                         navController = navController,

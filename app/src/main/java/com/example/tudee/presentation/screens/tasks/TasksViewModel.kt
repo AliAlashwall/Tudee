@@ -5,27 +5,24 @@ import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.example.tudee.database.dao.TasksDao
-import com.example.tudee.database.mapper.toDomain
-import com.example.tudee.database.mapper.toTaskEntity
 import com.example.tudee.domain.model.Task
+import com.example.tudee.domain.repository.TaskRepository
 import com.example.tudee.presentation.screens.home.TaskStatus
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 @RequiresApi(Build.VERSION_CODES.O)
-class TasksViewModel(val tasksDao: TasksDao) : ViewModel() {
+class TasksViewModel(val taskRepository: TaskRepository) : ViewModel() {
 
     private val _tasksUiState = MutableStateFlow(TasksUiState())
 
     val allTasks: StateFlow<List<Task>> =
-        tasksDao.getAllTasks().map { tasksEntity -> tasksEntity.map { it.toDomain() } }
+        taskRepository.getAllTasks()
             .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
     val tasksUiState: StateFlow<TasksUiState> = combine(
@@ -45,7 +42,7 @@ class TasksViewModel(val tasksDao: TasksDao) : ViewModel() {
 
     fun deleteTask(task: Task) {
         viewModelScope.launch {
-            tasksDao.deleteTask(task.toTaskEntity())
+            taskRepository.deleteTask(task)
         }
         _tasksUiState.update {
             it.copy(
@@ -100,10 +97,11 @@ class TasksViewModel(val tasksDao: TasksDao) : ViewModel() {
     }
 }
 
-class TaskViewModelFactoryForTask(private val dao: TasksDao) : ViewModelProvider.Factory {
+class TaskViewModelFactoryForTask(private val taskRepository: TaskRepository) :
+    ViewModelProvider.Factory {
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun <T : ViewModel> create(modelClass: Class<T>): T =
-        TasksViewModel(dao) as T
+        TasksViewModel(taskRepository) as T
 
 }

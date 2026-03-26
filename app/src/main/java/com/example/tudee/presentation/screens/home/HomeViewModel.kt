@@ -6,18 +6,15 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.tudee.R
-import com.example.tudee.database.dao.CategoryDao
-import com.example.tudee.database.dao.TasksDao
-import com.example.tudee.database.mapper.toDomain
-import com.example.tudee.database.mapper.toTaskEntity
 import com.example.tudee.domain.model.Category
 import com.example.tudee.domain.model.Task
+import com.example.tudee.domain.repository.CategoryRepository
+import com.example.tudee.domain.repository.TaskRepository
 import com.example.tudee.presentation.unit.toDMYFormat
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -25,18 +22,16 @@ import java.time.LocalDate
 
 @RequiresApi(Build.VERSION_CODES.O)
 class HomeViewModel(
-    val tasksDao: TasksDao,
-    categoryDao: CategoryDao
+    val taskRepository: TaskRepository,
+    val categoryRepository: CategoryRepository
 ) : ViewModel() {
 
-    val allTasks = tasksDao.getAllTasks().map { tasksEntity -> tasksEntity.map { it.toDomain() } }
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
-
-    val allCategories: StateFlow<List<Category>> =
-        categoryDao.getAllCategories().map { categoriesEntities ->
-            categoriesEntities.map { it.toDomain() }
-        }
+    val allTasks: StateFlow<List<Task>> =
+        taskRepository.getAllTasks()
             .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+
+    val allCategories: StateFlow<List<Category>> = categoryRepository.getAllCategories()
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
     private val _homeUiState = MutableStateFlow(HomeUiState())
     val homeUiState: StateFlow<HomeUiState> = combine(
@@ -219,7 +214,7 @@ class HomeViewModel(
         )
 
         viewModelScope.launch {
-            tasksDao.insertTask(task.toTaskEntity())
+            taskRepository.insertTask(task)
         }
         onDismissBottomSheet()
     }
@@ -235,7 +230,7 @@ class HomeViewModel(
                 status = _homeUiState.value.selectedTask!!.status,
             )
         viewModelScope.launch {
-            tasksDao.updateTask(updatedTask.toTaskEntity())
+            taskRepository.updateTask(updatedTask)
         }
         onDismissBottomSheet()
     }
@@ -244,7 +239,7 @@ class HomeViewModel(
         task: Task
     ) {
         viewModelScope.launch {
-            tasksDao.updateTask(task.toTaskEntity())
+            taskRepository.updateTask(task)
 
         }
     }
@@ -277,8 +272,8 @@ class HomeViewModel(
 }
 
 class TaskViewModelFactoryForHome(
-    private val tasksDao: TasksDao,
-    private val categoryDao: CategoryDao
+    val taskRepository: TaskRepository,
+    val categoryRepository: CategoryRepository
 ) : ViewModelProvider.Factory {
 // A Factory class — needed because NoteViewModel has a custom constructor parameter (dao)
 // By default, ViewModelProvider can only create ViewModels with empty constructors
@@ -288,7 +283,7 @@ class TaskViewModelFactoryForHome(
     // Called by the framework when a ViewModel is first requested
         // modelClass — the class of ViewModel being requested
 
-        HomeViewModel(tasksDao, categoryDao) as T
+        HomeViewModel(taskRepository, categoryRepository) as T
     // Creates a new NoteViewModel, passing the dao
     // as T — unchecked cast to the expected ViewModel type
 }

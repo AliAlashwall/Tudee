@@ -23,9 +23,4 @@ interface TasksDao {
 
     @Delete
     suspend fun deleteTask(task: TasksEntity)
-
-
-
-
-
 }
