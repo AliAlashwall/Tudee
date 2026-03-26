@@ -1,16 +1,20 @@
-package com.example.tudee.data.local
+package com.example.tudee.data.local.dataStore
 
 import android.content.Context
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class OnboardingPreferences(
-    private val context: Context
+@Singleton
+class OnboardingPreferences @Inject constructor(
+    @ApplicationContext private val context: Context
 ) {
 
-    val ONBOARDING_KEY =
+    private val ONBOARDING_KEY =
         booleanPreferencesKey("onboarding_completed")
 
     fun isOnboardingCompleted(): Flow<Boolean> =

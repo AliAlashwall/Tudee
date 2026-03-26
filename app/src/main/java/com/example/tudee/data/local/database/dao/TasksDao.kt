@@ -1,11 +1,11 @@
-package com.example.tudee.database.dao
+package com.example.tudee.data.local.database.dao
 
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
-import com.example.tudee.database.entity.TasksEntity
+import com.example.tudee.data.local.database.entity.TasksEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao

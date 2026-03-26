@@ -3,7 +3,6 @@ package com.example.tudee.presentation.screens.home
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.tudee.R
 import com.example.tudee.domain.model.Category
@@ -11,6 +10,7 @@ import com.example.tudee.domain.model.Task
 import com.example.tudee.domain.repository.CategoryRepository
 import com.example.tudee.domain.repository.TaskRepository
 import com.example.tudee.presentation.unit.toDMYFormat
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -19,11 +19,13 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.LocalDate
+import javax.inject.Inject
 
 @RequiresApi(Build.VERSION_CODES.O)
-class HomeViewModel(
-    val taskRepository: TaskRepository,
-    val categoryRepository: CategoryRepository
+@HiltViewModel
+class HomeViewModel @Inject constructor(
+    private val taskRepository: TaskRepository,
+    private val categoryRepository: CategoryRepository
 ) : ViewModel() {
 
     val allTasks: StateFlow<List<Task>> =
@@ -269,21 +271,4 @@ class HomeViewModel(
             it.copy(showAddBottomSheet = visibility)
         }
     }
-}
-
-class TaskViewModelFactoryForHome(
-    val taskRepository: TaskRepository,
-    val categoryRepository: CategoryRepository
-) : ViewModelProvider.Factory {
-// A Factory class — needed because NoteViewModel has a custom constructor parameter (dao)
-// By default, ViewModelProvider can only create ViewModels with empty constructors
-
-    @RequiresApi(Build.VERSION_CODES.O)
-    override fun <T : ViewModel> create(modelClass: Class<T>): T =
-    // Called by the framework when a ViewModel is first requested
-        // modelClass — the class of ViewModel being requested
-
-        HomeViewModel(taskRepository, categoryRepository) as T
-    // Creates a new NoteViewModel, passing the dao
-    // as T — unchecked cast to the expected ViewModel type
 }

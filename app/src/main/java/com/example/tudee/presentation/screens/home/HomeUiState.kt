@@ -15,13 +15,13 @@ data class HomeUiState(
     var showAddBottomSheet: Boolean = false,
     var showEditTaskBottomSheet: Boolean = false,
     var showDetailsBottomSheet: Boolean = false,
-    val todoTasks: List<Task>? = emptyList(),
-    val inProgressTasks: List<Task>? = emptyList(),
-    val doneTasks: List<Task>? = emptyList(),
     val notificationTitle: String = "title empty",
     val notificationDescription: String = "desc empty",
     val notificationIcon: Int = R.drawable.ic_status_neutral,
     val allTasks: List<Task> = emptyList(),
+    val todoTasks: List<Task>? = emptyList(),
+    val inProgressTasks: List<Task>? = emptyList(),
+    val doneTasks: List<Task>? = emptyList(),
     val allCategories: List<Category> = emptyList()
 )
 

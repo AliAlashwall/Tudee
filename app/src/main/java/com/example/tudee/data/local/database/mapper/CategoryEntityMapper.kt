@@ -1,6 +1,6 @@
-package com.example.tudee.database.mapper
+package com.example.tudee.data.local.database.mapper
 
-import com.example.tudee.database.entity.CategoryEntity
+import com.example.tudee.data.local.database.entity.CategoryEntity
 import com.example.tudee.domain.model.Category
 
 

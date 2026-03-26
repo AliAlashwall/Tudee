@@ -3,11 +3,11 @@ package com.example.tudee.presentation.screens.tasks
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.tudee.domain.model.Task
 import com.example.tudee.domain.repository.TaskRepository
 import com.example.tudee.presentation.screens.home.TaskStatus
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -15,9 +15,11 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @RequiresApi(Build.VERSION_CODES.O)
-class TasksViewModel(val taskRepository: TaskRepository) : ViewModel() {
+@HiltViewModel
+class TasksViewModel @Inject constructor(private val taskRepository: TaskRepository) : ViewModel() {
 
     private val _tasksUiState = MutableStateFlow(TasksUiState())
 
@@ -95,13 +97,4 @@ class TasksViewModel(val taskRepository: TaskRepository) : ViewModel() {
             it.date == date && it.status == state
         }
     }
-}
-
-class TaskViewModelFactoryForTask(private val taskRepository: TaskRepository) :
-    ViewModelProvider.Factory {
-
-    @RequiresApi(Build.VERSION_CODES.O)
-    override fun <T : ViewModel> create(modelClass: Class<T>): T =
-        TasksViewModel(taskRepository) as T
-
 }

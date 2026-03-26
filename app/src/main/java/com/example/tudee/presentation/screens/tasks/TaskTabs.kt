@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.PrimaryTabRow
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRowDefaults
@@ -28,6 +29,7 @@ import com.example.tudee.domain.model.Task
 import com.example.tudee.presentation.designSystem.theme.Theme
 import com.example.tudee.presentation.screens.home.TaskStatus
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TaskTabs(
     modifier: Modifier = Modifier,
@@ -36,7 +38,7 @@ fun TaskTabs(
     onTabClicked: (TaskStatus) -> Unit,
     onSwapTaskCard: (Task) -> Unit
 ) {
-    val tabs = TaskStatus.entries
+    val tabs = remember { TaskStatus.entries }
 
     // Calculate index once
     val selectedTabIndex = remember(selectedTab) {

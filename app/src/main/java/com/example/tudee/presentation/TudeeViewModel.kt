@@ -1,17 +1,18 @@
 package com.example.tudee.presentation
 
-import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.tudee.data.local.OnboardingPreferences
+import com.example.tudee.data.local.dataStore.OnboardingPreferences
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class TudeeViewModel(context: Context) : ViewModel() {
-
-    val onboardingPreferences = OnboardingPreferences(context)
-
+@HiltViewModel
+class TudeeViewModel @Inject constructor(
+    private val onboardingPreferences: OnboardingPreferences
+) : ViewModel() {
 
     val isOnboardingCompleted =
         onboardingPreferences.isOnboardingCompleted().stateIn(

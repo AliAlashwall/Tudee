@@ -1,14 +1,13 @@
 package com.example.tudee.presentation.screens.categories
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.tudee.domain.model.Category
 import com.example.tudee.domain.model.Task
 import com.example.tudee.domain.repository.CategoryRepository
 import com.example.tudee.domain.repository.TaskRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -17,9 +16,10 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class CategoryViewModel(
-    val taskRepository: TaskRepository,
-    val categoryRepository: CategoryRepository
+@HiltViewModel
+class CategoryViewModel @Inject constructor (
+    private val taskRepository: TaskRepository,
+    private val categoryRepository: CategoryRepository
 ) : ViewModel() {
 
     /*init {
@@ -245,16 +245,4 @@ class CategoryViewModel(
             it.copy(categoryTitle = "", selectedCategoryImage = null)
         }
     }
-}
-
-
-class TaskViewModelFactoryForCategories(
-    val taskRepository: TaskRepository,
-    val categoryRepository: CategoryRepository
-) : ViewModelProvider.Factory {
-
-    @RequiresApi(Build.VERSION_CODES.O)
-    @Suppress("UNCHECKED_CAST")
-    override fun <T : ViewModel> create(modelClass: Class<T>): T =
-        CategoryViewModel(taskRepository, categoryRepository) as T
 }

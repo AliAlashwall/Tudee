@@ -1,6 +1,6 @@
-package com.example.tudee.database.mapper
+package com.example.tudee.data.local.database.mapper
 
-import com.example.tudee.database.entity.TasksEntity
+import com.example.tudee.data.local.database.entity.TasksEntity
 import com.example.tudee.domain.model.Task
 
 // Entity → Domain: used when reading from DB and sending up to the domain/presentation layer
