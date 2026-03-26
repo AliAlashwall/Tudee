@@ -59,7 +59,7 @@ fun TaskTabs(
                 )
             }) {
             tabs.forEachIndexed { index, taskStatus ->
-                val isSelected = index == selectedTabIndex
+                val isSelected = (index == selectedTabIndex)
                 val textStyle =
                     if (isSelected) Theme.textStyle.label.medium else Theme.textStyle.label.small
                 Tab(
@@ -112,7 +112,7 @@ fun TaskTabs(
                     key = { it.id }
                 ) { task ->
                     val category =
-                        allCategories[task.id]
+                        allCategories[task.categoryId]
                             ?: Category(
                                 name = "Unknown",
                                 icon = R.drawable.reading_novels, count = 0
