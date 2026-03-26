@@ -6,12 +6,15 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.tudee.database.dao.TasksDao
-import com.example.tudee.database.entity.TasksEntity
+import com.example.tudee.database.mapper.toDomain
+import com.example.tudee.database.mapper.toTaskEntity
+import com.example.tudee.domain.model.Task
 import com.example.tudee.presentation.screens.home.TaskStatus
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -21,8 +24,9 @@ class TasksViewModel(val tasksDao: TasksDao) : ViewModel() {
 
     private val _tasksUiState = MutableStateFlow(TasksUiState())
 
-    val allTasks: StateFlow<List<TasksEntity>> = tasksDao.getAllTasks()
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+    val allTasks: StateFlow<List<Task>> =
+        tasksDao.getAllTasks().map { tasksEntity -> tasksEntity.map { it.toDomain() } }
+            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
     val tasksUiState: StateFlow<TasksUiState> = combine(
         _tasksUiState,
@@ -39,9 +43,9 @@ class TasksViewModel(val tasksDao: TasksDao) : ViewModel() {
         }
     }
 
-    fun deleteTask(task: TasksEntity) {
+    fun deleteTask(task: Task) {
         viewModelScope.launch {
-            tasksDao.deleteTask(task)
+            tasksDao.deleteTask(task.toTaskEntity())
         }
         _tasksUiState.update {
             it.copy(
@@ -51,7 +55,7 @@ class TasksViewModel(val tasksDao: TasksDao) : ViewModel() {
         }
     }
 
-    fun onSwapTaskCard(task: TasksEntity) {
+    fun onSwapTaskCard(task: Task) {
         _tasksUiState.update {
             it.copy(
                 showDeleteBottomSheet = true,
@@ -86,10 +90,10 @@ class TasksViewModel(val tasksDao: TasksDao) : ViewModel() {
     }
 
     fun getTasksByDateAndState(
-        allTasksList: List<TasksEntity>,
+        allTasksList: List<Task>,
         date: String,
         state: String
-    ): List<TasksEntity> {
+    ): List<Task> {
         return allTasksList.filter {
             it.date == date && it.status == state
         }

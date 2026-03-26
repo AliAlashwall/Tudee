@@ -24,7 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.tudee.R
-import com.example.tudee.database.entity.TasksEntity
+import com.example.tudee.domain.model.Task
 import com.example.tudee.presentation.designSystem.theme.Theme
 import com.example.tudee.presentation.screens.home.TaskStatus
 
@@ -32,9 +32,9 @@ import com.example.tudee.presentation.screens.home.TaskStatus
 fun TaskTabs(
     modifier: Modifier = Modifier,
     selectedTab: TaskStatus,
-    statusTasksList: List<TasksEntity>,
+    statusTasksList: List<Task>,
     onTabClicked: (TaskStatus) -> Unit,
-    onSwapTaskCard: (TasksEntity) -> Unit
+    onSwapTaskCard: (Task) -> Unit
 ) {
     val tabs = TaskStatus.entries
 
@@ -128,7 +128,7 @@ private fun TaskTabsPreview() {
         selectedTab = TaskStatus.IN_PROGRESS,
         onTabClicked = {},
         statusTasksList = listOf(
-            TasksEntity(
+            Task(
                 id = 1,
                 title = "First",
                 description = "First description",

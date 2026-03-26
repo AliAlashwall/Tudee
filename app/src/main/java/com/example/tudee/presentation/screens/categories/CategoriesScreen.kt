@@ -1,10 +1,8 @@
 package com.example.tudee.presentation.screens.categories
 
-import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
-import android.os.Build
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -47,7 +45,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.tudee.R
-import com.example.tudee.database.entity.CategoryEntity
+import com.example.tudee.domain.model.Category
 import com.example.tudee.presentation.components.CategoryCard
 import com.example.tudee.presentation.components.TudeeTextField
 import com.example.tudee.presentation.components.bottomSheet.BottomSheetButtons
@@ -117,7 +115,7 @@ fun CategoriesScreen(
 @Composable
 fun CategoryScreenContent(
     modifier: Modifier = Modifier,
-    categories: List<CategoryEntity>
+    categories: List<Category>
 ) {
     Column(
         modifier = modifier
@@ -205,11 +203,11 @@ fun BottomSheetContent(
 
         val context = LocalContext.current
 
-        val requiredPermission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        /*val requiredPermission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             Manifest.permission.READ_MEDIA_IMAGES
         } else {
             Manifest.permission.READ_EXTERNAL_STORAGE
-        }
+        }*/
 
         val imagePickerLauncher = rememberLauncherForActivityResult(
             // Use PickVisualMedia for better compatibility, persist the URI permission so it survives app restarts.

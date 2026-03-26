@@ -30,7 +30,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.tudee.R
-import com.example.tudee.database.entity.CategoryEntity
+import com.example.tudee.domain.model.Category
 import com.example.tudee.presentation.components.CategoryCard
 import com.example.tudee.presentation.components.CustomDateRangePicker
 import com.example.tudee.presentation.components.PriorityButton
@@ -63,7 +63,7 @@ fun TasksBottomSheetContent(
     onClickCategory: (String) -> Unit,
     onCancelBottomSheetClicked: (Boolean) -> Unit,
     onPrimaryButtonClicked: () -> Unit,
-    categories: List<CategoryEntity>
+    categories: List<Category>
 ) {
     // Persist dialog state across configuration changes
     var showDialog by rememberSaveable { mutableStateOf(false) }

@@ -33,7 +33,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.example.tudee.R
-import com.example.tudee.database.entity.TasksEntity
+import com.example.tudee.domain.model.Task
 import com.example.tudee.presentation.components.EmptyTasks
 import com.example.tudee.presentation.components.HomeTopBar
 import com.example.tudee.presentation.components.OverviewCard
@@ -184,11 +184,11 @@ fun HomeScreenContent(
     tudeeStatusImgId: Int,
     notificationTitle: String,
     notificationDescription: String,
-    allTasks: List<TasksEntity>,
-    onTaskClicked: (TasksEntity) -> Unit,
-    todoTasks: List<TasksEntity>?,
-    inProgressTasks: List<TasksEntity>?,
-    doneTasks: List<TasksEntity>?
+    allTasks: List<Task>,
+    onTaskClicked: (Task) -> Unit,
+    todoTasks: List<Task>?,
+    inProgressTasks: List<Task>?,
+    doneTasks: List<Task>?
 ) {
     LazyColumn(
         modifier = modifier.fillMaxWidth(),
@@ -328,7 +328,7 @@ private fun HomeScreenPreview() {
         HomeScreenContent(
             currentDate = "22-6-2025",
             allTasks = listOf(
-                TasksEntity(
+                Task(
                     id = 1,
                     title = "First",
                     description = "First description",

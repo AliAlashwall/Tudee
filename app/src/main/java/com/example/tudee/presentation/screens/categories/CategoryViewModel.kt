@@ -7,25 +7,28 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.tudee.database.dao.CategoryDao
 import com.example.tudee.database.dao.TasksDao
-import com.example.tudee.database.entity.CategoryEntity
-import com.example.tudee.database.entity.TasksEntity
+import com.example.tudee.database.mapper.toCategoryEntity
+import com.example.tudee.database.mapper.toDomain
+import com.example.tudee.domain.model.Category
+import com.example.tudee.domain.model.Task
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class CategoryViewModel(
-    val tasksDao: TasksDao,
+    tasksDao: TasksDao,
     val categoryDao: CategoryDao
 ) : ViewModel() {
 
-    /*    init {
+        /*init {
             viewModelScope.launch {
-                categoryDao.deleteCategory(21)
-                categoryDao.deleteCategory(22)
+                categoryDao.deleteCategory(23)
+                categoryDao.deleteCategory(24)
             }
         }*/
 
@@ -147,17 +150,20 @@ class CategoryViewModel(
         }
     }*/
 
-    val allTasks: StateFlow<List<TasksEntity>> = tasksDao.getAllTasks()
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+    val allTasks: StateFlow<List<Task>> =
+        tasksDao.getAllTasks().map { tasksEntities -> tasksEntities.map { it.toDomain() } }
+            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
-    val allCategories: StateFlow<List<CategoryEntity>> = categoryDao.getAllCategories()
+    val allCategories: StateFlow<List<Category>> = categoryDao.getAllCategories().map { categoriesEntities ->
+        categoriesEntities.map { it.toDomain() }
+    }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
     private val _categoryUiState =
         MutableStateFlow(CategoryUiState(categories = allCategories.value))
 
     // Every time one of the combine's flows changed its block would be executed
-    val categoriesWithCount: StateFlow<List<CategoryEntity>> = combine(
+    val categoriesWithCount: StateFlow<List<Category>> = combine(
         flow = allCategories,
         flow2 = allTasks
     ) { categories, tasks ->
@@ -211,13 +217,13 @@ class CategoryViewModel(
             )
         }
         viewModelScope.launch {
-            val newCategory = CategoryEntity(
+            val newCategory = Category(
                 name = _categoryUiState.value.categoryTitle,
                 uriImage = _categoryUiState.value.selectedCategoryImage ?: "",
                 count = 0,
                 isCustom = true   // it is always equal true, as every entered image would be URI
             )
-            categoryDao.insertCategory(newCategory)
+            categoryDao.insertCategory(newCategory.toCategoryEntity())
         }
         onDismissBottomSheet()
     }

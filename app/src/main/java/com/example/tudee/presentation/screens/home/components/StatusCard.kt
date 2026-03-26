@@ -17,12 +17,12 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.tudee.R
-import com.example.tudee.database.entity.TasksEntity
+import com.example.tudee.domain.model.Task
 import com.example.tudee.presentation.designSystem.theme.Theme
 import com.example.tudee.presentation.screens.home.TaskStatus
 
 @Composable
-fun StatusCard(task: TasksEntity) {
+fun StatusCard(task: Task) {
 
     val textColor = when (task.status) {
         TaskStatus.TO_DO.label -> Theme.colors.yellowAccent

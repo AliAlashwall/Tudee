@@ -24,7 +24,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.tudee.R
-import com.example.tudee.database.entity.TasksEntity
+import com.example.tudee.domain.model.Task
 import com.example.tudee.presentation.components.CategoryCard
 import com.example.tudee.presentation.components.PriorityButton
 import com.example.tudee.presentation.components.SecondaryButton
@@ -34,7 +34,7 @@ import com.example.tudee.presentation.screens.home.components.StatusCard
 @Composable
 fun TaskDetailsBottomSheetContent(
     modifier: Modifier = Modifier,
-    task: TasksEntity,
+    task: Task,
     onMoveButtonClicked: () -> Unit,
     onEditButtonClicked: () -> Unit
 ) {
@@ -142,7 +142,7 @@ fun TaskDetailsBottomSheetContent(
 @Composable
 private fun TaskDetailsBottomSheetContentPreview() {
     TaskDetailsBottomSheetContent(
-        task = TasksEntity(
+        task = Task(
             title = "Organize Study Desk",
             categoryIcon = (R.drawable.ic_book_open).toString(),
             description = "Solve all exercises from page 45 to 50 in the textbook, Solve all exercises from page 45 to 50 in the textbook.",

@@ -8,13 +8,16 @@ import androidx.lifecycle.viewModelScope
 import com.example.tudee.R
 import com.example.tudee.database.dao.CategoryDao
 import com.example.tudee.database.dao.TasksDao
-import com.example.tudee.database.entity.CategoryEntity
-import com.example.tudee.database.entity.TasksEntity
+import com.example.tudee.database.mapper.toDomain
+import com.example.tudee.database.mapper.toTaskEntity
+import com.example.tudee.domain.model.Category
+import com.example.tudee.domain.model.Task
 import com.example.tudee.presentation.unit.toDMYFormat
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -23,14 +26,17 @@ import java.time.LocalDate
 @RequiresApi(Build.VERSION_CODES.O)
 class HomeViewModel(
     val tasksDao: TasksDao,
-    val categoryDao: CategoryDao
+    categoryDao: CategoryDao
 ) : ViewModel() {
 
-    val allTasks: StateFlow<List<TasksEntity>> = tasksDao.getAllTasks()
+    val allTasks = tasksDao.getAllTasks().map { tasksEntity -> tasksEntity.map { it.toDomain() } }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
-    val allCategories: StateFlow<List<CategoryEntity>> = categoryDao.getAllCategories()
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+    val allCategories: StateFlow<List<Category>> =
+        categoryDao.getAllCategories().map { categoriesEntities ->
+            categoriesEntities.map { it.toDomain() }
+        }
+            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
     private val _homeUiState = MutableStateFlow(HomeUiState())
     val homeUiState: StateFlow<HomeUiState> = combine(
@@ -61,7 +67,7 @@ class HomeViewModel(
 
     private fun updateOverviewSection(
         state: HomeUiState,
-        allTasks: List<TasksEntity>
+        allTasks: List<Task>
     ): HomeUiState {
         val stateWithCounters = updateOverviewCounter(state, allTasks)
         return updateOverviewNotification(stateWithCounters)
@@ -69,7 +75,7 @@ class HomeViewModel(
 
     private fun updateOverviewCounter(
         state: HomeUiState,
-        allTasks: List<TasksEntity>
+        allTasks: List<Task>
     ): HomeUiState {
         val counts = allTasks.groupBy { it.status }
         val todoTasks = counts[TaskStatus.TO_DO.label]
@@ -165,7 +171,7 @@ class HomeViewModel(
         }
     }
 
-    fun onTaskClicked(task: TasksEntity) {
+    fun onTaskClicked(task: Task) {
         _homeUiState.update {
             it.copy(
                 selectedTask = task,
@@ -188,7 +194,7 @@ class HomeViewModel(
         }
     }
 
-    fun onMoveTaskStatusClicked(task: TasksEntity) {
+    fun onMoveTaskStatusClicked(task: Task) {
         if (task.status == TaskStatus.TO_DO.label) {
             updateTask(task.copy(status = TaskStatus.IN_PROGRESS.label))
 
@@ -203,7 +209,7 @@ class HomeViewModel(
 
     fun onAddClicked() {
         // All values are exists, because the button is enabled only if they are.
-        val task = TasksEntity(
+        val task = Task(
             title = _homeUiState.value.newTaskTitle,
             description = _homeUiState.value.newDescription,
             date = _homeUiState.value.selectedDate,
@@ -213,7 +219,7 @@ class HomeViewModel(
         )
 
         viewModelScope.launch {
-            tasksDao.insertTask(task)
+            tasksDao.insertTask(task.toTaskEntity())
         }
         onDismissBottomSheet()
     }
@@ -229,16 +235,16 @@ class HomeViewModel(
                 status = _homeUiState.value.selectedTask!!.status,
             )
         viewModelScope.launch {
-            tasksDao.updateTask(updatedTask)
+            tasksDao.updateTask(updatedTask.toTaskEntity())
         }
         onDismissBottomSheet()
     }
 
     fun updateTask(
-        task: TasksEntity
+        task: Task
     ) {
         viewModelScope.launch {
-            tasksDao.updateTask(task)
+            tasksDao.updateTask(task.toTaskEntity())
 
         }
     }

@@ -1,8 +1,8 @@
 package com.example.tudee.presentation.screens.home
 
 import com.example.tudee.R
-import com.example.tudee.database.entity.CategoryEntity
-import com.example.tudee.database.entity.TasksEntity
+import com.example.tudee.domain.model.Category
+import com.example.tudee.domain.model.Task
 
 data class HomeUiState(
     var newTaskTitle: String = "",
@@ -11,18 +11,18 @@ data class HomeUiState(
     var currentDate: String = "21 Mar 2026",
     var currentPriority: Int? = null,
     var selectedCategoryIcon: String? = null,
-    var selectedTask: TasksEntity? = null,
+    var selectedTask: Task? = null,
     var showAddBottomSheet: Boolean = false,
     var showEditTaskBottomSheet: Boolean = false,
     var showDetailsBottomSheet: Boolean = false,
-    val todoTasks: List<TasksEntity>? = emptyList(),
-    val inProgressTasks: List<TasksEntity>? = emptyList(),
-    val doneTasks: List<TasksEntity>? = emptyList(),
+    val todoTasks: List<Task>? = emptyList(),
+    val inProgressTasks: List<Task>? = emptyList(),
+    val doneTasks: List<Task>? = emptyList(),
     val notificationTitle: String = "title empty",
     val notificationDescription: String = "desc empty",
     val notificationIcon: Int = R.drawable.ic_status_neutral,
-    val allTasks: List<TasksEntity> = emptyList(),
-    val allCategories: List<CategoryEntity> = emptyList()
+    val allTasks: List<Task> = emptyList(),
+    val allCategories: List<Category> = emptyList()
 )
 
 

@@ -24,7 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.example.tudee.R
-import com.example.tudee.database.entity.TasksEntity
+import com.example.tudee.domain.model.Task
 import com.example.tudee.presentation.components.CustomDateRangePicker
 import com.example.tudee.presentation.components.bottomSheet.BottomSheetButtons
 import com.example.tudee.presentation.components.bottomSheet.TudeeBottomSheet
@@ -95,8 +95,8 @@ fun TasksScreenContent(
     onShowDatePicker: () -> Unit,
     selectedTab: TaskStatus,
     onTabClicked: (TaskStatus) -> Unit,
-    statusTasksList: List<TasksEntity>,
-    onSwapTaskCard: (TasksEntity) -> Unit
+    statusTasksList: List<Task>,
+    onSwapTaskCard: (Task) -> Unit
 ) {
     Column(
         modifier

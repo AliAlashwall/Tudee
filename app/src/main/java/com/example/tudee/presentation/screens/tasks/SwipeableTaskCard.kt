@@ -26,7 +26,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import com.example.tudee.R
-import com.example.tudee.database.entity.TasksEntity
+import com.example.tudee.domain.model.Task
 import com.example.tudee.presentation.components.TaskCard
 import com.example.tudee.presentation.designSystem.theme.Theme
 import kotlin.math.roundToInt
@@ -34,8 +34,8 @@ import kotlin.math.roundToInt
 @Composable
 fun SwipeableTaskCard(
     modifier: Modifier = Modifier,
-    task: TasksEntity,
-    onSwap: (TasksEntity) -> Unit = {}
+    task: Task,
+    onSwap: (Task) -> Unit = {}
 ) {
     val swipeThreshold = remember { -600f }
     var offsetX by remember { mutableFloatStateOf(0f) }
@@ -102,7 +102,7 @@ fun SwipeableTaskCard(
 private fun SwipeableTaskCardPreview() {
     SwipeableTaskCard(
         modifier = Modifier,
-        task = TasksEntity(
+        task = Task(
             id = 1,
             title = "First",
             description = "First description",
