@@ -132,7 +132,13 @@ fun TaskTabs(
                 }
             }
         } else {
-            Column(Modifier.fillMaxSize().padding(horizontal = 16.dp)){
+            Column(
+                Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 16.dp),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
                 EmptyTasks(
                     title = "No tasks",
                     body = ""
