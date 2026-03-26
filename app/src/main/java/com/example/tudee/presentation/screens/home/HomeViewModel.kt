@@ -74,10 +74,10 @@ class HomeViewModel @Inject constructor(
         state: HomeUiState,
         allTasks: List<Task>
     ): HomeUiState {
-        val counts = allTasks.groupBy { it.status }
-        val todoTasks = counts[TaskStatus.TO_DO.label]
-        val inProgressTasks = counts[TaskStatus.IN_PROGRESS.label]
-        val doneTasks = counts[TaskStatus.DONE.label]
+        val groupedTasksWithStatus = allTasks.filter { it.date == state.currentDate }.groupBy { it.status }
+        val todoTasks = groupedTasksWithStatus[TaskStatus.TO_DO.label]
+        val inProgressTasks = groupedTasksWithStatus[TaskStatus.IN_PROGRESS.label]
+        val doneTasks = groupedTasksWithStatus[TaskStatus.DONE.label]
 
         return state.copy(
             todoTasks = todoTasks,
