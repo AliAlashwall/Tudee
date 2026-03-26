@@ -71,12 +71,11 @@ fun AppNavHost(
 
         composable(route = Screens.Home.route) {
 
-            HomeScreen(navController = navController, homeViewModel = homeViewModel)
+            HomeScreen(homeViewModel = homeViewModel)
         }
 
         composable(Screens.Tasks.route) {
             TasksScreen(
-                navController = navController,
                 tasksViewModel = tasksViewModel
             )
         }
@@ -90,7 +89,7 @@ fun AppNavHost(
             )
         }
 
-        composable (route = Screens.CategoryTasks.route){
+        composable(route = Screens.CategoryTasks.route) {
             CategoryTasksScreen(
                 categoryViewModel = categoryViewModel,
                 navController = navController

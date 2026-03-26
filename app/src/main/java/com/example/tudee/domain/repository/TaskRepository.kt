@@ -13,4 +13,6 @@ interface TaskRepository {
 
 
     suspend fun deleteTask(task: Task)
+
+    suspend fun getTasksByCategoryId(categoryId: Int): List<Task>
 }

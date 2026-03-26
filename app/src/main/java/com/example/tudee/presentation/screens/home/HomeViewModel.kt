@@ -74,7 +74,8 @@ class HomeViewModel @Inject constructor(
         state: HomeUiState,
         allTasks: List<Task>
     ): HomeUiState {
-        val groupedTasksWithStatus = allTasks.filter { it.date == state.currentDate }.groupBy { it.status }
+        val groupedTasksWithStatus =
+            allTasks.filter { it.date == state.currentDate }.groupBy { it.status }
         val todoTasks = groupedTasksWithStatus[TaskStatus.TO_DO.label]
         val inProgressTasks = groupedTasksWithStatus[TaskStatus.IN_PROGRESS.label]
         val doneTasks = groupedTasksWithStatus[TaskStatus.DONE.label]
@@ -158,13 +159,13 @@ class HomeViewModel @Inject constructor(
 
     fun enableAddTaskButton(): Boolean {
         return _homeUiState.value.newTaskTitle.isNotBlank() &&
-                _homeUiState.value.selectedCategoryIcon.let { it != null } &&
+                _homeUiState.value.selectedCategoryId.let { it != null } &&
                 _homeUiState.value.currentPriority.let { it != null }
     }
 
-    fun updateSelectedCategory(categoryIcon: String) {
+    fun updateSelectedCategory(categoryId: Int) {
         _homeUiState.update {
-            it.copy(selectedCategoryIcon = categoryIcon)
+            it.copy(selectedCategoryId = categoryId)
         }
     }
 
@@ -186,7 +187,7 @@ class HomeViewModel @Inject constructor(
                 newDescription = _homeUiState.value.selectedTask!!.description,
                 currentPriority = _homeUiState.value.selectedTask!!.priority,
                 selectedDate = _homeUiState.value.selectedTask!!.date,
-                selectedCategoryIcon = _homeUiState.value.selectedTask!!.categoryIcon,
+                selectedCategoryId = _homeUiState.value.selectedTask!!.categoryId,
             )
         }
     }
@@ -210,7 +211,7 @@ class HomeViewModel @Inject constructor(
             title = _homeUiState.value.newTaskTitle,
             description = _homeUiState.value.newDescription,
             date = _homeUiState.value.selectedDate,
-            categoryIcon = _homeUiState.value.selectedCategoryIcon!!,
+            categoryId = _homeUiState.value.selectedCategoryId!!,
             priority = _homeUiState.value.currentPriority!!,
             status = TaskStatus.TO_DO.label,
         )
@@ -227,7 +228,7 @@ class HomeViewModel @Inject constructor(
                 title = _homeUiState.value.newTaskTitle,
                 description = _homeUiState.value.newDescription,
                 date = _homeUiState.value.selectedDate,
-                categoryIcon = _homeUiState.value.selectedCategoryIcon!!,
+                categoryId = _homeUiState.value.selectedCategoryId!!,
                 priority = _homeUiState.value.currentPriority!!,
                 status = _homeUiState.value.selectedTask!!.status,
             )
@@ -260,7 +261,7 @@ class HomeViewModel @Inject constructor(
                 showDetailsBottomSheet = false,
                 selectedDate = it.currentDate,
                 currentPriority = null,
-                selectedCategoryIcon = null
+                selectedCategoryId = null
             )
         }
     }

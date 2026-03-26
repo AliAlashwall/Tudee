@@ -5,11 +5,12 @@ import com.example.tudee.domain.model.Category
 
 
 fun CategoryEntity.toDomain(): Category = Category(
+    id = this.id,
     name = this.name,
     icon = this.icon,
     uriImage = this.uriImage,
     count = this.count,
-    isCustom =this.isCustom
+    isCustom = this.isCustom
 )
 
 

@@ -1,6 +1,7 @@
 package com.example.tudee.presentation.screens.categories
 
 import com.example.tudee.domain.model.Category
+import com.example.tudee.domain.model.Task
 import com.example.tudee.presentation.screens.home.TaskStatus
 
 data class CategoryUiState(
@@ -9,4 +10,6 @@ data class CategoryUiState(
     val categories: List<Category> = emptyList(),
     val showBottomSheet: Boolean = false,
     var selectedTab: TaskStatus = TaskStatus.IN_PROGRESS,
+    var clickedCategory: Category? = null,
+    val tasksPerCategory: List<Task> = emptyList()
 )

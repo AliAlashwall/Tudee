@@ -35,6 +35,7 @@ import com.example.tudee.presentation.screens.home.components.StatusCard
 fun TaskDetailsBottomSheetContent(
     modifier: Modifier = Modifier,
     task: Task,
+    categoryImage: String,
     onMoveButtonClicked: () -> Unit,
     onEditButtonClicked: () -> Unit
 ) {
@@ -57,12 +58,11 @@ fun TaskDetailsBottomSheetContent(
         Spacer(Modifier.height(12.dp))
 
         CategoryCard(
-            icon = task.categoryIcon,
+            icon = categoryImage,
             label = "",
             count = null,
             showCount = false,
             isPredefined = false,
-
         )
 
         Spacer(Modifier.height(8.dp))
@@ -144,13 +144,14 @@ private fun TaskDetailsBottomSheetContentPreview() {
     TaskDetailsBottomSheetContent(
         task = Task(
             title = "Organize Study Desk",
-            categoryIcon = (R.drawable.ic_book_open).toString(),
             description = "Solve all exercises from page 45 to 50 in the textbook, Solve all exercises from page 45 to 50 in the textbook.",
             priority = 0,
             status = TaskStatus.TO_DO.label,
-            date = "22-6-2025"
+            date = "22-6-2025",
+            categoryId = 1,
         ),
         onMoveButtonClicked = {},
         onEditButtonClicked = {},
+        categoryImage = ""
     )
 }

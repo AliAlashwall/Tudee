@@ -28,4 +28,8 @@ class CategoryRepositoryImpl @Inject constructor(private val categoryDao: Catego
     override suspend fun deleteCategory(categoryId: Int) {
         categoryDao.deleteCategory(categoryId)
     }
+
+    override suspend fun getCategoryById(categoryId: Int): Category {
+        return categoryDao.getCategoryById(categoryId).toDomain()
+    }
 }

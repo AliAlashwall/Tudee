@@ -57,12 +57,12 @@ fun TasksBottomSheetContent(
     newDescription: String,
     currentPriority: Int?,
     selectedDate: String,
-    selectedCategoryIcon: String?,
+    selectedCategoryId: Int?,
     onNewTaskTitleChange: (String) -> Unit,
     onNewDescriptionChange: (String) -> Unit,
     updateCurrentPriority: (Int) -> Unit,
     updateSelectedDate: (String) -> Unit,
-    onClickCategory: (String) -> Unit,
+    onClickCategory: (Int) -> Unit,
     onCancelBottomSheetClicked: (Boolean) -> Unit,
     onPrimaryButtonClicked: () -> Unit,
     categories: List<Category>
@@ -198,7 +198,7 @@ fun TasksBottomSheetContent(
                 ) {
                     categories.forEachIndexed { categoryIndex, category ->
 
-                        val categoryImage = remember {
+                        val categoryImage = remember(category.id, category.isCustom, category.uriImage, category.icon) {
                             (if (category.isCustom) {
                                 category.uriImage
                             } else {
@@ -212,12 +212,12 @@ fun TasksBottomSheetContent(
                         CategoryCard(
                             icon = categoryImage,
                             label = category.name,
-                            selected = categoryImage == selectedCategoryIcon.toString(),
+                            selected = (category.id == selectedCategoryId),
                             showCount = false,
-                            isPredefined = true,
+                            isPredefined = !category.isCustom,
                             modifier = Modifier
                                 .padding(bottom = bottomPadding),
-                            onClickCategory = { onClickCategory(categoryImage) }
+                            onClickCategory = { onClickCategory(category.id) }
                         )
 
                     }
@@ -266,7 +266,7 @@ private fun TasksBottomSheetContentPreview() {
             newDescription = "",
             currentPriority = 0,
             selectedDate = "",
-            selectedCategoryIcon = null,
+            selectedCategoryId = null,
             onNewTaskTitleChange = {},
             onNewDescriptionChange = {},
             updateCurrentPriority = {},

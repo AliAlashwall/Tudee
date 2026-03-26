@@ -9,7 +9,7 @@ data class TasksEntity(
     val title: String,
     val description: String,
     val date: String,
-    val categoryIcon : String,  // saved here as a String even it is drawable or uri
+    val categoryId : Int,
     val priority: Int,
     val status: String,
 )

@@ -7,7 +7,6 @@ import com.example.tudee.domain.model.Task
 import com.example.tudee.domain.repository.CategoryRepository
 import com.example.tudee.domain.repository.TaskRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -15,9 +14,10 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @HiltViewModel
-class CategoryViewModel @Inject constructor (
+class CategoryViewModel @Inject constructor(
     private val taskRepository: TaskRepository,
     private val categoryRepository: CategoryRepository
 ) : ViewModel() {
@@ -28,8 +28,11 @@ class CategoryViewModel @Inject constructor (
             categoryDao.deleteCategory(24)
         }
     }*/
+/*    init {
+        insertInitCategories()
+    }
 
-    /*fun insertInitCategories() {
+    fun insertInitCategories() {
         val categories = listOf(
             CategoryEntity(
                 name = "Education",
@@ -142,7 +145,7 @@ class CategoryViewModel @Inject constructor (
         )
         categories.forEach {
             viewModelScope.launch {
-                categoryDao.insertCategory(it)
+                categoryRepository.insertCategory(it.toDomain())
             }
         }
     }*/
@@ -164,11 +167,7 @@ class CategoryViewModel @Inject constructor (
     ) { categories, tasks ->
         categories.map { category ->
             val taskCountPerCategory = tasks.count { task ->
-                if (category.isCustom) {
-                    task.categoryIcon == category.uriImage
-                } else {
-                    task.categoryIcon == category.icon.toString()
-                }
+                task.categoryId == category.id
             }
             category.copy(count = taskCountPerCategory)
         }
@@ -243,6 +242,18 @@ class CategoryViewModel @Inject constructor (
     private fun resetBottomSheetState() {
         _categoryUiState.update {
             it.copy(categoryTitle = "", selectedCategoryImage = null)
+        }
+    }
+
+    // I also want to change categoryIcon to categoryId into TaskEntity
+    fun onCategoryClicked(category: Category) {
+        viewModelScope.launch {
+            _categoryUiState.update {
+                it.copy(
+                    tasksPerCategory = taskRepository.getTasksByCategoryId(category.id),
+                    clickedCategory = category
+                )
+            }
         }
     }
 }

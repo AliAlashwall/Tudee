@@ -23,4 +23,7 @@ interface TasksDao {
 
     @Delete
     suspend fun deleteTask(task: TasksEntity)
+
+    @Query("Select * from tasks_table Where categoryId = :categoryId")
+    suspend fun getTasksByCategoryId(categoryId: Int): List<TasksEntity>
 }

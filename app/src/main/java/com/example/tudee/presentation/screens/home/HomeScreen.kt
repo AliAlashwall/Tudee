@@ -31,8 +31,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavController
 import com.example.tudee.R
+import com.example.tudee.domain.model.Category
 import com.example.tudee.domain.model.Task
 import com.example.tudee.presentation.components.EmptyTasks
 import com.example.tudee.presentation.components.HomeTopBar
@@ -45,7 +45,7 @@ import com.example.tudee.presentation.designSystem.theme.TudeeTheme
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun HomeScreen(
-    modifier: Modifier = Modifier, navController: NavController,
+    modifier: Modifier = Modifier,
     homeViewModel: HomeViewModel
 ) {
     LaunchedEffect(Unit) {
@@ -92,6 +92,7 @@ fun HomeScreen(
                 todoTasks = homeUiState.todoTasks,
                 inProgressTasks = homeUiState.inProgressTasks,
                 doneTasks = homeUiState.doneTasks,
+                allCategories = homeUiState.allCategories
             )
 
             if (homeUiState.showAddBottomSheet) {
@@ -108,7 +109,7 @@ fun HomeScreen(
                         newDescription = homeUiState.newDescription,
                         currentPriority = homeUiState.currentPriority,
                         selectedDate = homeUiState.selectedDate,
-                        selectedCategoryIcon = homeUiState.selectedCategoryIcon,
+                        selectedCategoryId = homeUiState.selectedCategoryId,
                         onNewTaskTitleChange = { homeViewModel.onNewTaskTitleChange(it) },
                         onNewDescriptionChange = { homeViewModel.onNewTaskDescriptionChange(it) },
                         updateCurrentPriority = { homeViewModel.updateCurrentPriority(it) },
@@ -130,8 +131,13 @@ fun HomeScreen(
                     modifier = Modifier.heightIn(max = 700.dp),
                     expanded = false,
                     onDismissRequest = { homeViewModel.onDismissBottomSheet() }) {
+                    val category =
+                        homeUiState.allCategories.find { it.id == homeUiState.selectedTask!!.categoryId }!!
+                    val categoryImage =
+                        if (category.isCustom) category.uriImage else category.icon.toString()
                     TaskDetailsBottomSheetContent(
                         task = homeUiState.selectedTask!!,
+                        categoryImage = categoryImage,
                         onMoveButtonClicked = { homeViewModel.onMoveTaskStatusClicked(homeUiState.selectedTask!!) },
                         onEditButtonClicked = { homeViewModel.onEditTaskClicked() },
                         modifier = Modifier.heightIn(max = 373.dp)
@@ -152,7 +158,7 @@ fun HomeScreen(
                         newDescription = homeUiState.newDescription,
                         currentPriority = homeUiState.currentPriority,
                         selectedDate = homeUiState.selectedDate,
-                        selectedCategoryIcon = homeUiState.selectedCategoryIcon,
+                        selectedCategoryId = homeUiState.selectedCategoryId,
                         onNewTaskTitleChange = { homeViewModel.onNewTaskTitleChange(it) },
                         onNewDescriptionChange = { homeViewModel.onNewTaskDescriptionChange(it) },
                         updateCurrentPriority = { homeViewModel.updateCurrentPriority(it) },
@@ -184,7 +190,8 @@ fun HomeScreenContent(
     onTaskClicked: (Task) -> Unit,
     todoTasks: List<Task>?,
     inProgressTasks: List<Task>?,
-    doneTasks: List<Task>?
+    doneTasks: List<Task>?,
+    allCategories: List<Category>
 ) {
     LazyColumn(
         modifier = modifier.fillMaxWidth(),
@@ -221,8 +228,13 @@ fun HomeScreenContent(
             item {
                 LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     items(inProgressTasks, key = { it.id }) { task ->
+                        val category = allCategories.find { it.id == task.categoryId }!!
+
+                        val icon = if (category.isCustom) {
+                            category.uriImage
+                        } else category.icon.toString()
                         TaskCard(
-                            taskIcon = task.categoryIcon,
+                            categoryIconOfTask = icon,
                             priorityLevel = task.priority,
                             title = task.title,
                             description = task.description,
@@ -256,8 +268,13 @@ fun HomeScreenContent(
                         .padding(horizontal = 16.dp)
                 ) {
                     items(todoTasks, key = { it.id }) { task ->
+                        val category = allCategories.find { it.id == task.categoryId }!!
+
+                        val icon = if (category.isCustom) {
+                            category.uriImage
+                        } else category.icon.toString()
                         TaskCard(
-                            taskIcon = task.categoryIcon,
+                            categoryIconOfTask = icon,
                             priorityLevel = task.priority,
                             title = task.title,
                             description = task.description,
@@ -288,8 +305,13 @@ fun HomeScreenContent(
                         .padding(horizontal = 16.dp)
                 ) {
                     items(doneTasks, key = { it.id }) { task ->
+                        val category = allCategories.find { it.id == task.categoryId }!!
+
+                        val icon = if (category.isCustom) {
+                            category.uriImage
+                        } else category.icon.toString()
                         TaskCard(
-                            taskIcon = task.categoryIcon,
+                            categoryIconOfTask = icon,
                             priorityLevel = task.priority,
                             title = task.title,
                             description = task.description,
@@ -326,7 +348,17 @@ private fun HomeScreenPreview() {
             onTaskClicked = {},
             todoTasks = emptyList(),
             inProgressTasks = emptyList(),
-            doneTasks = emptyList()
+            doneTasks = emptyList(),
+            allCategories = listOf(
+                Category(
+                    id = 0,
+                    name = "",
+                    icon = R.drawable.im_robot_neutral,
+                    uriImage = "",
+                    count = 0,
+                    isCustom = false
+                )
+            )
         )
     }
 }

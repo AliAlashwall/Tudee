@@ -13,4 +13,6 @@ interface CategoryRepository {
 
     suspend fun deleteCategory(categoryId: Int)
 
+    suspend fun getCategoryById(categoryId: Int): Category
+
 }

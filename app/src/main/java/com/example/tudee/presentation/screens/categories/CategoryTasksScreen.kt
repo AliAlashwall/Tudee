@@ -19,7 +19,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavController
 import com.example.tudee.R
+import com.example.tudee.domain.model.Category
 import com.example.tudee.domain.model.Task
 import com.example.tudee.presentation.designSystem.theme.Theme
 import com.example.tudee.presentation.designSystem.theme.TudeeTheme
@@ -28,14 +31,28 @@ import com.example.tudee.presentation.screens.tasks.TaskTabs
 
 
 @Composable
-fun CategoryTasksScreen() {
-//    CategoryTasksScreenContent()
+fun CategoryTasksScreen(categoryViewModel: CategoryViewModel, navController: NavController) {
+    val categoryUiState = categoryViewModel.categoryUiState.collectAsStateWithLifecycle().value
+
+    CategoryTasksScreenContent(
+        category = categoryUiState.clickedCategory ?: Category(
+            name = "Error",
+            icon = R.drawable.reading_novels,
+            count = 0
+        ),
+        selectedTab = categoryUiState.selectedTab,
+        onBackClicked = { navController.popBackStack() },
+        onEditClicked = {},
+        tasksList = categoryUiState.tasksPerCategory,
+        onTaBClicked = {},
+        onSwapTaskCard = {}
+    )
 }
 
 @Composable
 fun CategoryTasksScreenContent(
     modifier: Modifier = Modifier,
-    categoryTitle: String,
+    category: Category,
     selectedTab: TaskStatus,
     onBackClicked: () -> Unit,
     onEditClicked: () -> Unit,
@@ -72,7 +89,7 @@ fun CategoryTasksScreenContent(
             Spacer(Modifier.width(12.dp))
 
             Text(
-                text = categoryTitle,
+                text = category.name,
                 color = Theme.colors.title,
                 style = Theme.textStyle.title.large
             )
@@ -104,7 +121,13 @@ fun CategoryTasksScreenContent(
             selectedTab = selectedTab,
             statusTasksList = tasksList,
             onTabClicked = { onTaBClicked() },
-            onSwapTaskCard = { onSwapTaskCard() }
+            onSwapTaskCard = { onSwapTaskCard() },
+            allCategories = mapOf(          // as it has only the selected category
+                Pair(
+                    category.id,
+                    category
+                )
+            )
         )
 
 
@@ -117,7 +140,11 @@ fun CategoryTasksScreenContent(
 private fun CategoryTasksScreenPreview() {
     TudeeTheme {
         CategoryTasksScreenContent(
-            categoryTitle = "Reading novel",
+            category = Category(
+                name = "reading novels",
+                icon = R.drawable.reading_novels,
+                count = 0
+            ),
             onBackClicked = {},
             onEditClicked = {},
             selectedTab = TaskStatus.IN_PROGRESS,
@@ -126,7 +153,7 @@ private fun CategoryTasksScreenPreview() {
                     id = 1,
                     title = "First",
                     description = "First description",
-                    categoryIcon = (R.drawable.ic_quran).toString(),
+                    categoryId = 0,
                     priority = 0,
                     status = TaskStatus.TO_DO.label,
                     date = "22-6-2025"

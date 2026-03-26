@@ -32,13 +32,13 @@ import com.example.tudee.presentation.unit.isValidUri
 @Composable
 fun TaskCard(
     modifier: Modifier = Modifier,
-    taskIcon: String,
+    categoryIconOfTask: String,
     priorityLevel: Int,
     title: String,
     description: String,
     onClick: () -> Unit = {},
 ) {
-    val isCustom = remember(taskIcon) { taskIcon.isValidUri() }
+    val isCustom = remember(categoryIconOfTask) { categoryIconOfTask.isValidUri() }
     Card(
         modifier = modifier
             .clickable { onClick() }
@@ -58,14 +58,14 @@ fun TaskCard(
             ) {
                 if (isCustom) {
                     AsyncImage(
-                        model = taskIcon.toUri(),
+                        model = categoryIconOfTask.toUri(),
                         contentDescription = stringResource(R.string.task_card_icon),
                         modifier = Modifier.size(32.dp),
 //                        colorFilter = ColorFilter.tint(Color.Unspecified)
                     )
                 } else {
                     Image(
-                        painter = painterResource(taskIcon.toInt()),
+                        painter = painterResource(categoryIconOfTask.toInt()),
                         contentDescription = stringResource(R.string.task_card_icon),
                         modifier = Modifier.size(32.dp),
 //                        colorFilter = ColorFilter.tint(Color.Unspecified)
@@ -102,7 +102,7 @@ fun TaskCard(
 private fun TaskCardPreview() {
     TudeeTheme {
         TaskCard(
-            taskIcon = R.drawable.ic_quran.toString(),
+            categoryIconOfTask = R.drawable.ic_quran.toString(),
             title = "Organize Study Desk",
             description = "Review cell structure and functions for tomorrow...",
             priorityLevel = 0

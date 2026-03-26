@@ -25,6 +25,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.tudee.R
+import com.example.tudee.domain.model.Category
 import com.example.tudee.domain.model.Task
 import com.example.tudee.presentation.designSystem.theme.Theme
 import com.example.tudee.presentation.screens.home.TaskStatus
@@ -36,7 +37,8 @@ fun TaskTabs(
     selectedTab: TaskStatus,
     statusTasksList: List<Task>,
     onTabClicked: (TaskStatus) -> Unit,
-    onSwapTaskCard: (Task) -> Unit
+    onSwapTaskCard: (Task) -> Unit,
+    allCategories: Map<Int, Category>,
 ) {
     val tabs = remember { TaskStatus.entries }
 
@@ -109,12 +111,21 @@ fun TaskTabs(
                     items = statusTasksList,
                     key = { it.id }
                 ) { task ->
+                    val category =
+                        allCategories[task.id]
+                            ?: Category(
+                                name = "Unknown",
+                                icon = R.drawable.reading_novels, count = 0
+                            )
+                    val categoryImage =
+                        if (category.isCustom) category.uriImage else category.icon.toString()
                     SwipeableTaskCard(
                         task = task,
+                        categoryIcon = categoryImage,
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(horizontal = 16.dp),
-                        onSwap = { onSwapTaskCard(it) }
+                        onSwap = { onSwapTaskCard(it) },
                     )
                 }
             }
@@ -134,12 +145,13 @@ private fun TaskTabsPreview() {
                 id = 1,
                 title = "First",
                 description = "First description",
-                categoryIcon = (R.drawable.ic_quran).toString(),
+                categoryId = 0,
                 priority = 0,
                 status = TaskStatus.TO_DO.label,
                 date = "22-6-2025"
             )
         ),
-        onSwapTaskCard = {}
+        onSwapTaskCard = {},
+        allCategories = emptyMap()
     )
 }

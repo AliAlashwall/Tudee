@@ -35,6 +35,7 @@ import kotlin.math.roundToInt
 fun SwipeableTaskCard(
     modifier: Modifier = Modifier,
     task: Task,
+    categoryIcon: String,
     onSwap: (Task) -> Unit = {}
 ) {
     val swipeThreshold = remember { -600f }
@@ -73,7 +74,7 @@ fun SwipeableTaskCard(
 
         // Foreground card
         TaskCard(
-            taskIcon = task.categoryIcon,
+            categoryIconOfTask = categoryIcon,
             priorityLevel = task.priority,
             title = task.title,
             description = task.description,
@@ -102,11 +103,12 @@ fun SwipeableTaskCard(
 private fun SwipeableTaskCardPreview() {
     SwipeableTaskCard(
         modifier = Modifier,
+        categoryIcon = "",
         task = Task(
             id = 1,
             title = "First",
             description = "First description",
-            categoryIcon = (R.drawable.ic_quran).toString(),
+            categoryId = 0,
             priority = 0,
             status = "To Do",
             date = "22-6-2025"

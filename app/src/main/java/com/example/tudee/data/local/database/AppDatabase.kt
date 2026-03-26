@@ -7,26 +7,10 @@ import com.example.tudee.data.local.database.dao.TasksDao
 import com.example.tudee.data.local.database.entity.CategoryEntity
 import com.example.tudee.data.local.database.entity.TasksEntity
 
-@Database(entities = [TasksEntity::class, CategoryEntity::class], version = 7, exportSchema = false)
+@Database(entities = [TasksEntity::class, CategoryEntity::class], version = 2, exportSchema = false)
 
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun tasksDao(): TasksDao
     abstract fun categoryDao(): CategoryDao
-
-
-//    companion object {
-//
-//        @Volatile private var INSTANCE: AppDatabase? = null
-//
-//        fun getInstance(context: Context): AppDatabase =
-//
-//            INSTANCE ?: synchronized(this) {
-//
-//                Room.databaseBuilder(context, AppDatabase::class.java, "db")
-//                    .fallbackToDestructiveMigration(false)
-//                    .build()
-//                    .also { INSTANCE = it }
-//            }
-//    }
 }
