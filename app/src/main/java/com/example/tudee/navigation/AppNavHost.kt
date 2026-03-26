@@ -16,6 +16,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.tudee.presentation.TudeeViewModel
 import com.example.tudee.presentation.screens.categories.CategoriesScreen
+import com.example.tudee.presentation.screens.categories.CategoryTasksScreen
 import com.example.tudee.presentation.screens.categories.CategoryViewModel
 import com.example.tudee.presentation.screens.home.HomeScreen
 import com.example.tudee.presentation.screens.home.HomeViewModel
@@ -27,8 +28,10 @@ sealed class Screens(val route: String) {
     object OnBoarding : Screens("onBoarding")
     object Home : Screens("home")
     object Tasks : Screens("Tasks")
-    object Categories : Screens("Categories") {
-    }
+    object Categories : Screens("Categories")
+
+    object CategoryTasks : Screens("CategoryTasks")
+
 }
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -84,6 +87,13 @@ fun AppNavHost(
             CategoriesScreen(
                 navController = navController,
                 categoryViewModel = categoryViewModel
+            )
+        }
+
+        composable (route = Screens.CategoryTasks.route){
+            CategoryTasksScreen(
+                categoryViewModel = categoryViewModel,
+                navController = navController
             )
         }
 
