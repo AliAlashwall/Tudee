@@ -13,6 +13,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.tudee.R
@@ -20,7 +21,11 @@ import com.example.tudee.presentation.designSystem.theme.Theme
 import com.example.tudee.presentation.designSystem.theme.TudeeTheme
 
 @Composable
-fun EmptyTasks(modifier: Modifier = Modifier) {
+fun EmptyTasks(
+    modifier: Modifier = Modifier,
+    title: String = stringResource(R.string.no_tasks_for_today),
+    body: String = stringResource(R.string.tap_the_button_to_add_your_first_one)
+) {
     Box(modifier = modifier) {
         Image(
             painterResource(R.drawable.empty_task_img),
@@ -44,13 +49,13 @@ fun EmptyTasks(modifier: Modifier = Modifier) {
                 verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
                 Text(
-                    text = "No tasks for today!",
+                    text = title,
                     color = Theme.colors.body,
                     style = Theme.textStyle.title.small
                 )
 
                 Text(
-                    text = "Tap the + button to add your \n" + "first one.",
+                    text = body,
                     style = Theme.textStyle.body.small,
                     color = Theme.colors.hint
                 )
