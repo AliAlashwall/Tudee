@@ -7,10 +7,13 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -21,6 +24,7 @@ import com.example.tudee.navigation.Screens
 import com.example.tudee.presentation.TudeeViewModel
 import com.example.tudee.presentation.components.BottomNavBar
 import com.example.tudee.presentation.designSystem.theme.Theme
+import com.example.tudee.presentation.designSystem.theme.ThemeState
 import com.example.tudee.presentation.designSystem.theme.TudeeTheme
 import com.example.tudee.presentation.screens.categories.CategoryViewModel
 import com.example.tudee.presentation.screens.home.HomeViewModel
@@ -39,7 +43,16 @@ class MainActivity : ComponentActivity() {
         setContent {
             val navController = rememberNavController()
             val navBackStackEntry by navController.currentBackStackEntryAsState()
-            TudeeTheme {
+
+            val isDark = isSystemInDarkTheme()
+            val (isDarkThemeState, onThemeStateChanged) = remember { mutableStateOf(isDark) }
+            val themeState = remember(isDarkThemeState) {
+                ThemeState(
+                    isDark = isDarkThemeState,
+                    onThemeChanged = onThemeStateChanged
+                )
+            }
+            TudeeTheme(themeState) {
                 Scaffold(
                     modifier = Modifier.fillMaxSize(),
                     bottomBar = {
