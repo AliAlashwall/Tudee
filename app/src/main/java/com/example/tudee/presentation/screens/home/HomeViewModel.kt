@@ -1,5 +1,6 @@
 package com.example.tudee.presentation.screens.home
 
+import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
@@ -12,6 +13,7 @@ import com.example.tudee.domain.repository.TaskRepository
 import com.example.tudee.presentation.screens.home.components.TaskStatus
 import com.example.tudee.presentation.unit.toDMYFormat
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -26,7 +28,8 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val taskRepository: TaskRepository,
-    private val categoryRepository: CategoryRepository
+    private val categoryRepository: CategoryRepository,
+    @ApplicationContext private val context: Context
 ) : ViewModel() {
 
     /*init {
@@ -264,25 +267,25 @@ class HomeViewModel @Inject constructor(
 
         val (title, description, icon) = when {
             todo == 0 && inProgress == 0 && done == 0 -> Triple(
-                "Nothing on your list...",
-                "Fill your day with something awesome.",
+                context.getString(R.string.Noting_to_do),
+                context.getString(R.string.Noting_to_do_description),
                 R.drawable.ic_status_sad
             )
 
             todo == 0 && inProgress == 0 && done != 0 -> Triple(
-                "Tadaa!",
-                "You're doing amazing!!!\nTudee is proud of you.",
+                context.getString(R.string.tadaa),
+                context.getString(R.string.tadaa_description),
                 R.drawable.ic_status_happy
             )
 
             todo != 0 && inProgress == 0 && done == 0 -> Triple(
-                "Zero progress?!",
-                "You just scrolling, not working. Tudee is watching. back to work!!!",
+                context.getString(R.string.zero_progress),
+                context.getString(R.string.zero_progress_description),
                 R.drawable.ic_status_angry
             )
 
             else -> Triple(
-                "Stay working",
+                context.getString(R.string.stay_working),
                 "You've completed $done out of ${inProgress + todo + done} tasks. Keep going!",
                 R.drawable.ic_status_neutral
             )
