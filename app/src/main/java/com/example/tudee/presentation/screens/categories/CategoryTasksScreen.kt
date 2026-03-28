@@ -1,5 +1,6 @@
 package com.example.tudee.presentation.screens.categories
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -65,7 +66,9 @@ fun CategoryTasksScreenContent(
     onSwapTaskCard: () -> Unit
 ) {
     Column(
-        modifier = modifier.fillMaxSize(),
+        modifier = modifier
+            .background(color = Theme.colors.surfaceHigh)
+            .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Row(
