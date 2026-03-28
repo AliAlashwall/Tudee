@@ -29,7 +29,7 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor(
     private val taskRepository: TaskRepository,
     private val categoryRepository: CategoryRepository,
-    @ApplicationContext private val context: Context
+    @param:ApplicationContext private val context: Context
 ) : ViewModel() {
 
     /*init {
@@ -264,6 +264,8 @@ class HomeViewModel @Inject constructor(
         val todo = state.todoTasks?.size ?: 0
         val inProgress = state.inProgressTasks?.size ?: 0
         val done = state.doneTasks?.size ?: 0
+        val allTasksCount = todo + inProgress + done
+
 
         val (title, description, icon) = when {
             todo == 0 && inProgress == 0 && done == 0 -> Triple(
@@ -286,7 +288,7 @@ class HomeViewModel @Inject constructor(
 
             else -> Triple(
                 context.getString(R.string.stay_working),
-                "You've completed $done out of ${inProgress + todo + done} tasks. Keep going!",
+                context.getString(R.string.stay_working_description, allTasksCount, done),
                 R.drawable.ic_status_neutral
             )
         }
