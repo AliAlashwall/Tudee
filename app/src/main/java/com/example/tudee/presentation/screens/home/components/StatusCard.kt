@@ -19,7 +19,6 @@ import androidx.compose.ui.unit.dp
 import com.example.tudee.R
 import com.example.tudee.domain.model.Task
 import com.example.tudee.presentation.designSystem.theme.Theme
-import com.example.tudee.presentation.screens.home.TaskStatus
 
 @Composable
 fun StatusCard(task: Task) {

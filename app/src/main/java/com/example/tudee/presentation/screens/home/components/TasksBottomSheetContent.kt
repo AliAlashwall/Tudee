@@ -1,4 +1,4 @@
-package com.example.tudee.presentation.screens.home
+package com.example.tudee.presentation.screens.home.components
 
 import android.os.Build
 import androidx.annotation.RequiresApi

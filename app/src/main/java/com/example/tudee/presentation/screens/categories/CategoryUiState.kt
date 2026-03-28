@@ -2,7 +2,7 @@ package com.example.tudee.presentation.screens.categories
 
 import com.example.tudee.domain.model.Category
 import com.example.tudee.domain.model.Task
-import com.example.tudee.presentation.screens.home.TaskStatus
+import com.example.tudee.presentation.screens.home.components.TaskStatus
 
 data class CategoryUiState(
     val categoryTitle: String = "",

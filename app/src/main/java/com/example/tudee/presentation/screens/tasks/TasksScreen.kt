@@ -30,7 +30,9 @@ import com.example.tudee.presentation.components.bottomSheet.BottomSheetButtons
 import com.example.tudee.presentation.components.bottomSheet.TudeeBottomSheet
 import com.example.tudee.presentation.designSystem.theme.Theme
 import com.example.tudee.presentation.designSystem.theme.TudeeTheme
-import com.example.tudee.presentation.screens.home.TaskStatus
+import com.example.tudee.presentation.screens.home.components.TaskStatus
+import com.example.tudee.presentation.screens.tasks.components.HorizontalDayPicker
+import com.example.tudee.presentation.components.TaskTabs
 import com.example.tudee.presentation.unit.fromDMYtoLocalDate
 
 @RequiresApi(Build.VERSION_CODES.O)

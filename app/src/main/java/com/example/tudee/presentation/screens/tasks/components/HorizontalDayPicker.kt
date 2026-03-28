@@ -1,4 +1,4 @@
-package com.example.tudee.presentation.screens.tasks
+package com.example.tudee.presentation.screens.tasks.components
 
 import android.os.Build
 import androidx.annotation.RequiresApi

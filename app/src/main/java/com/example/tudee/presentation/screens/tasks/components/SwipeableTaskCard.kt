@@ -1,4 +1,4 @@
-package com.example.tudee.presentation.screens.tasks
+package com.example.tudee.presentation.screens.tasks.components
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background

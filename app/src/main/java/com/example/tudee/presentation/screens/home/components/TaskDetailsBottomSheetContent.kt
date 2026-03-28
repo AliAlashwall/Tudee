@@ -1,4 +1,4 @@
-package com.example.tudee.presentation.screens.home
+package com.example.tudee.presentation.screens.home.components
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -29,7 +29,6 @@ import com.example.tudee.presentation.components.CategoryCard
 import com.example.tudee.presentation.components.PriorityButton
 import com.example.tudee.presentation.components.SecondaryButton
 import com.example.tudee.presentation.designSystem.theme.Theme
-import com.example.tudee.presentation.screens.home.components.StatusCard
 
 @Composable
 fun TaskDetailsBottomSheetContent(

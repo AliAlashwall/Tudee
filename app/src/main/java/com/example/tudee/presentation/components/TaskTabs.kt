@@ -1,4 +1,4 @@
-package com.example.tudee.presentation.screens.tasks
+package com.example.tudee.presentation.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -28,9 +28,9 @@ import androidx.compose.ui.unit.dp
 import com.example.tudee.R
 import com.example.tudee.domain.model.Category
 import com.example.tudee.domain.model.Task
-import com.example.tudee.presentation.components.EmptyTasks
 import com.example.tudee.presentation.designSystem.theme.Theme
-import com.example.tudee.presentation.screens.home.TaskStatus
+import com.example.tudee.presentation.screens.home.components.TaskStatus
+import com.example.tudee.presentation.screens.tasks.components.SwipeableTaskCard
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

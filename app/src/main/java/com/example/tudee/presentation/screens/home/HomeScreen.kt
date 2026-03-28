@@ -41,6 +41,8 @@ import com.example.tudee.presentation.components.TaskCard
 import com.example.tudee.presentation.components.bottomSheet.TudeeBottomSheet
 import com.example.tudee.presentation.designSystem.theme.Theme
 import com.example.tudee.presentation.designSystem.theme.TudeeTheme
+import com.example.tudee.presentation.screens.home.components.TaskDetailsBottomSheetContent
+import com.example.tudee.presentation.screens.home.components.TasksBottomSheetContent
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable

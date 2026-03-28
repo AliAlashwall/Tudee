@@ -8,7 +8,7 @@ import com.example.tudee.domain.model.Category
 import com.example.tudee.domain.model.Task
 import com.example.tudee.domain.repository.CategoryRepository
 import com.example.tudee.domain.repository.TaskRepository
-import com.example.tudee.presentation.screens.home.TaskStatus
+import com.example.tudee.presentation.screens.home.components.TaskStatus
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
