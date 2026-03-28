@@ -22,9 +22,6 @@
       <SelectionState runConfigName="Po">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="TaskTabsScreenPreview">
-        <option name="selectionMode" value="DROPDOWN" />
-      </SelectionState>
       <SelectionState runConfigName="fdsg">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>

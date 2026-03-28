@@ -132,9 +132,10 @@ fun HomeScreen(
                     expanded = false,
                     onDismissRequest = { homeViewModel.onDismissBottomSheet() }) {
                     val category =
-                        homeUiState.allCategories.find { it.id == homeUiState.selectedTask!!.categoryId }!!
-                    val categoryImage =
+                        homeUiState.allCategories.find { it.id == homeUiState.selectedTask?.categoryId }
+                    val categoryImage = if (category != null) {
                         if (category.isCustom) category.uriImage else category.icon.toString()
+                    } else ""
                     TaskDetailsBottomSheetContent(
                         task = homeUiState.selectedTask!!,
                         categoryImage = categoryImage,
@@ -226,22 +227,27 @@ fun HomeScreenContent(
                 Spacer(Modifier.height(2.dp))
             }
             item {
-                LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                LazyRow(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp)
+                ) {
                     items(inProgressTasks, key = { it.id }) { task ->
-                        val category = allCategories.find { it.id == task.categoryId }!!
+                        val category = allCategories.find { it.id == task.categoryId }
 
-                        val icon = if (category.isCustom) {
-                            category.uriImage
-                        } else category.icon.toString()
+                        val icon = if (category != null) {
+                            if (category.isCustom) {
+                                category.uriImage
+                            } else category.icon.toString()
+                        } else ""
+
                         TaskCard(
                             categoryIconOfTask = icon,
                             priorityLevel = task.priority,
                             title = task.title,
                             description = task.description,
                             onClick = { onTaskClicked(task) },
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 16.dp)
                         )
                     }
                 }
@@ -268,11 +274,14 @@ fun HomeScreenContent(
                         .padding(horizontal = 16.dp)
                 ) {
                     items(todoTasks, key = { it.id }) { task ->
-                        val category = allCategories.find { it.id == task.categoryId }!!
+                        val category = allCategories.find { it.id == task.categoryId }
 
-                        val icon = if (category.isCustom) {
-                            category.uriImage
-                        } else category.icon.toString()
+                        val icon = if (category != null) {
+                            if (category.isCustom) {
+                                category.uriImage
+                            } else category.icon.toString()
+                        } else ""
+
                         TaskCard(
                             categoryIconOfTask = icon,
                             priorityLevel = task.priority,
@@ -305,11 +314,14 @@ fun HomeScreenContent(
                         .padding(horizontal = 16.dp)
                 ) {
                     items(doneTasks, key = { it.id }) { task ->
-                        val category = allCategories.find { it.id == task.categoryId }!!
+                        val category = allCategories.find { it.id == task.categoryId }
 
-                        val icon = if (category.isCustom) {
-                            category.uriImage
-                        } else category.icon.toString()
+                        val icon = if (category != null) {
+                            if (category.isCustom) {
+                                category.uriImage
+                            } else category.icon.toString()
+                        } else ""
+
                         TaskCard(
                             categoryIconOfTask = icon,
                             priorityLevel = task.priority,

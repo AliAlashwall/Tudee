@@ -28,6 +28,175 @@ class HomeViewModel @Inject constructor(
     private val categoryRepository: CategoryRepository
 ) : ViewModel() {
 
+    /*init {
+
+
+        val po = listOf(
+            Task(
+                title = "Design Login Screen",
+                description = "Create wireframes and UI mockups for the login screen",
+                date = "27 Mar 2026",
+                categoryId = 1,
+                priority = 1,
+                status = "Done"
+            ),
+            Task(
+                title = "Implement Authentication",
+                description = "Set up Firebase Auth with email and Google sign-in",
+                date = "27 Mar 2026",
+                categoryId = 1,
+                priority = 0,
+                status = "In progress"
+            ),
+            Task(
+                title = "Create Database Schema",
+                description = "Define Room entities, DAOs, and database migrations",
+                date = "27 Mar 2026",
+                categoryId = 2,
+                priority = 0,
+                status = "Done"
+            ),
+            Task(
+                title = "Write Unit Tests",
+                description = "Cover repository and ViewModel layers with JUnit tests",
+                date = "27 Mar 2026",
+                categoryId = 2,
+                priority = 2,
+                status = "To-Do"
+            ),
+            Task(
+                title = "Build Home Dashboard",
+                description = "Develop the main dashboard with task summary cards",
+                date = "27 Mar 2026",
+                categoryId = 1,
+                priority = 1,
+                status = "In progress"
+            ),
+            Task(
+                title = "Fix Crash on Startup",
+                description = "Investigate and resolve NullPointerException on cold start",
+                date = "27 Mar 2026",
+                categoryId = 3,
+                priority = 0,
+                status = "To-Do"
+            ),
+            Task(
+                title = "Add Dark Mode Support",
+                description = "Implement dynamic theming using Material3 color schemes",
+                date = "27 Mar 2026",
+                categoryId = 1,
+                priority = 2,
+                status = "To-Do"
+            ),
+            Task(
+                title = "Integrate REST API",
+                description = "Connect Retrofit client to the backend task sync endpoint",
+                date = "27 Mar 2026",
+                categoryId = 2,
+                priority = 1,
+                status = "In progress"
+            ),
+            Task(
+                title = "Optimize RecyclerView",
+                description = "Use DiffUtil and ViewHolder recycling for smoother lists",
+                date = "27 Mar 2026",
+                categoryId = 2,
+                priority = 2,
+                status = "To-Do"
+            ),
+            Task(
+                title = "Set Up CI/CD Pipeline",
+                description = "Configure GitHub Actions for automated build and test runs",
+                date = "27 Mar 2026",
+                categoryId = 3,
+                priority = 1,
+                status = "Done"
+            ),
+            Task(
+                title = "Design Notification System",
+                description = "Plan and implement task reminder push notifications",
+                date = "27 Mar 2026",
+                categoryId = 1,
+                priority = 0,
+                status = "To-Do"
+            ),
+            Task(
+                title = "Refactor ViewModel Layer",
+                description = "Migrate to StateFlow and clean up LiveData usage",
+                date = "27 Mar 2026",
+                categoryId = 2,
+                priority = 2,
+                status = "In progress"
+            ),
+            Task(
+                title = "Add Drag and Drop",
+                description = "Enable reordering tasks via drag-and-drop in the list screen",
+                date = "27 Mar 2026",
+                categoryId = 1,
+                priority = 2,
+                status = "To-Do"
+            ),
+            Task(
+                title = "Localize App Strings",
+                description = "Extract all hardcoded strings into res/values/strings.xml",
+                date = "27 Mar 2026",
+                categoryId = 3,
+                priority = 2,
+                status = "To-Do"
+            ),
+            Task(
+                title = "Implement Search Feature",
+                description = "Add real-time search with filtering by title and category",
+                date = "27 Mar 2026",
+                categoryId = 1,
+                priority = 1,
+                status = "To-Do"
+            ),
+            Task(
+                title = "Profile App Performance",
+                description = "Use Android Profiler to detect memory leaks and jank",
+                date = "27 Mar 2026",
+                categoryId = 3,
+                priority = 0,
+                status = "In progress"
+            ),
+            Task(
+                title = "Create Onboarding Screens",
+                description = "Design 3-step onboarding flow shown on first app launch",
+                date = "27 Mar 2026",
+                categoryId = 1,
+                priority = 1,
+                status = "Done"
+            ),
+            Task(
+                title = "Add Export to CSV",
+                description = "Allow users to export their task list as a CSV file",
+                date = "27 Mar 2026",
+                categoryId = 2,
+                priority = 2,
+                status = "To-Do"
+            ),
+            Task(
+                title = "Code Review Sprint 3",
+                description = "Review and merge all open PRs before the sprint deadline",
+                date = "27 Mar 2026",
+                categoryId = 3,
+                priority = 0,
+                status = "In progress"
+            ),
+            Task(
+                title = "Publish to Play Store",
+                description = "Prepare release build, screenshots, and store listing copy",
+                date = "27 Mar 2026",
+                categoryId = 3,
+                priority = 0,
+                status = "To-Do"
+            )
+        )
+
+        viewModelScope.launch { po.forEach { taskRepository.insertTask(it) } }
+    }*/
+
     val allTasks: StateFlow<List<Task>> =
         taskRepository.getAllTasks()
             .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
