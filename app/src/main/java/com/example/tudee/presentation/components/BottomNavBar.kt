@@ -1,5 +1,6 @@
 package com.example.tudee.presentation.components
 
+import android.annotation.SuppressLint
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -20,13 +21,17 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.tudee.R
-import com.example.tudee.navigation.Screens
+import com.example.tudee.navigation.CategoriesScreen
+import com.example.tudee.navigation.HomeScreen
+import com.example.tudee.navigation.TasksScreen
 import com.example.tudee.presentation.designSystem.theme.Theme
 import com.example.tudee.presentation.designSystem.theme.TudeeTheme
 
+@SuppressLint("RestrictedApi")
 @Composable
 fun BottomNavBar(
     modifier: Modifier = Modifier,
@@ -34,7 +39,7 @@ fun BottomNavBar(
 ) {
     NavigationBar(containerColor = Theme.colors.surfaceHigh) {
         val navBackStackEntry by navController.currentBackStackEntryAsState()
-        val currentRoute = navBackStackEntry?.destination?.route
+        val currentRoute = navBackStackEntry?.destination
 
         Row(
             modifier = modifier
@@ -44,33 +49,33 @@ fun BottomNavBar(
             verticalAlignment = Alignment.Bottom
         ) {
             NavBarIcon(
-                iconId = if (currentRoute == Screens.Home.route) R.drawable.ic_home_filled else R.drawable.ic_home_outlined,
+                iconId = if (currentRoute?.hasRoute(HomeScreen::class) == true) R.drawable.ic_home_filled else R.drawable.ic_home_outlined,
                 contentDescription = "Home",
-                isSelected = currentRoute == Screens.Home.route,
+                isSelected = currentRoute?.hasRoute(HomeScreen::class) == true,
                 onClick = {
-                    navController.navigate(Screens.Home.route) {
+                    navController.navigate(HomeScreen) {
                         launchSingleTop = true   // to avoid duplicated nav
                     }
                 }
             )
 
             NavBarIcon(
-                iconId = if (currentRoute == Screens.Tasks.route) R.drawable.ic_document_filled else R.drawable.ic_document_outlined,
+                iconId = if (currentRoute?.hasRoute(TasksScreen::class) == true) R.drawable.ic_document_filled else R.drawable.ic_document_outlined,
                 contentDescription = "document",
-                isSelected = currentRoute == Screens.Tasks.route,
+                isSelected = currentRoute?.hasRoute(TasksScreen::class) == true,
                 onClick = {
-                    navController.navigate(Screens.Tasks.route) {
+                    navController.navigate(TasksScreen) {
                         launchSingleTop = true
                     }
                 }
             )
 
             NavBarIcon(
-                iconId = if (currentRoute == Screens.Categories.route) R.drawable.ic_menu_circle_filled else R.drawable.ic_menu_circle_outlined,
+                iconId = if (currentRoute?.hasRoute(CategoriesScreen::class) == true) R.drawable.ic_menu_circle_filled else R.drawable.ic_menu_circle_outlined,
                 contentDescription = "menu",
-                isSelected = currentRoute == Screens.Categories.route,
+                isSelected = currentRoute?.hasRoute(CategoriesScreen::class) == true,
                 onClick = {
-                    navController.navigate(Screens.Categories.route) {
+                    navController.navigate(CategoriesScreen) {
                         launchSingleTop = true
                     }
                 },

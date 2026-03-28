@@ -24,15 +24,6 @@ import com.example.tudee.presentation.screens.onBoarding.OnBoardingScreen
 import com.example.tudee.presentation.screens.tasks.TasksScreen
 import com.example.tudee.presentation.screens.tasks.TasksViewModel
 
-sealed class Screens(val route: String) {
-    object OnBoarding : Screens("onBoarding")
-    object Home : Screens("home")
-    object Tasks : Screens("Tasks")
-    object Categories : Screens("Categories")
-
-    object CategoryTasks : Screens("CategoryTasks")
-
-}
 
 @RequiresApi(Build.VERSION_CODES.O)
 @SuppressLint("ViewModelConstructorInComposable")
@@ -59,42 +50,39 @@ fun AppNavHost(
     NavHost(
         navController = navController,
         startDestination = if (isOnboardingCompleted == true) {
-            Screens.Home.route
+            HomeScreen
         } else {
-            Screens.OnBoarding.route
+            OnBoardingScreen
         },
         modifier = modifier
     ) {
-        composable(route = Screens.OnBoarding.route) {
+        composable<OnBoardingScreen> {
             OnBoardingScreen(onCompleteScroll = { tudeeViewModel.completeOnboarding() })
         }
 
-        composable(route = Screens.Home.route) {
+        composable<HomeScreen> {
 
             HomeScreen(homeViewModel = homeViewModel)
         }
 
-        composable(Screens.Tasks.route) {
+        composable<TasksScreen> {
             TasksScreen(
                 tasksViewModel = tasksViewModel
             )
         }
 
-        composable(
-            route = Screens.Categories.route
-        ) {
+        composable<CategoriesScreen> {
             CategoriesScreen(
                 navController = navController,
                 categoryViewModel = categoryViewModel
             )
         }
 
-        composable(route = Screens.CategoryTasks.route) {
+        composable<CategoryTasksScreen> {
             CategoryTasksScreen(
                 categoryViewModel = categoryViewModel,
                 navController = navController
             )
         }
-
     }
 }

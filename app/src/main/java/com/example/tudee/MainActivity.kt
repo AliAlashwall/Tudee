@@ -17,10 +17,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.tudee.navigation.AppNavHost
-import com.example.tudee.navigation.Screens
+import com.example.tudee.navigation.CategoriesScreen
+import com.example.tudee.navigation.HomeScreen
+import com.example.tudee.navigation.TasksScreen
 import com.example.tudee.presentation.TudeeViewModel
 import com.example.tudee.presentation.components.BottomNavBar
 import com.example.tudee.presentation.designSystem.theme.Theme
@@ -36,13 +39,20 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     @RequiresApi(Build.VERSION_CODES.O)
-    @SuppressLint("ViewModelConstructorInComposable")
+    @SuppressLint("ViewModelConstructorInComposable", "RestrictedApi")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             val navController = rememberNavController()
             val navBackStackEntry by navController.currentBackStackEntryAsState()
+
+            val bottomBarScreens =
+                listOf(HomeScreen::class, TasksScreen::class, CategoriesScreen::class)
+
+            val showBottomBar = bottomBarScreens.any { screen ->
+                navBackStackEntry?.destination?.hasRoute(screen) == true
+            }
 
             val isDark = isSystemInDarkTheme()
             val (isDarkThemeState, onThemeStateChanged) = remember { mutableStateOf(isDark) }
@@ -56,12 +66,7 @@ class MainActivity : ComponentActivity() {
                 Scaffold(
                     modifier = Modifier.fillMaxSize(),
                     bottomBar = {
-                        if ((navBackStackEntry?.destination?.route) in listOf(
-                                Screens.Home.route,
-                                Screens.Tasks.route,
-                                Screens.Categories.route,
-                            )
-                        ) {
+                        if (showBottomBar) {
                             BottomNavBar(navController = navController)
                         }
                     },
@@ -83,11 +88,9 @@ class MainActivity : ComponentActivity() {
                         homeViewModel = homeViewModel,
                         tasksViewModel = tasksViewModel,
                         categoryViewModel = categoryViewModel
-
                     )
                 }
             }
         }
-
     }
 }

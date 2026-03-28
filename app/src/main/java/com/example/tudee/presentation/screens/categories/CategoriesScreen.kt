@@ -46,7 +46,7 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.tudee.R
 import com.example.tudee.domain.model.Category
-import com.example.tudee.navigation.Screens
+import com.example.tudee.navigation.CategoryTasksScreen
 import com.example.tudee.presentation.components.CategoryCard
 import com.example.tudee.presentation.components.TudeeTextField
 import com.example.tudee.presentation.components.bottomSheet.BottomSheetButtons
@@ -85,7 +85,7 @@ fun CategoriesScreen(
             categories = categoryUiState.categories,
             onCategoryClicked = {
                 categoryViewModel.onCategoryClicked(it)
-                navController.navigate(Screens.CategoryTasks.route)
+                navController.navigate(CategoryTasksScreen)
             }
 
         )

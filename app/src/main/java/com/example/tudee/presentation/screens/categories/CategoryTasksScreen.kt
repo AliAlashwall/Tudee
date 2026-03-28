@@ -115,7 +115,7 @@ fun CategoryTasksScreenContent(
             ) {
                 Icon(
                     painter = painterResource(R.drawable.ic_pencil_edit),
-                    contentDescription = stringResource(R.string.back_button),
+                    contentDescription = stringResource(R.string.edit_category_icon),
                     modifier = Modifier.size(20.dp),
                     tint = Theme.colors.body
                 )

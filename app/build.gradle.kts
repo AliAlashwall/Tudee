@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt)
 }
@@ -57,7 +58,9 @@ dependencies {
     implementation(libs.androidx.hilt.navigation.compose)
 
     //Navigation
-    implementation(libs.androidx.navigation.compose)
+//    implementation(libs.androidx.navigation.compose)
+    implementation(libs.navigation.compose)
+    implementation(libs.kotlinx.serialization.json)
 
     // Preferences DataStore (SharedPreferences like APIs)
     implementation(libs.androidx.datastore.preferences)
@@ -69,7 +72,7 @@ dependencies {
     ksp(libs.androidx.room.compiler)
     implementation(libs.androidx.room.ktx)
 
-    implementation(libs.androidx.navigation.compose) // Corrected from navigation.runtime.ktx
+//    implementation(libs.androidx.navigation.compose) // Corrected from navigation.runtime.ktx
 
     implementation(libs.coil.compose)
 
