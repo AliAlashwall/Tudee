@@ -11,7 +11,7 @@ Tudee is a modern Android task management application built with the latest Andr
 - **Animations**: Integrated Lottie animations for an engaging user experience.
 
 ## Screens
-<img width="208" height="580" alt="image" src="https://github.com/user-attachments/assets/5fdf8804-06a1-4f35-9717-1d4de4b3fe0a" /> 
+<img width="208" height="580" alt="image" src="https://github.com/user-attachments/assets/12dbf28b-3672-4bba-a48d-05538d0c02f4" />
 
 <img width="208" height="580" alt="image" src="https://github.com/user-attachments/assets/d42d3029-2e81-434b-945b-b73f2c178b74" />
 
