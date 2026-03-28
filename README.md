@@ -11,12 +11,17 @@ Tudee is a modern Android task management application built with the latest Andr
 - **Animations**: Integrated Lottie animations for an engaging user experience.
 
 ## Screens
-<img width="208" height="580" alt="image" src="https://github.com/user-attachments/assets/a1a93482-7d3a-4493-99f2-6fe0de1439bc" />
-<img width="208" height="580" alt="image" src="https://github.com/user-attachments/assets/ffba5f78-8dca-45e6-a8b2-9eb8b38c565d" />
-<img width="208" height="580" alt="image" src="https://github.com/user-attachments/assets/4bf9178e-3869-4b7f-9bac-7b3ac6b790f1" />
-<img width="208" height="580" alt="image" src="https://github.com/user-attachments/assets/2da4e835-60ba-40aa-80f3-da636d34ef7a" />
-<img width="208" height="580" alt="image" src="https://github.com/user-attachments/assets/af1774f7-158c-4ce2-8ffe-d8ed0e7adc54" />
-<img width="208" height="580" alt="image" src="https://github.com/user-attachments/assets/e61b28c8-2374-41d2-8bba-343250bb4e95" />
+<img width="208" height="580" alt="image" src="https://github.com/user-attachments/assets/5fdf8804-06a1-4f35-9717-1d4de4b3fe0a" /> 
+
+<img width="208" height="580" alt="image" src="https://github.com/user-attachments/assets/d42d3029-2e81-434b-945b-b73f2c178b74" />
+
+<img width="208" height="580" alt="image" src="https://github.com/user-attachments/assets/f7d2b8c4-cee9-4c76-bc4e-cd8e5c3c0685" />
+
+<img width="208" height="580" alt="image" src="https://github.com/user-attachments/assets/666f97a3-9a21-4112-a945-7a8c13117f38" />
+
+<img width="208" height="580" alt="image" src="https://github.com/user-attachments/assets/aeebc942-0e0b-494c-b899-cd051f3f80c9" />
+
+<img width="208" height="580" alt="image" src="https://github.com/user-attachments/assets/bf429c38-2cad-4e25-991c-977ba6a5fa5f" />
 
 
 
