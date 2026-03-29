@@ -201,6 +201,7 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch { po.forEach { taskRepository.insertTask(it) } }
     }*/
 
+
     val allTasks: StateFlow<List<Task>> =
         taskRepository.getAllTasks()
             .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
@@ -208,7 +209,10 @@ class HomeViewModel @Inject constructor(
     val allCategories: StateFlow<List<Category>> = categoryRepository.getAllCategories()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
-    private val _homeUiState = MutableStateFlow(HomeUiState())
+    private val initialDate = LocalDate.now().toDMYFormat()
+    private val _homeUiState = MutableStateFlow(
+        HomeUiState(currentDate = initialDate, selectedDate = initialDate)
+    )
     val homeUiState: StateFlow<HomeUiState> = combine(
         _homeUiState,
         allTasks,
@@ -225,7 +229,7 @@ class HomeViewModel @Inject constructor(
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5000),
-        initialValue = HomeUiState()
+        initialValue = HomeUiState(currentDate = initialDate, selectedDate = initialDate)
     )
 
 
@@ -310,14 +314,6 @@ class HomeViewModel @Inject constructor(
     fun updateCurrentPriority(newPriority: Int) {
         _homeUiState.update {
             it.copy(currentPriority = newPriority)
-        }
-    }
-
-
-    fun getCurrentDate() {
-        val currDate = LocalDate.now().toDMYFormat()
-        _homeUiState.update {
-            it.copy(currentDate = currDate, selectedDate = currDate)
         }
     }
 

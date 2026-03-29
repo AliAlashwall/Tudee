@@ -56,20 +56,20 @@ fun TaskCard(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.padding(start = 4.dp, end = 12.dp, top = 14.dp)
             ) {
-                if (isCustom) {
-                    AsyncImage(
-                        model = categoryIconOfTask.toUri(),
-                        contentDescription = stringResource(R.string.task_card_icon),
-                        modifier = Modifier.size(32.dp),
-//                        colorFilter = ColorFilter.tint(Color.Unspecified)
-                    )
-                } else {
-                    Image(
-                        painter = painterResource(categoryIconOfTask.toInt()),
-                        contentDescription = stringResource(R.string.task_card_icon),
-                        modifier = Modifier.size(32.dp),
-//                        colorFilter = ColorFilter.tint(Color.Unspecified)
-                    )
+                if (categoryIconOfTask != "") {
+                    if (isCustom) {
+                        AsyncImage(
+                            model = categoryIconOfTask.toUri(),
+                            contentDescription = stringResource(R.string.task_card_icon),
+                            modifier = Modifier.size(32.dp),
+                        )
+                    } else {
+                        Image(
+                            painter = painterResource(categoryIconOfTask.toInt()),
+                            contentDescription = stringResource(R.string.task_card_icon),
+                            modifier = Modifier.size(32.dp),
+                        )
+                    }
                 }
 
                 Spacer(Modifier.weight(1f))
