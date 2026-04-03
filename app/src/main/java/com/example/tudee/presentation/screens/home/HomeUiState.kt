@@ -5,16 +5,16 @@ import com.example.tudee.domain.model.Category
 import com.example.tudee.domain.model.Task
 
 data class HomeUiState(
-    var newTaskTitle: String = "",
-    var newDescription: String = "",
-    var selectedDate: String = "",      //21 Mar 2026
-    var currentDate: String = "",       //21 Mar 2026
-    var currentPriority: Int? = null,
-    var selectedCategoryId: Int? = null,
-    var selectedTask: Task? = null,
-    var showAddBottomSheet: Boolean = false,
-    var showEditTaskBottomSheet: Boolean = false,
-    var showDetailsBottomSheet: Boolean = false,
+    val newTaskTitle: String = "",
+    val newDescription: String = "",
+    val selectedDate: String = "",      //21 Mar 2026
+    val currentDate: String = "",       //21 Mar 2026
+    val currentPriority: Int? = null,
+    val selectedCategoryId: Int? = null,
+    val selectedTask: Task? = null,
+    val showAddBottomSheet: Boolean = false,
+    val showEditTaskBottomSheet: Boolean = false,
+    val showDetailsBottomSheet: Boolean = false,
     val notificationTitle: String = "",
     val notificationDescription: String = "",
     val notificationIcon: Int = R.drawable.ic_status_neutral,

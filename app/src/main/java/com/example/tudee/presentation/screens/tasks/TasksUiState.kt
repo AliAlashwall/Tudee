@@ -11,10 +11,10 @@ import java.time.LocalDate
 @RequiresApi(Build.VERSION_CODES.O)
 data class TasksUiState(
     val selectedDate: String = LocalDate.now().toDMYFormat(),
-    var showDatePicker: Boolean = false,
-    var showDeleteBottomSheet: Boolean = false,
-    var selectedTab: TaskStatus = TaskStatus.IN_PROGRESS,
-    var swapedTask: Task? = null,
+    val showDatePicker: Boolean = false,
+    val showDeleteBottomSheet: Boolean = false,
+    val selectedTab: TaskStatus = TaskStatus.IN_PROGRESS,
+    val swapedTask: Task? = null,
     val allTasks : List<Task> = emptyList(),
     val allCategories: Map<Int, Category> = emptyMap(),
 )
