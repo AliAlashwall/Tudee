@@ -21,8 +21,7 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.Composable import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -130,14 +129,14 @@ fun HomeScreen(
                     expanded = false,
                     onDismissRequest = { homeViewModel.onDismissBottomSheet() }) {
                     val category =
-                        homeUiState.allCategories.find { it.id == homeUiState.selectedTask?.categoryId }
+                        homeUiState.allCategories.find { it.id == homeUiState.selectedTask.categoryId }
                     val categoryImage = if (category != null) {
                         if (category.isCustom) category.uriImage else category.icon.toString()
                     } else ""
                     TaskDetailsBottomSheetContent(
-                        task = homeUiState.selectedTask!!,
+                        task = homeUiState.selectedTask,
                         categoryImage = categoryImage,
-                        onMoveButtonClicked = { homeViewModel.onMoveTaskStatusClicked(homeUiState.selectedTask!!) },
+                        onMoveButtonClicked = { homeViewModel.onMoveTaskStatusClicked(homeUiState.selectedTask) },
                         onEditButtonClicked = { homeViewModel.onEditTaskClicked() },
                         modifier = Modifier.heightIn(max = 373.dp)
                     )
@@ -292,7 +291,6 @@ fun HomeScreenContent(
                 }
             }
         }
-
         if (doneTasks != null) {
             item {
                 Text(
@@ -331,7 +329,8 @@ fun HomeScreenContent(
                     }
                 }
             }
-        } else {
+        }
+        if(todoTasks.isNullOrEmpty() && inProgressTasks.isNullOrEmpty() && doneTasks.isNullOrEmpty()) {
             item {
                 EmptyTasks(
                     modifier = Modifier
