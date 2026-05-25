@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.annotation.RequiresApi
@@ -11,10 +12,12 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -41,7 +44,7 @@ class MainActivity : ComponentActivity() {
     @SuppressLint("ViewModelConstructorInComposable", "RestrictedApi")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+
         setContent {
             val navController = rememberNavController()
             val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -61,6 +64,17 @@ class MainActivity : ComponentActivity() {
                     onThemeChanged = onThemeStateChanged
                 )
             }
+            enableEdgeToEdge(
+                statusBarStyle = if (isDarkThemeState) {
+                    SystemBarStyle.dark(android.graphics.Color.TRANSPARENT)
+                } else {
+                    SystemBarStyle.light(
+                        android.graphics.Color.TRANSPARENT,
+                        android.graphics.Color.TRANSPARENT
+                    )
+                }
+
+            )
             TudeeTheme(themeState) {
                 Scaffold(
                     modifier = Modifier.fillMaxSize(),
@@ -69,7 +83,7 @@ class MainActivity : ComponentActivity() {
                             BottomNavBar(navController = navController)
                         }
                     },
-                    containerColor = Theme.colors.overlay,
+                    containerColor = Theme.colors.surfaceHigh,
                     contentColor = Theme.colors.overlay,
                 ) { innerPadding ->
 
