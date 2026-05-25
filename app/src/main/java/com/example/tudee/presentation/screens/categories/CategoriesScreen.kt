@@ -129,7 +129,7 @@ fun CategoryScreenContent(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .padding(horizontal = 16.dp),
+            .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(20.dp)
     ) {
@@ -148,7 +148,7 @@ fun CategoryScreenContent(
             verticalArrangement = Arrangement.spacedBy(24.dp),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            items(categories, key = { it.name }) { category ->
+            items(categories, key = { it.id }) { category ->
 
                 val painter = if (category.isCustom) {
                     category.uriImage
