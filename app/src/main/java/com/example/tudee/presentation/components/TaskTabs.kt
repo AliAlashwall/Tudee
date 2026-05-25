@@ -39,6 +39,7 @@ fun TaskTabs(
     selectedTab: TaskStatus,
     statusTasksList: List<Task>,
     onTabClicked: (TaskStatus) -> Unit,
+    erasableCard: Boolean = true,
     onSwapTaskCard: (Task) -> Unit,
     allCategories: Map<Int, Category>,
 ) {
@@ -127,6 +128,7 @@ fun TaskTabs(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(horizontal = 16.dp),
+                        erasable = erasableCard,
                         onSwap = { onSwapTaskCard(it) },
                     )
                 }

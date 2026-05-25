@@ -126,6 +126,7 @@ fun CategoryTasksScreenContent(
             selectedTab = selectedTab,
             statusTasksList = tasksList,
             onTabClicked = { onTabClicked(it) },
+            erasableCard = false,
             onSwapTaskCard = { onSwapTaskCard() },
             allCategories = mapOf(          // as it has only the selected category
                 Pair(
