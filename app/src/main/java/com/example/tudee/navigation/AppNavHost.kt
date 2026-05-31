@@ -11,6 +11,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -31,13 +32,8 @@ import com.example.tudee.presentation.screens.tasks.TasksViewModel
 fun AppNavHost(
     navController: NavHostController,
     modifier: Modifier,
-    tudeeViewModel: TudeeViewModel,
-    homeViewModel: HomeViewModel,
-    tasksViewModel: TasksViewModel,
-    categoryViewModel: CategoryViewModel
-
 ) {
-
+    val tudeeViewModel = hiltViewModel<TudeeViewModel>()
     val isOnboardingCompleted by tudeeViewModel.isOnboardingCompleted.collectAsState()
 
     if (isOnboardingCompleted == null) {
@@ -61,17 +57,19 @@ fun AppNavHost(
         }
 
         composable<HomeScreen> {
-
+            val homeViewModel = hiltViewModel<HomeViewModel>()
             HomeScreen(homeViewModel = homeViewModel)
         }
 
         composable<TasksScreen> {
+            val tasksViewModel = hiltViewModel<TasksViewModel>()
             TasksScreen(
                 tasksViewModel = tasksViewModel
             )
         }
 
         composable<CategoriesScreen> {
+            val categoryViewModel = hiltViewModel<CategoryViewModel>()
             CategoriesScreen(
                 navController = navController,
                 categoryViewModel = categoryViewModel
@@ -79,6 +77,7 @@ fun AppNavHost(
         }
 
         composable<CategoryTasksScreen> {
+            val categoryViewModel = hiltViewModel<CategoryViewModel>()
             CategoryTasksScreen(
                 categoryViewModel = categoryViewModel,
                 navController = navController
