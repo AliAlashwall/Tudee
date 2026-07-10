@@ -53,13 +53,6 @@ The project is organized following Clean Architecture principles:
 - **`di`**: Dependency Injection modules using Hilt.
 - **`navigation`**: Navigation logic and route definitions.
 
-## Getting Started
-
-### Prerequisites
-
-- Android Studio Koala | 2024.1.1 or newer
-- JDK 17
-- Android SDK 24+
 
 ### Installation
 
